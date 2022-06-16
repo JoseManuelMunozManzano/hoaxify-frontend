@@ -1,12 +1,19 @@
 import React from 'react';
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
 
-// Statefull compoennt. No se usan hooks
-// Incluimos aquí el export para nuestros tests
-export class UserSignUpPage extends React.Component {
-  render() {
-    return <div></div>;
-  }
-}
+import { UserSignUpPage } from './UserSignupPage.spec';
 
-// Este export es para Redux, más adelante
-export default UserSignUpPage;
+// Se agrupan los tests de JavaScript en funciones describe(), para organizarlos
+// Toman 2 parámetros, la descripción y la función donde se incluirán las funciones de test
+describe('UserSignUpPage', () => {
+  // Vamos a testear la existencia de los campos requeridos
+  // Vamos a renderizar el componente y luego su cabecera
+  describe('Layout', () => {
+    it('has header of Sign Up', () => {
+      const { container } = render(<UserSignUpPage />);
+      const header = screen.getByText('Sign Up');
+      expect(header).toHaveTextContent('Sign Up');
+    });
+  });
+});
