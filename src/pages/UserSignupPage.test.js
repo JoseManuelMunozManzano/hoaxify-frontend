@@ -12,7 +12,8 @@ describe('UserSignUpPage', () => {
   describe('Layout', () => {
     it('has header of Sign Up', () => {
       const { container } = render(<UserSignUpPage />);
-      const header = screen.getByText('Sign Up');
+      // No recomendado acceder con querySelector
+      const header = container.querySelector('h1');
       expect(header).toHaveTextContent('Sign Up');
     });
 
@@ -20,6 +21,43 @@ describe('UserSignUpPage', () => {
       const { queryByPlaceholderText } = render(<UserSignUpPage />);
       const displayNameInput = screen.queryByPlaceholderText('Your display name');
       expect(displayNameInput).toBeInTheDocument();
+    });
+
+    it('has input for username', () => {
+      const { queryByPlaceholderText } = render(<UserSignUpPage />);
+      const usernameInput = screen.queryByPlaceholderText('Your username');
+      expect(usernameInput).toBeInTheDocument();
+    });
+
+    it('has input for password', () => {
+      const { queryByPlaceholderText } = render(<UserSignUpPage />);
+      const passwordInput = screen.queryByPlaceholderText('Your password');
+      expect(passwordInput).toBeInTheDocument();
+    });
+
+    it('has password type for password input', () => {
+      const { queryByPlaceholderText } = render(<UserSignUpPage />);
+      const passwordInput = screen.queryByPlaceholderText('Your password');
+      expect(passwordInput.type).toBe('password');
+    });
+
+    it('has input for password repeat', () => {
+      const { queryByPlaceholderText } = render(<UserSignUpPage />);
+      const passwordRepeat = screen.queryByPlaceholderText('Repeat your password');
+      expect(passwordRepeat).toBeInTheDocument();
+    });
+
+    it('has password type for password repeat input', () => {
+      const { queryByPlaceholderText } = render(<UserSignUpPage />);
+      const passwordRepeat = screen.queryByPlaceholderText('Repeat your password');
+      expect(passwordRepeat.type).toBe('password');
+    });
+
+    it('has submit button', () => {
+      const { container } = render(<UserSignUpPage />);
+      // No recomendado acceder con querySelector
+      const button = container.querySelector('button');
+      expect(button).toBeInTheDocument();
     });
   });
 });
