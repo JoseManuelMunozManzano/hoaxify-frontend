@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent, queryByPlaceholderText } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 
 import { UserSignUpPage } from './UserSignupPage.spec';
@@ -58,6 +58,52 @@ describe('UserSignUpPage', () => {
       // No recomendado acceder con querySelector
       const button = container.querySelector('button');
       expect(button).toBeInTheDocument();
+    });
+  });
+
+  describe('Interactions', () => {
+    const changeEvent = (content) => ({
+      target: {
+        value: content,
+      },
+    });
+
+    it('sets the displayName value into state', () => {
+      const { queryAllByPlaceholderText } = render(<UserSignUpPage />);
+      const displayNameInput = screen.queryByPlaceholderText('Your display name');
+
+      // Se simula la acción de entrada de datos de usuario con fireEvent.
+      // change toma el campo como primer parámetro y el evento change como segundo parámetro.
+      fireEvent.change(displayNameInput, changeEvent('my-display-name'));
+
+      expect(displayNameInput).toHaveValue('my-display-name');
+    });
+
+    it('sets the username value into state', () => {
+      const { queryAllByPlaceholderText } = render(<UserSignUpPage />);
+      const usernameInput = screen.queryByPlaceholderText('Your username');
+
+      fireEvent.change(usernameInput, changeEvent('my-user-name'));
+
+      expect(usernameInput).toHaveValue('my-user-name');
+    });
+
+    it('sets the password value into state', () => {
+      const { queryAllByPlaceholderText } = render(<UserSignUpPage />);
+      const passwordInput = screen.queryByPlaceholderText('Your password');
+
+      fireEvent.change(passwordInput, changeEvent('P4ssword'));
+
+      expect(passwordInput).toHaveValue('P4ssword');
+    });
+
+    it('sets the password repeat value into state', () => {
+      const { queryAllByPlaceholderText } = render(<UserSignUpPage />);
+      const passwordRepeat = screen.queryByPlaceholderText('Repeat your password');
+
+      fireEvent.change(passwordRepeat, changeEvent('P4ssword'));
+
+      expect(passwordRepeat).toHaveValue('P4ssword');
     });
   });
 });
