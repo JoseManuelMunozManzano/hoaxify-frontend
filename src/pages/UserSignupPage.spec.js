@@ -53,6 +53,10 @@ export class UserSignUpPage extends React.Component {
     });
   };
 
+  onClickSignup = () => {
+    this.props.actions.postSignup();
+  };
+
   render() {
     return (
       <div>
@@ -84,12 +88,22 @@ export class UserSignUpPage extends React.Component {
         </div>
 
         <div>
-          <button>Sign Up</button>
+          <button onClick={this.onClickSignup}>Sign Up</button>
         </div>
       </div>
     );
   }
 }
+
+// Props por defecto si llamamos sin alguno de ellos
+UserSignUpPage.defaultProps = {
+  actions: {
+    postSignup: () =>
+      new Promise((resolve, reject) => {
+        resolve({});
+      }),
+  },
+};
 
 // Este export es para Redux, más adelante
 export default UserSignUpPage;
