@@ -68,6 +68,29 @@ describe('UserSignUpPage', () => {
       },
     });
 
+    let button, displayNameInput, usernameInput, passwordInput, passwordRepeat;
+
+    // Función para test de click en Sign Up
+    const setupForSubmit = (props) => {
+      // Vamos a cambiar nuestros campos input y vamos a hacer click en el botón
+      const view = render(<UserSignUpPage {...props} />);
+
+      const { container, queryByPlaceholderText } = view;
+      displayNameInput = screen.queryByPlaceholderText('Your display name');
+      usernameInput = screen.queryByPlaceholderText('Your username');
+      passwordInput = screen.queryByPlaceholderText('Your password');
+      passwordRepeat = screen.queryByPlaceholderText('Repeat your password');
+
+      fireEvent.change(displayNameInput, changeEvent('my-display-name'));
+      fireEvent.change(usernameInput, changeEvent('my-username'));
+      fireEvent.change(passwordInput, changeEvent('P4ssword'));
+      fireEvent.change(passwordRepeat, changeEvent('P4ssword'));
+
+      button = container.querySelector('button');
+
+      return view;
+    };
+
     it('sets the displayName value into state', () => {
       const { queryAllByPlaceholderText } = render(<UserSignUpPage />);
       const displayNameInput = screen.queryByPlaceholderText('Your display name');
@@ -116,20 +139,8 @@ describe('UserSignUpPage', () => {
         postSignup: jest.fn().mockResolvedValueOnce({}),
       };
 
-      // Vamos a cambiar nuestros campos input y vamos a hacer click en el botón
-      const { container, queryByPlaceholderText } = render(<UserSignUpPage actions={actions} />);
+      setupForSubmit({ actions });
 
-      const displayNameInput = screen.queryByPlaceholderText('Your display name');
-      const usernameInput = screen.queryByPlaceholderText('Your username');
-      const passwordInput = screen.queryByPlaceholderText('Your password');
-      const passwordRepeat = screen.queryByPlaceholderText('Repeat your password');
-
-      fireEvent.change(displayNameInput, changeEvent('my-display-name'));
-      fireEvent.change(usernameInput, changeEvent('my-username'));
-      fireEvent.change(passwordInput, changeEvent('P4ssword'));
-      fireEvent.change(passwordRepeat, changeEvent('P4ssword'));
-
-      const button = container.querySelector('button');
       fireEvent.click(button);
 
       // Se ha debido de llamar una vez
@@ -138,22 +149,30 @@ describe('UserSignUpPage', () => {
 
     it('does not throw exception when clicking the button when actions not provided in props', () => {
       // Vamos a cambiar nuestros campos input y vamos a hacer click en el botón
-      const { container, queryByPlaceholderText } = render(<UserSignUpPage />);
-
-      const displayNameInput = screen.queryByPlaceholderText('Your display name');
-      const usernameInput = screen.queryByPlaceholderText('Your username');
-      const passwordInput = screen.queryByPlaceholderText('Your password');
-      const passwordRepeat = screen.queryByPlaceholderText('Repeat your password');
-
-      fireEvent.change(displayNameInput, changeEvent('my-display-name'));
-      fireEvent.change(usernameInput, changeEvent('my-username'));
-      fireEvent.change(passwordInput, changeEvent('P4ssword'));
-      fireEvent.change(passwordRepeat, changeEvent('P4ssword'));
-
-      const button = container.querySelector('button');
+      setupForSubmit();
 
       // Pulsar el botón no arroja excepción
       expect(() => fireEvent.click(button)).not.toThrow();
+    });
+
+    // Cuando se hace click en el botón, debemos recibir el cuerpo del request basado en lo que ha escrito
+    // el usuario, para poder enviarlo al backend
+    it('calls post with user body when the fields are valid', () => {
+      const actions = {
+        postSignup: jest.fn().mockResolvedValueOnce({}),
+      };
+
+      setupForSubmit({ actions });
+
+      fireEvent.click(button);
+
+      const expectedUserObject = {
+        username: 'my-username',
+        displayName: 'my-display-name',
+        password: 'P4ssword',
+      };
+
+      expect(actions.postSignup).toHaveBeenCalledWith(expectedUserObject);
     });
   });
 });
