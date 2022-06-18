@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, queryByPlaceholderText } from '@testing-library/react';
+import { render, screen, fireEvent, queryByPlaceholderText, waitForDomChange } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 
 import { UserSignUpPage } from './UserSignupPage';
@@ -208,6 +208,24 @@ describe('UserSignUpPage', () => {
       // https://getbootstrap.com/docs/4.3/components/spinners/
       const spinner = queryByText('Loading...');
       expect(spinner).toBeInTheDocument();
+    });
+
+    it('hides spinner after api call finishes successfully', async () => {
+      // Tenemos que esperar a la respuesta.
+      const actions = {
+        postSignup: mockAsyncDelayed(),
+      };
+      const { queryByText } = setupForSubmit({ actions });
+      fireEvent.click(button);
+
+      // Ahora, tras pulsar el botón, esperamos a que nuestro componente
+      // se actualice, lo que significará que nuestro spinner se habrá ocultado.
+      await waitForDomChange();
+
+      // Este test fallará por un timeout porque nada cambia en el DOM todavía.
+      // Para resolver este problema se debe manejar el caso success en nuestra llamada a la API.
+      const spinner = queryByText('Loading...');
+      expect(spinner).not.toBeInTheDocument();
     });
   });
 });
