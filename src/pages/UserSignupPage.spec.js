@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent, queryByPlaceholderText } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 
-import { UserSignUpPage } from './UserSignupPage.spec';
+import { UserSignUpPage } from './UserSignupPage';
 
 // Se agrupan los tests de JavaScript en funciones describe(), para organizarlos
 // Toman 2 parámetros, la descripción y la función donde se incluirán las funciones de test
@@ -68,6 +68,17 @@ describe('UserSignUpPage', () => {
       },
     });
 
+    const mockAsyncDelayed = () => {
+      return jest.fn().mockImplementation(() => {
+        return new Promise((resolve, reject) => {
+          // Establecemos un tiempo de espera tras el cual la promise se resuelve
+          setTimeout(() => {
+            resolve({});
+          }, 300);
+        });
+      });
+    };
+
     let button, displayNameInput, usernameInput, passwordInput, passwordRepeat;
 
     // Función para test de click en Sign Up
@@ -130,11 +141,6 @@ describe('UserSignUpPage', () => {
     });
 
     it('calls postSignup when the fields are valid and the actions are provided in props', () => {
-      // Se envía una petición http al backend.
-      // En Testing, no se realiza realmente la llamada a la API del servidor.
-      // Lo qwe se hace es emular que se envía la petición http. Esto se llama mocking.
-      //
-      // Primero creamos un objeto con nuestras acciones
       const actions = {
         postSignup: jest.fn().mockResolvedValueOnce({}),
       };
@@ -143,20 +149,15 @@ describe('UserSignUpPage', () => {
 
       fireEvent.click(button);
 
-      // Se ha debido de llamar una vez
       expect(actions.postSignup).toHaveBeenCalledTimes(1);
     });
 
     it('does not throw exception when clicking the button when actions not provided in props', () => {
-      // Vamos a cambiar nuestros campos input y vamos a hacer click en el botón
       setupForSubmit();
 
-      // Pulsar el botón no arroja excepción
       expect(() => fireEvent.click(button)).not.toThrow();
     });
 
-    // Cuando se hace click en el botón, debemos recibir el cuerpo del request basado en lo que ha escrito
-    // el usuario, para poder enviarlo al backend
     it('calls post with user body when the fields are valid', () => {
       const actions = {
         postSignup: jest.fn().mockResolvedValueOnce({}),
@@ -173,6 +174,26 @@ describe('UserSignUpPage', () => {
       };
 
       expect(actions.postSignup).toHaveBeenCalledWith(expectedUserObject);
+    });
+
+    // Se va a impedir que el usuario pueda pulsar múltiples veces el botón Sign Up mientras se procesa
+    // la petición.
+    // También se va a indicar al usuario como va el progreso de la petición realizada.
+    it('does not allow user to click the Sign Up button when there is an ongoing api call', () => {
+      // Utilizamos una implementación a medida
+      // Devolvemos una promise porque nuestra action API de axios devuelve una promise.
+      const actions = {
+        postSignup: mockAsyncDelayed(),
+      };
+      setupForSubmit({ actions });
+      fireEvent.click(button);
+
+      // Pulsamos el botón SignUp por segunda vez
+      fireEvent.click(button);
+
+      // Por ahora se esta llamando 2 veces.
+      // Para corregir esto, necesitamos conocer el progreso de nuestra petición
+      expect(actions.postSignup).toHaveBeenCalledTimes(1);
     });
   });
 });
