@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, queryByPlaceholderText, waitForDomChange } from '@testing-library/react';
+import { render, screen, fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 
 import { UserSignUpPage } from './UserSignupPage';
@@ -196,6 +196,7 @@ describe('UserSignUpPage', () => {
       expect(actions.postSignup).toHaveBeenCalledTimes(1);
     });
 
+    // NOTA: Se puede indicar que un test no se realice poniendo xit en vez de it
     it('displays spinner when there is an ongoing api call', () => {
       const actions = {
         postSignup: mockAsyncDelayed(),
@@ -220,7 +221,7 @@ describe('UserSignUpPage', () => {
 
       // Ahora, tras pulsar el botón, esperamos a que nuestro componente
       // se actualice, lo que significará que nuestro spinner se habrá ocultado.
-      await waitForDomChange();
+      await waitForElementToBeRemoved(document.querySelector('div.spinner-border'));
 
       // Este test fallará por un timeout porque nada cambia en el DOM todavía.
       // Para resolver este problema se debe manejar el caso success en nuestra llamada a la API.

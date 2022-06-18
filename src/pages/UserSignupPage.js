@@ -61,7 +61,11 @@ export class UserSignUpPage extends React.Component {
       password: this.state.password,
     };
     this.setState({ pendingApiCall: true });
-    this.props.actions.postSignup(user);
+    // Como es un promise, manejamos la condición resolve.
+    // Por ahora solo actualizamos el state
+    this.props.actions.postSignup(user).then((response) => {
+      this.setState({ pendingApiCall: false });
+    });
   };
 
   render() {
