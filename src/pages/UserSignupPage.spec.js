@@ -1,132 +1,178 @@
-// Se va a usar la nomenclatura siguiente:
-// component.spec.js     este para el componente
-// component.test.js     este para los tests del componente
-//
-// NOTA: También se podría haber creado un folder llamado __tests__ y meter los tests ahí.
-//
-//
-// Para nombrar los test hay dos posibilidades:
-// test
-// it     La que vamos a usar
-
 import React from 'react';
+import { render, screen, fireEvent, queryByPlaceholderText } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
 
-// Statefull compoennt. No se usan hooks
-// Incluimos aquí el export para nuestros tests
-export class UserSignUpPage extends React.Component {
-  state = {
-    displayName: '',
-    username: '',
-    password: '',
-    passwordRepeat: '',
-  };
+import { UserSignUpPage } from './UserSignupPage.spec';
 
-  onChangeDisplayName = (event) => {
-    const value = event.target.value;
-
-    this.setState({
-      displayName: value,
+// Se agrupan los tests de JavaScript en funciones describe(), para organizarlos
+// Toman 2 parámetros, la descripción y la función donde se incluirán las funciones de test
+describe('UserSignUpPage', () => {
+  // Vamos a testear la existencia de los campos requeridos
+  // Vamos a renderizar el componente y luego su cabecera
+  describe('Layout', () => {
+    it('has header of Sign Up', () => {
+      const { container } = render(<UserSignUpPage />);
+      // No recomendado acceder con querySelector
+      const header = container.querySelector('h1');
+      expect(header).toHaveTextContent('Sign Up');
     });
-  };
 
-  onChangeUsername = (event) => {
-    const value = event.target.value;
-
-    this.setState({
-      username: value,
+    it('has input for display name', () => {
+      const { queryByPlaceholderText } = render(<UserSignUpPage />);
+      const displayNameInput = screen.queryByPlaceholderText('Your display name');
+      expect(displayNameInput).toBeInTheDocument();
     });
-  };
 
-  onChangePassword = (event) => {
-    const value = event.target.value;
-
-    this.setState({
-      password: value,
+    it('has input for username', () => {
+      const { queryByPlaceholderText } = render(<UserSignUpPage />);
+      const usernameInput = screen.queryByPlaceholderText('Your username');
+      expect(usernameInput).toBeInTheDocument();
     });
-  };
 
-  onChangePasswordRepeat = (event) => {
-    const value = event.target.value;
-
-    this.setState({
-      passwordRepeat: value,
+    it('has input for password', () => {
+      const { queryByPlaceholderText } = render(<UserSignUpPage />);
+      const passwordInput = screen.queryByPlaceholderText('Your password');
+      expect(passwordInput).toBeInTheDocument();
     });
-  };
 
-  onClickSignup = () => {
-    const user = {
-      username: this.state.username,
-      displayName: this.state.displayName,
-      password: this.state.password,
+    it('has password type for password input', () => {
+      const { queryByPlaceholderText } = render(<UserSignUpPage />);
+      const passwordInput = screen.queryByPlaceholderText('Your password');
+      expect(passwordInput.type).toBe('password');
+    });
+
+    it('has input for password repeat', () => {
+      const { queryByPlaceholderText } = render(<UserSignUpPage />);
+      const passwordRepeat = screen.queryByPlaceholderText('Repeat your password');
+      expect(passwordRepeat).toBeInTheDocument();
+    });
+
+    it('has password type for password repeat input', () => {
+      const { queryByPlaceholderText } = render(<UserSignUpPage />);
+      const passwordRepeat = screen.queryByPlaceholderText('Repeat your password');
+      expect(passwordRepeat.type).toBe('password');
+    });
+
+    it('has submit button', () => {
+      const { container } = render(<UserSignUpPage />);
+      // No recomendado acceder con querySelector
+      const button = container.querySelector('button');
+      expect(button).toBeInTheDocument();
+    });
+  });
+
+  describe('Interactions', () => {
+    const changeEvent = (content) => ({
+      target: {
+        value: content,
+      },
+    });
+
+    let button, displayNameInput, usernameInput, passwordInput, passwordRepeat;
+
+    // Función para test de click en Sign Up
+    const setupForSubmit = (props) => {
+      // Vamos a cambiar nuestros campos input y vamos a hacer click en el botón
+      const view = render(<UserSignUpPage {...props} />);
+
+      const { container, queryByPlaceholderText } = view;
+      displayNameInput = screen.queryByPlaceholderText('Your display name');
+      usernameInput = screen.queryByPlaceholderText('Your username');
+      passwordInput = screen.queryByPlaceholderText('Your password');
+      passwordRepeat = screen.queryByPlaceholderText('Repeat your password');
+
+      fireEvent.change(displayNameInput, changeEvent('my-display-name'));
+      fireEvent.change(usernameInput, changeEvent('my-username'));
+      fireEvent.change(passwordInput, changeEvent('P4ssword'));
+      fireEvent.change(passwordRepeat, changeEvent('P4ssword'));
+
+      button = container.querySelector('button');
+
+      return view;
     };
-    this.props.actions.postSignup(user);
-  };
 
-  render() {
-    return (
-      <div className="container">
-        <h1 className="text-center">Sign Up</h1>
-        <div className="col-12 mb-3">
-          <label>Display Name</label>
-          <input
-            className="form-control"
-            placeholder="Your display name"
-            value={this.state.displayName}
-            onChange={this.onChangeDisplayName}
-          />
-        </div>
+    it('sets the displayName value into state', () => {
+      const { queryAllByPlaceholderText } = render(<UserSignUpPage />);
+      const displayNameInput = screen.queryByPlaceholderText('Your display name');
 
-        <div className="col-12 mb-3">
-          <label>Username</label>
-          <input
-            className="form-control"
-            placeholder="Your username"
-            value={this.state.username}
-            onChange={this.onChangeUsername}
-          />
-        </div>
+      // Se simula la acción de entrada de datos de usuario con fireEvent.
+      // change toma el campo como primer parámetro y el evento change como segundo parámetro.
+      fireEvent.change(displayNameInput, changeEvent('my-display-name'));
 
-        <div className="col-12 mb-3">
-          <label>Password</label>
-          <input
-            className="form-control"
-            placeholder="Your password"
-            type="password"
-            value={this.state.password}
-            onChange={this.onChangePassword}
-          />
-        </div>
+      expect(displayNameInput).toHaveValue('my-display-name');
+    });
 
-        <div className="col-12 mb-3">
-          <label>Password Repeat</label>
-          <input
-            className="form-control"
-            placeholder="Repeat your password"
-            type="password"
-            value={this.state.passwordRepeat}
-            onChange={this.onChangePasswordRepeat}
-          />
-        </div>
+    it('sets the username value into state', () => {
+      const { queryAllByPlaceholderText } = render(<UserSignUpPage />);
+      const usernameInput = screen.queryByPlaceholderText('Your username');
 
-        <div className="text-center">
-          <button className="btn btn-primary" onClick={this.onClickSignup}>
-            Sign Up
-          </button>
-        </div>
-      </div>
-    );
-  }
-}
+      fireEvent.change(usernameInput, changeEvent('my-user-name'));
 
-// Props por defecto si llamamos sin alguno de ellos
-UserSignUpPage.defaultProps = {
-  actions: {
-    postSignup: () =>
-      new Promise((resolve, reject) => {
-        resolve({});
-      }),
-  },
-};
+      expect(usernameInput).toHaveValue('my-user-name');
+    });
 
-// Este export es para Redux, más adelante
-export default UserSignUpPage;
+    it('sets the password value into state', () => {
+      const { queryAllByPlaceholderText } = render(<UserSignUpPage />);
+      const passwordInput = screen.queryByPlaceholderText('Your password');
+
+      fireEvent.change(passwordInput, changeEvent('P4ssword'));
+
+      expect(passwordInput).toHaveValue('P4ssword');
+    });
+
+    it('sets the password repeat value into state', () => {
+      const { queryAllByPlaceholderText } = render(<UserSignUpPage />);
+      const passwordRepeat = screen.queryByPlaceholderText('Repeat your password');
+
+      fireEvent.change(passwordRepeat, changeEvent('P4ssword'));
+
+      expect(passwordRepeat).toHaveValue('P4ssword');
+    });
+
+    it('calls postSignup when the fields are valid and the actions are provided in props', () => {
+      // Se envía una petición http al backend.
+      // En Testing, no se realiza realmente la llamada a la API del servidor.
+      // Lo qwe se hace es emular que se envía la petición http. Esto se llama mocking.
+      //
+      // Primero creamos un objeto con nuestras acciones
+      const actions = {
+        postSignup: jest.fn().mockResolvedValueOnce({}),
+      };
+
+      setupForSubmit({ actions });
+
+      fireEvent.click(button);
+
+      // Se ha debido de llamar una vez
+      expect(actions.postSignup).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not throw exception when clicking the button when actions not provided in props', () => {
+      // Vamos a cambiar nuestros campos input y vamos a hacer click en el botón
+      setupForSubmit();
+
+      // Pulsar el botón no arroja excepción
+      expect(() => fireEvent.click(button)).not.toThrow();
+    });
+
+    // Cuando se hace click en el botón, debemos recibir el cuerpo del request basado en lo que ha escrito
+    // el usuario, para poder enviarlo al backend
+    it('calls post with user body when the fields are valid', () => {
+      const actions = {
+        postSignup: jest.fn().mockResolvedValueOnce({}),
+      };
+
+      setupForSubmit({ actions });
+
+      fireEvent.click(button);
+
+      const expectedUserObject = {
+        username: 'my-username',
+        displayName: 'my-display-name',
+        password: 'P4ssword',
+      };
+
+      expect(actions.postSignup).toHaveBeenCalledWith(expectedUserObject);
+    });
+  });
+});

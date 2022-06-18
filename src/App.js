@@ -1,4 +1,4 @@
-import { UserSignUpPage } from './pages/UserSignupPage.spec';
+import { UserSignUpPage } from './pages/UserSignupPage';
 import * as apiCalls from './api/apiCalls';
 
 // Para pasar la función sign-up como un prop a UserSignupPage
