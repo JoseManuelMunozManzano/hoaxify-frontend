@@ -1,4 +1,5 @@
 import axios from 'axios';
+import * as apiCalls from './apiCalls';
 
 describe('apiCalls', () => {
   describe('signup', () => {
@@ -6,9 +7,16 @@ describe('apiCalls', () => {
     // Falla porque no existe signup() en apiCalls
     it('calls /api/1.0/users', () => {
       const mockSignup = jest.fn();
-
       axios.post = mockSignup;
       apiCalls.signup();
+
+      // calls contiene el historial de llamadas.
+      // Esto es porque esta función puede llamarse muchas veces, así que obtenemos que call queremos.
+      // En este caso la primera vez.
+      // Y cuando acedemos a ese call, podemos obtener el array de parámetros y queremos buscar el primer parámetro.
+      // Ese calls[0][0] es nuestro path
+      const path = mockSignup.mock.calls[0][0];
+      expect(path).toBe('/api/1.0/users');
     });
   });
 });
