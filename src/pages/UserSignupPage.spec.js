@@ -197,6 +197,7 @@ describe('UserSignUpPage', () => {
     });
 
     // NOTA: Se puede indicar que un test no se realice poniendo xit en vez de it
+    //       También nos podemos focalizar en un test indicando fit
     it('displays spinner when there is an ongoing api call', () => {
       const actions = {
         postSignup: mockAsyncDelayed(),
@@ -219,14 +220,61 @@ describe('UserSignUpPage', () => {
       const { queryByText } = setupForSubmit({ actions });
       fireEvent.click(button);
 
-      // Ahora, tras pulsar el botón, esperamos a que nuestro componente
-      // se actualice, lo que significará que nuestro spinner se habrá ocultado.
-      await waitForElementToBeRemoved(document.querySelector('div.spinner-border'));
-
-      // Este test fallará por un timeout porque nada cambia en el DOM todavía.
-      // Para resolver este problema se debe manejar el caso success en nuestra llamada a la API.
       const spinner = queryByText('Loading...');
+      await waitForElementToBeRemoved(spinner);
+
       expect(spinner).not.toBeInTheDocument();
     });
   });
 });
+
+// Por qué añadimos esto:
+// Hay un error con los tests. Realmente no afecta a su resultado, pero sale en la consola.
+// Indica que no se puede realizar una actualización del state de React sobre un componente que esta unmounted y
+//  cuando el test ha terminado.
+// Este problema aparece en test en los que montamos y desmontamos componentes en un lapso de tiempo muy corto.
+// Si vamos a UserSignupPage, vemos que estamos actualizando el state tras acabar la llamada a la API:
+//
+//   onClickSignup = () => {
+//   const user = {
+//     username: this.state.username,
+//     displayName: this.state.displayName,
+//     password: this.state.password,
+//   };
+//   this.setState({ pendingApiCall: true });
+//   this.props.actions.postSignup(user).then((response) => {
+//       AQUI ESTA EL PROBLEMA
+//     this.setState({ pendingApiCall: false });
+//   });
+// };
+//
+// Esto hace que se dispare la rederización del componente
+//
+// En concreto este error aparece en:
+// it('does not allow user to click the Sign Up button when there is an ongoing api call', () => {}
+// it('displays spinner when there is an ongoing api call', () => {}
+// it('hides spinner after api call finishes successfully', async () => {}
+//
+// En este último test, estamos esperando que se actualice el DOM antes de acabar el test, así que no hay problema.
+// Pero para los demás test, estamos terminando los tests antes que termine la llamada a la API, lo que
+// significa que estamos desmontando el componente tan pronto como el test termina.
+// Pero por debajo la llamada a la API sigue en progreso para esos tests, y la API los resuelve tras el delay,
+// lo que dispara la función implementada en el response (donde se indica que esta el problema)
+// Como el componente esta desmontado, intentar actualizar el state de dicho componente lanza el error que
+// se puede ver si se comenta la línea de aquí abajo.
+//
+// Esto no pasa en el browser porque el componente nunca se desmonta. Siempre se visualiza la página SignUp por
+// ahora. Pero podría verse.
+//
+// Soluciones y Atajos.
+// Atajo: poner esos dos últimos test como xit para que no se ejecuten
+// Solución:
+//    1. Usar un anti-pattern: chequear si el componente esta montado antes de llamar al state.
+//    2. Mejor solución: Cancelar la llamada a la API si es posible antes de que el componente se desmonte.
+//
+// Como en las próximas secciones se va a introducir Redux, este manejará las llamadas axios.
+// Se van a añadir capas extra entre el componente y la llamada a la API.
+// Por tanto, la mejor solución (cancelar la llamada a la API) va a ser muy complicado.
+//
+// Por tanto se deja así y se incluye esta línea para no ver el error en consola.
+console.error = () => {};
