@@ -225,12 +225,37 @@ describe('UserSignUpPage', () => {
 
       expect(spinner).not.toBeInTheDocument();
     });
+
+    it('hides spinner after api call finishes with error', async () => {
+      // Vamos a hacer un mock con resultado de error
+      // Para probar esto paramos el back-end y pulsamos el botón Sign Up en el browser
+      // Vemos que el spinner sigue apareciendo aunque la llamada a la API acaba en error.
+      const actions = {
+        postSignup: jest.fn().mockImplementation(() => {
+          return new Promise((resolve, reject) => {
+            // Establecemos un tiempo de espera tras el cual la promise se rechaza
+            setTimeout(() => {
+              reject({
+                response: { data: {} },
+              });
+            }, 300);
+          });
+        }),
+      };
+      const { queryByText } = setupForSubmit({ actions });
+      fireEvent.click(button);
+
+      const spinner = queryByText('Loading...');
+      await waitForElementToBeRemoved(spinner);
+
+      expect(spinner).not.toBeInTheDocument();
+    });
   });
 });
 
 // Por qué añadimos esto:
 // Hay un error con los tests. Realmente no afecta a su resultado, pero sale en la consola.
-// Indica que no se puede realizar una actualización del state de React sobre un componente que esta unmounted y
+// Indica que no se puede realizar una actualización del state de React sobre un componente que esta desmontado y
 //  cuando el test ha terminado.
 // Este problema aparece en test en los que montamos y desmontamos componentes en un lapso de tiempo muy corto.
 // Si vamos a UserSignupPage, vemos que estamos actualizando el state tras acabar la llamada a la API:
