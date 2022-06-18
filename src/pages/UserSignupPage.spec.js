@@ -195,5 +195,19 @@ describe('UserSignUpPage', () => {
       // Para corregir esto, necesitamos conocer el progreso de nuestra petición
       expect(actions.postSignup).toHaveBeenCalledTimes(1);
     });
+
+    it('displays spinner when there is an ongoing api call', () => {
+      const actions = {
+        postSignup: mockAsyncDelayed(),
+      };
+      const { queryByText } = setupForSubmit({ actions });
+      fireEvent.click(button);
+
+      // De nuestro texto buscamos Loading... para saber que esta el spinner.
+      // Este texto viene del spinner de Bootstrap
+      // https://getbootstrap.com/docs/4.3/components/spinners/
+      const spinner = queryByText('Loading...');
+      expect(spinner).toBeInTheDocument();
+    });
   });
 });

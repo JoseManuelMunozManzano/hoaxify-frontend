@@ -1,6 +1,6 @@
 // Se va a usar la nomenclatura siguiente:
-// component.spec.js     este para el componente
-// component.test.js     este para los tests del componente
+// component.js          este para el componente
+// component.spec.js     este para los tests del componente
 //
 // NOTA: También se podría haber creado un folder llamado __tests__ y meter los tests ahí.
 //
@@ -19,6 +19,7 @@ export class UserSignUpPage extends React.Component {
     username: '',
     password: '',
     passwordRepeat: '',
+    pendingApiCall: false,
   };
 
   onChangeDisplayName = (event) => {
@@ -59,6 +60,7 @@ export class UserSignUpPage extends React.Component {
       displayName: this.state.displayName,
       password: this.state.password,
     };
+    this.setState({ pendingApiCall: true });
     this.props.actions.postSignup(user);
   };
 
@@ -109,7 +111,7 @@ export class UserSignUpPage extends React.Component {
         </div>
 
         <div className="text-center">
-          <button className="btn btn-primary" onClick={this.onClickSignup}>
+          <button className="btn btn-primary" onClick={this.onClickSignup} disabled={this.state.pendingApiCall}>
             Sign Up
           </button>
         </div>
@@ -118,7 +120,6 @@ export class UserSignUpPage extends React.Component {
   }
 }
 
-// Props por defecto si llamamos sin alguno de ellos
 UserSignUpPage.defaultProps = {
   actions: {
     postSignup: () =>
