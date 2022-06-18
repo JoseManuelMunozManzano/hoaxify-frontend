@@ -112,6 +112,11 @@ export class UserSignUpPage extends React.Component {
 
         <div className="text-center">
           <button className="btn btn-primary" onClick={this.onClickSignup} disabled={this.state.pendingApiCall}>
+            {this.state.pendingApiCall && (
+              <div className="spinner-border text-light spinner-border-sm mr-sm-1" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+            )}
             Sign Up
           </button>
         </div>
