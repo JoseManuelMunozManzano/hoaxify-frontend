@@ -84,6 +84,7 @@ export class UserSignUpPage extends React.Component {
         <h1 className="text-center">Sign Up</h1>
         <div className="col-12 mb-3">
           <label>Display Name</label>
+          {/* Para que se vea el error hace falta añadir el className is-invalid, porque así funciona Bootstrap */}
           <input
             className="form-control"
             placeholder="Your display name"
