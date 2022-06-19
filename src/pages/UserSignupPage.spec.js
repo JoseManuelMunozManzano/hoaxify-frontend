@@ -250,6 +250,28 @@ describe('UserSignUpPage', () => {
 
       expect(spinner).not.toBeInTheDocument();
     });
+
+    it('displays validation error for displayName when error is received for the field.', async () => {
+      // En este momento no necesitamos un objeto de error completo
+      // Solo nos enfocamos en errores de validación.
+      const actions = {
+        postSignup: jest.fn().mockRejectedValue({
+          response: {
+            data: {
+              validationErrors: {
+                displayName: 'Cannot be null',
+              },
+            },
+          },
+        }),
+      };
+
+      const { findByText } = setupForSubmit({ actions });
+      fireEvent.click(button);
+
+      const errorMessage = await findByText('Cannot be null');
+      expect(errorMessage).toBeInTheDocument();
+    });
   });
 });
 
