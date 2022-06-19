@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, screen, fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
 
 import { UserSignUpPage } from './UserSignupPage';
 
