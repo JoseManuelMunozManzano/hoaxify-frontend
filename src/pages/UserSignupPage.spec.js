@@ -250,7 +250,7 @@ describe('UserSignUpPage', () => {
       expect(spinner).not.toBeInTheDocument();
     });
 
-    it('displays validation error for displayName when error is received for the field.', async () => {
+    it('displays validation error for displayName when error is received for the field', async () => {
       // En este momento no necesitamos un objeto de error completo
       // Solo nos enfocamos en errores de validación.
       const actions = {
@@ -270,6 +270,106 @@ describe('UserSignUpPage', () => {
 
       const errorMessage = await findByText('Cannot be null');
       expect(errorMessage).toBeInTheDocument();
+    });
+
+    it('enables the signup button when password and repeat password have same value', () => {
+      setupForSubmit();
+      expect(button).not.toBeDisabled();
+    });
+
+    it('disables the signup button when password repeat does not match to password', () => {
+      setupForSubmit();
+      fireEvent.change(passwordRepeat, changeEvent('new-pass'));
+      expect(button).toBeDisabled();
+    });
+
+    it('disables the signup button when password does not match to password repeat', () => {
+      setupForSubmit();
+      fireEvent.change(passwordInput, changeEvent('new-pass'));
+      expect(button).toBeDisabled();
+    });
+
+    it('displays error style for password repeat input when password repeat mismatch', () => {
+      const { queryByText } = setupForSubmit();
+      fireEvent.change(passwordRepeat, changeEvent('new-pass'));
+      const mismatchWarning = queryByText('Does not match to password');
+      expect(mismatchWarning).toBeInTheDocument();
+    });
+
+    it('displays error style for password repeat input when password input mismatch', () => {
+      const { queryByText } = setupForSubmit();
+      fireEvent.change(passwordInput, changeEvent('new-pass'));
+      const mismatchWarning = queryByText('Does not match to password');
+      expect(mismatchWarning).toBeInTheDocument();
+    });
+
+    it('hides the validation error when user changes the content of displayName', async () => {
+      const actions = {
+        postSignup: jest.fn().mockRejectedValue({
+          response: {
+            data: {
+              validationErrors: {
+                displayName: 'Cannot be null',
+              },
+            },
+          },
+        }),
+      };
+
+      const { findByText } = setupForSubmit({ actions });
+      fireEvent.click(button);
+      await findByText('Cannot be null');
+
+      fireEvent.change(displayNameInput, changeEvent('name updated'));
+      const errorMessage = screen.queryByText('Cannot be null');
+
+      expect(errorMessage).not.toBeInTheDocument();
+    });
+
+    it('hides the validation error when user changes the content of username', async () => {
+      const actions = {
+        postSignup: jest.fn().mockRejectedValue({
+          response: {
+            data: {
+              validationErrors: {
+                username: 'Username cannot be null',
+              },
+            },
+          },
+        }),
+      };
+
+      const { findByText } = setupForSubmit({ actions });
+      fireEvent.click(button);
+      await findByText('Username cannot be null');
+
+      fireEvent.change(usernameInput, changeEvent('name updated'));
+      const errorMessage = screen.queryByText('Username cannot be null');
+
+      expect(errorMessage).not.toBeInTheDocument();
+    });
+
+    it('hides the validation error when user changes the content of password', async () => {
+      const actions = {
+        postSignup: jest.fn().mockRejectedValue({
+          response: {
+            data: {
+              validationErrors: {
+                password: 'Cannot be null',
+              },
+            },
+          },
+        }),
+      };
+
+      const { findByText } = setupForSubmit({ actions });
+      fireEvent.click(button);
+      await findByText('Cannot be null');
+
+      fireEvent.change(passwordInput, changeEvent('updated-password'));
+      const errorMessage = screen.queryByText('Cannot be null');
+
+      expect(errorMessage).not.toBeInTheDocument();
     });
   });
 });
