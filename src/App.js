@@ -1,4 +1,5 @@
 import { UserSignUpPage } from './pages/UserSignupPage';
+import { LoginPage } from './pages/LoginPage';
 import * as apiCalls from './api/apiCalls';
 
 // Para pasar la función sign-up como un prop a UserSignupPage
@@ -9,7 +10,8 @@ const actions = {
 };
 
 function App() {
-  return <UserSignUpPage actions={actions} />;
+  // return <UserSignUpPage actions={actions} />;
+  return <LoginPage />;
 }
 
 export default App;
