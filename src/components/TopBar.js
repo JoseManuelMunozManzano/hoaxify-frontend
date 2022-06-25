@@ -1,5 +1,6 @@
 import React from 'react';
 import logo from '../assets/hoaxify-logo.png';
+import { Link } from 'react-router-dom';
 
 class TopBar extends React.Component {
   render() {
@@ -11,10 +12,21 @@ class TopBar extends React.Component {
               1. Envolver la imagen con el tag <a> y establecer href con el valor que queremos.
                   Como usamos HashRouter nuestros links van con prefijo #. Si pulsamos el logo,
                   nuestra página se recarga porque nuestro link no esta hasheado y el browser
-                  envía esta petición url que hace que nuestra aplicación se recargue. */}
-            <a href="/">
+                  envía esta petición url que hace que nuestra aplicación se recargue. 
+
+              2. Se añade # a nuestro link. Esto hace que el test falle porque se espera que
+                href sera "/", no "#/", pero cuando pulsamos en nuestro icono nuestra app
+                no se recarga. Este es el comportamiento que queremos.
+                Para que nuestro test pase, ReactRouter viene con una solución, esto es,
+                el componente <Link />.
+                Básicamente crea por nosotros el correspondiente link basado en el comportamiento
+                de root de nuestro cliente. 
+                Sustituimos <a> por <Link> y "#/" por "/"
+                Esto da error en la consola: You should not use <Link> outside a <Router> 
+                En el navegador no se ve ese error porque TopBar esta en App que esta en Router. */}
+            <Link to="/">
               <img src={logo} width="60" alt="Hoaxify" />
-            </a>
+            </Link>
           </nav>
         </div>
       </div>
