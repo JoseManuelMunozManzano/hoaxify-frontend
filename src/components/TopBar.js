@@ -22,7 +22,7 @@ class TopBar extends React.Component {
                 Básicamente crea por nosotros el correspondiente link basado en el comportamiento
                 de root de nuestro cliente. 
                 Sustituimos <a> por <Link> y "#/" por "/"
-                Esto da error en la consola: You should not use <Link> outside a <Router> 
+                Esto da error de test, en la consola: You should not use <Link> outside a <Router> 
                 En el navegador no se ve ese error porque TopBar esta en App que esta en Router. */}
             <Link to="/">
               <img src={logo} width="60" alt="Hoaxify" />
