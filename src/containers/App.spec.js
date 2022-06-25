@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import App from './App';
 
@@ -58,5 +58,28 @@ describe('App', () => {
     const { container } = setup('/user1');
     const navigation = container.querySelector('nav');
     expect(navigation).toBeInTheDocument();
+  });
+
+  it('shows the UserSignupPage when clicking signup', () => {
+    const { queryByText, container } = setup('/');
+    const signupLink = screen.queryByText('Sign Up');
+    fireEvent.click(signupLink);
+    const header = container.querySelector('h1');
+    expect(header).toHaveTextContent('Sign Up');
+  });
+
+  it('shows the LoginPage when clicking login', () => {
+    const { queryByText, container } = setup('/');
+    const loginLink = screen.queryByText('Login');
+    fireEvent.click(loginLink);
+    const header = container.querySelector('h1');
+    expect(header).toHaveTextContent('Login');
+  });
+
+  it('shows the HomePage when clicking logo', () => {
+    const { getByTestId, container } = setup('/login');
+    const logo = container.querySelector('img');
+    fireEvent.click(logo);
+    expect(screen.getByTestId('homepage')).toBeInTheDocument();
   });
 });
