@@ -1,26 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-
-// En test usamos MemoryRouter, pero en nuestra app usaremos HashRouter
-// Añade # a nuestras urls
-// Por ejemplo, para login será: localhost:3000/#/login
-//
-// También existe BrowserRouter. No hace falta añadir el hash (#)
-// Luce mejor, pero requiere también implementación en la parte back-end
 import { HashRouter } from 'react-router-dom';
+
+// Si vamos a Chrome, herramientas de desarrollador (F12), tab Components de React y LoginPage,
+// veremos que hay nuevas props.
+// Antes teníamos solo la propiedad actions
+// Ahora también tenemos history, location y match
+// Estos props los proporciona React Router.
+// Para confirmarlo importamos LoginPage y la renderizamos.
+// Ahora vemos solo el prop actions.
+import LoginPage from './pages/LoginPage';
 
 import App from './containers/App';
 import * as apiCalls from './api/apiCalls';
 
 const actions = {
-  // postSignup: apiCalls.signup,
   postLogin: apiCalls.login,
 };
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <HashRouter>
-    <App />
+    <LoginPage />
   </HashRouter>
 );
