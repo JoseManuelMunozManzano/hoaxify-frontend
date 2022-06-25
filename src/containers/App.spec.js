@@ -38,4 +38,25 @@ describe('App', () => {
     const { getByTestId } = setup('/user1');
     expect(screen.getByTestId('userpage')).toBeInTheDocument();
   });
+
+  it('displays topBar when url is /', () => {
+    const { container } = setup('/');
+    const navigation = container.querySelector('nav');
+    expect(navigation).toBeInTheDocument();
+  });
+  it('displays topBar when url is /login', () => {
+    const { container } = setup('/login');
+    const navigation = container.querySelector('nav');
+    expect(navigation).toBeInTheDocument();
+  });
+  it('displays topBar when url is /signup', () => {
+    const { container } = setup('/signup');
+    const navigation = container.querySelector('nav');
+    expect(navigation).toBeInTheDocument();
+  });
+  it('displays topBar when url is /user1', () => {
+    const { container } = setup('/user1');
+    const navigation = container.querySelector('nav');
+    expect(navigation).toBeInTheDocument();
+  });
 });
