@@ -1,4 +1,4 @@
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import HomePage from '../pages/HomePage';
 import LoginPage from '../pages/LoginPage';
 
@@ -6,8 +6,12 @@ function App() {
   return (
     <div>
       <div className="container">
-        <Route path="/" component={HomePage} />
-        <Route path="/login" component={LoginPage} />
+        <Switch>
+          {/* Para que encuentre correctamente los paths hay 2 posibilidades:
+            1. Ordenar los paths */}
+          <Route path="/login" component={LoginPage} />
+          <Route path="/" component={HomePage} />
+        </Switch>
       </div>
     </div>
   );

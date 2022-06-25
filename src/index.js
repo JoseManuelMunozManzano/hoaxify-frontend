@@ -2,12 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 
-import LoginPage from './pages/LoginPage';
+// En test usamos MemoryRouter, pero en nuestra app usaremos HashRouter
+// Añade # a nuestras urls
+// Por ejemplo, para login será: localhost:3000/#/login
+//
+// También existe BrowserRouter. No hace falta añadir el hash (#)
+// Luce mejor, pero requiere también implementación en la parte back-end
+import { HashRouter } from 'react-router-dom';
+
+import App from './containers/App';
 import * as apiCalls from './api/apiCalls';
 
-// Para pasar la función sign-up como un prop a UserSignupPage
-// Esto no quedará en producción, es solo con propósito de pruebas.
-// Esto lo hacemos aquí porque más tarde vamos a meter Redux y se dispararán las acciones de Sign Up a través de el.
 const actions = {
   // postSignup: apiCalls.signup,
   postLogin: apiCalls.login,
@@ -15,6 +20,7 @@ const actions = {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  // <UserSignUpPage actions={actions} />;
-  <LoginPage actions={actions} />
+  <HashRouter>
+    <App />
+  </HashRouter>
 );

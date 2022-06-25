@@ -21,4 +21,10 @@ describe('App', () => {
     const header = container.querySelector('h1');
     expect(header).toHaveTextContent('Login');
   });
+
+  // Para evitar path parciales. Por ejemplo, /login y /homepage parten ambos de /
+  it('displays only LoginPage when url is /login', () => {
+    const { queryByTestId } = setup('/login');
+    expect(screen.queryByTestId('homepage')).not.toBeInTheDocument();
+  });
 });
