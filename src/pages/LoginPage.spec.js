@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, queryByText, waitForElementToBeRemoved } from '@testing-library/react';
+import { render, screen, fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
 import { LoginPage } from './LoginPage';
 
 describe('LoginPage', () => {
@@ -242,6 +242,26 @@ describe('LoginPage', () => {
       await waitForElementToBeRemoved(spinner);
 
       expect(spinner).not.toBeInTheDocument();
+    });
+
+    it('redirects to homePage after successful login', async () => {
+      const actions = {
+        // En la página login no revisamos la respuesta, por eso el Json vacío
+        postLogin: jest.fn().mockResolvedValue({}),
+      };
+
+      // property que viene de React Router.
+      const history = {
+        push: jest.fn(),
+      };
+
+      const { queryByText } = setupForSubmit({ actions, history });
+      fireEvent.click(button);
+
+      const spinner = queryByText('Loading...');
+      await waitForElementToBeRemoved(spinner);
+
+      expect(history.push).toHaveBeenCalledWith('/');
     });
   });
 });

@@ -3,6 +3,11 @@ import HomePage from '../pages/HomePage';
 import LoginPage from '../pages/LoginPage';
 import UserSignupPage from '../pages/UserSignupPage';
 import UserPage from '../pages/UserPage';
+import * as apiCalls from '../api/apiCalls';
+
+const actions = {
+  postLogin: apiCalls.login,
+};
 
 function App() {
   // Hay un problema potencial con este routing interno.
@@ -20,12 +25,9 @@ function App() {
     <div>
       <div className="container">
         <Switch>
-          {/* Para que encuentre correctamente los paths hay 2 posibilidades:
-            1. Ordenar los paths
-            2. Usar la propiedad exact. Se usa cuando queremos que el componente sea visible
-                si se cumple el path concreto */}
           <Route exact path="/" component={HomePage} />
-          <Route path="/login" component={LoginPage} />
+          {/* En estos props va history, location y match */}
+          <Route path="/login" component={(props) => <LoginPage {...props} actions={actions} />} />
           <Route path="/signup" component={UserSignupPage} />
           {/* Path dinámico usando : */}
           <Route path="/:username" component={UserPage} />
