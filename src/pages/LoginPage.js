@@ -1,4 +1,5 @@
 import React from 'react';
+import ButtonWithProgress from '../components/ButtonWithProgress';
 import Input from '../components/Input';
 
 export class LoginPage extends React.Component {
@@ -6,6 +7,7 @@ export class LoginPage extends React.Component {
     username: '',
     password: '',
     apiError: undefined,
+    pendingApiCall: false,
   };
 
   onChangeUsername = (event) => {
@@ -29,11 +31,19 @@ export class LoginPage extends React.Component {
       username: this.state.username,
       password: this.state.password,
     };
-    this.props.actions.postLogin(body).catch((error) => {
-      if (error.response) {
-        this.setState({ apiError: error.response.data.message });
-      }
-    });
+
+    this.setState({ pendingApiCall: true });
+
+    this.props.actions
+      .postLogin(body)
+      .then((response) => {
+        this.setState({ pendingApiCall: false });
+      })
+      .catch((error) => {
+        if (error.response) {
+          this.setState({ apiError: error.response.data.message, pendingApiCall: false });
+        }
+      });
   };
 
   render() {
@@ -73,9 +83,12 @@ export class LoginPage extends React.Component {
         )}
 
         <div className="text-center">
-          <button className="btn btn-primary" onClick={this.onClickLogin} disabled={disableSubmit}>
-            Login
-          </button>
+          <ButtonWithProgress
+            onClick={this.onClickLogin}
+            disabled={disableSubmit || this.state.pendingApiCall}
+            text="Login"
+            pendingApiCall={this.state.pendingApiCall}
+          />
         </div>
       </div>
     );

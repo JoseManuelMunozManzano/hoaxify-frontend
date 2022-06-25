@@ -10,6 +10,7 @@
 // it     La que vamos a usar
 
 import React from 'react';
+import ButtonWithProgress from '../components/ButtonWithProgress';
 import Input from '../components/Input';
 
 // Statefull compoennt. No se usan hooks
@@ -155,18 +156,12 @@ export class UserSignUpPage extends React.Component {
         </div>
 
         <div className="text-center">
-          <button
-            className="btn btn-primary"
+          <ButtonWithProgress
             onClick={this.onClickSignup}
             disabled={this.state.pendingApiCall || !this.state.passwordRepeatConfirmed}
-          >
-            {this.state.pendingApiCall && (
-              <div className="spinner-border text-light spinner-border-sm mr-sm-1" role="status">
-                <span className="sr-only">Loading...</span>
-              </div>
-            )}
-            Sign Up
-          </button>
+            pendingApiCall={this.state.pendingApiCall}
+            text="Sign Up"
+          />
         </div>
       </div>
     );
