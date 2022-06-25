@@ -7,6 +7,7 @@ import * as apiCalls from '../api/apiCalls';
 
 const actions = {
   postLogin: apiCalls.login,
+  postSignup: apiCalls.signup,
 };
 
 function App() {
@@ -28,7 +29,7 @@ function App() {
           <Route exact path="/" component={HomePage} />
           {/* En estos props va history, location y match */}
           <Route path="/login" component={(props) => <LoginPage {...props} actions={actions} />} />
-          <Route path="/signup" component={UserSignupPage} />
+          <Route path="/signup" component={(props) => <UserSignupPage {...props} actions={actions} />} />
           {/* Path dinámico usando : */}
           <Route path="/:username" component={UserPage} />
         </Switch>

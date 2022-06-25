@@ -371,6 +371,26 @@ describe('UserSignUpPage', () => {
 
       expect(errorMessage).not.toBeInTheDocument();
     });
+
+    it('redirects to homePage after successful signup', async () => {
+      const actions = {
+        // En la página login no revisamos la respuesta, por eso el Json vacío
+        postSignup: jest.fn().mockResolvedValue({}),
+      };
+
+      // property que viene de React Router.
+      const history = {
+        push: jest.fn(),
+      };
+
+      const { queryByText } = setupForSubmit({ actions, history });
+      fireEvent.click(button);
+
+      const spinner = queryByText('Loading...');
+      await waitForElementToBeRemoved(spinner);
+
+      expect(history.push).toHaveBeenCalledWith('/');
+    });
   });
 });
 
