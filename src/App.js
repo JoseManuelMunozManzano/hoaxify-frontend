@@ -6,12 +6,13 @@ import * as apiCalls from './api/apiCalls';
 // Esto no quedará en producción, es solo con propósito de pruebas.
 // Esto lo hacemos aquí porque más tarde vamos a meter Redux y se dispararán las acciones de Sign Up a través de el.
 const actions = {
-  postSignup: apiCalls.signup,
+  // postSignup: apiCalls.signup,
+  postLogin: apiCalls.login,
 };
 
 function App() {
   // return <UserSignUpPage actions={actions} />;
-  return <LoginPage />;
+  return <LoginPage actions={actions} />;
 }
 
 export default App;
