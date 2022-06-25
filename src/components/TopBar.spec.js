@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import TopBar from './TopBar';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -25,6 +25,18 @@ describe('TopBar', () => {
       const { container } = setup();
       const image = container.querySelector('img');
       expect(image.parentElement.getAttribute('href')).toBe('/');
+    });
+
+    it('has link to signup', () => {
+      const { queryByText } = setup();
+      const signupLink = screen.queryByText('Sign Up');
+      expect(signupLink.getAttribute('href')).toBe('/signup');
+    });
+
+    it('has link to login', () => {
+      const { queryByText } = setup();
+      const loginLink = screen.queryByText('Login');
+      expect(loginLink.getAttribute('href')).toBe('/login');
     });
   });
 });

@@ -24,9 +24,22 @@ class TopBar extends React.Component {
                 Sustituimos <a> por <Link> y "#/" por "/"
                 Esto da error de test, en la consola: You should not use <Link> outside a <Router> 
                 En el navegador no se ve ese error porque TopBar esta en App que esta en Router. */}
-            <Link to="/">
-              <img src={logo} width="60" alt="Hoaxify" />
+            <Link to="/" className="navbar-brand">
+              <img src={logo} width="60" alt="Hoaxify" /> Hoaxify
             </Link>
+            <ul className="nav navbar-nav ml-auto">
+              <li className="nav-item">
+                <Link to="/signup" className="nav-link">
+                  Sign Up
+                </Link>
+              </li>
+
+              <li className="nav-item">
+                <Link to="/login" className="nav-link">
+                  Login
+                </Link>
+              </li>
+            </ul>
           </nav>
         </div>
       </div>
