@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import TopBar from './TopBar';
 import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
@@ -77,6 +77,18 @@ describe('TopBar', () => {
       const profileLink = screen.queryByText('My Profile');
       // Es user1 porque en loggedInState hemos puesto ese valor a username
       expect(profileLink.getAttribute('href')).toBe('/user1');
+    });
+  });
+
+  describe('Interactions', () => {
+    it('displays the login and signup links when user clicks logout', () => {
+      const { queryByText } = setup(loggedInState);
+      const logoutLink = screen.queryByText('Logout');
+      fireEvent.click(logoutLink);
+
+      // Podemos probar Login y SignUp, pero con uno es suficiente
+      const loginLink = screen.queryByText('Login');
+      expect(loginLink).toBeInTheDocument();
     });
   });
 });
