@@ -7,11 +7,25 @@ import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import authReducer from './redux/authReducer';
 
+// Para hacer prueba:
+// Si vamos a Chrome, Herramientas de Desarrolladores, Components, y nos posicionamos en
+// TopBar veremos en nuestros props user con los valores.
+// Si cambiamos el valor de isLoggedIn de true a false, vemos como el Layout se actualiza
+// y vuelve a aparecer SignUP y Login.
+const loggedInState = {
+  id: 1,
+  username: 'user1',
+  displayName: 'display1',
+  image: 'profile1.png',
+  password: 'P4ssword',
+  isLoggedIn: true,
+};
+
 // Vamos a usar Redux para mantener el estado de nuestra autenticación
 // En una app Redux, solo podemos tener un store, y este es responsable de mantener el estado
 // de la aplicación.
 // El estado se actualiza cuando se despachan funciones.
-const store = createStore(authReducer);
+const store = createStore(authReducer, loggedInState);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
