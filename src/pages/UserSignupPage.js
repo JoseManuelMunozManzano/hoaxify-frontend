@@ -12,6 +12,7 @@
 import React from 'react';
 import ButtonWithProgress from '../components/ButtonWithProgress';
 import Input from '../components/Input';
+import { connect } from 'react-redux';
 
 // Statefull compoennt. No se usan hooks
 // Incluimos aquí el export para nuestros tests
@@ -88,14 +89,44 @@ export class UserSignUpPage extends React.Component {
       password: this.state.password,
     };
     this.setState({ pendingApiCall: true });
-    // Como es un promise, manejamos la condición resolve.
-    // Por ahora solo actualizamos el state
     this.props.actions
       .postSignup(user)
       .then((response) => {
-        this.setState({ pendingApiCall: false }, () => {
-          this.props.history.push('/');
-        });
+        // Con esto funciona en el navegador (no pasa el test por temas de configuración)
+        // Hemos introducido aquí responsabilidad relacionada con LoginPage
+        // Pero esta mal porque esto es la página SignUp y no debería importarle como se maneja
+        // el login.
+        const body = {
+          username: this.state.username,
+          password: this.state.password,
+        };
+
+        this.setState({ pendingApiCall: true });
+
+        this.props.actions
+          .postLogin(body)
+          .then((response) => {
+            const action = {
+              type: 'login-success',
+              payload: {
+                ...response.data,
+                password: this.state.password,
+              },
+            };
+            this.props.dispatch(action);
+            this.setState({ pendingApiCall: false }, () => {
+              this.props.history.push('/');
+            });
+          })
+          .catch((error) => {
+            if (error.response) {
+              this.setState({ apiError: error.response.data.message, pendingApiCall: false });
+            }
+          });
+
+        // this.setState({ pendingApiCall: false }, () => {
+        //   this.props.history.push('/');
+        // });
       })
       .catch((apiError) => {
         let errors = { ...this.state.errors };
@@ -183,4 +214,4 @@ UserSignUpPage.defaultProps = {
 };
 
 // Este export es para Redux, más adelante
-export default UserSignUpPage;
+export default connect()(UserSignUpPage);
