@@ -3,6 +3,7 @@ import { createStore, applyMiddleware } from 'redux';
 import authReducer from './authReducer';
 import logger from 'redux-logger';
 import thunk from 'redux-thunk';
+import * as apiCalls from '../api/apiCalls';
 
 const configureStore = (addLogger = true) => {
   // Miramos si tenemos el id de usuario en localStorage
@@ -19,6 +20,7 @@ const configureStore = (addLogger = true) => {
   if (localStorageData) {
     try {
       persistedState = JSON.parse(localStorageData);
+      apiCalls.setAuthorizationHeader(persistedState);
     } catch (error) {}
   }
 
@@ -28,6 +30,7 @@ const configureStore = (addLogger = true) => {
   // Se le llamará cuando algo cambie en nuestro store de Redux
   store.subscribe(() => {
     localStorage.setItem('hoax-auth', JSON.stringify(store.getState()));
+    apiCalls.setAuthorizationHeader(store.getState());
   });
 
   return store;

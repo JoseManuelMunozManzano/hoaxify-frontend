@@ -4,10 +4,12 @@ import App from './App';
 import { Provider } from 'react-redux';
 import axios from 'axios';
 import configureStore from '../redux/configureStore';
+import { Buffer } from 'buffer';
 
 // Para evitar problemas de datos cargados en LocalStorage, los vamos a limpiar antes de cada test
 beforeEach(() => {
   localStorage.clear();
+  delete axios.defaults.headers.common['Authorization'];
 });
 
 const setup = (path) => {
@@ -214,5 +216,77 @@ describe('App', () => {
     const { queryByText } = setup('/');
     const myProfileLink = screen.queryByText('My Profile');
     expect(myProfileLink).toBeInTheDocument();
+  });
+
+  it('sets axios authorization with base64 encoded user credentials after login success', async () => {
+    const { container } = setup('/login');
+
+    const usernameInput = screen.queryByPlaceholderText('Your username');
+    fireEvent.change(usernameInput, changeEvent('user1'));
+    const passwordInput = screen.queryByPlaceholderText('Your password');
+    fireEvent.change(passwordInput, changeEvent('P4ssword'));
+    const button = container.querySelector('button');
+
+    axios.post = jest.fn().mockResolvedValue({
+      data: {
+        id: 1,
+        username: 'user1',
+        displayName: 'display1',
+        image: 'profile1.png',
+      },
+    });
+
+    fireEvent.click(button);
+
+    await screen.findByText('My Profile');
+
+    // La cabecera Authorization tendrá las credenciales del usuario codificadas en Base64
+    const axiosAuthorization = axios.defaults.headers.common['Authorization'];
+    const encoded = Buffer.from('user1:P4ssword').toString('base64');
+    const expectedAuthorization = `Basic ${encoded}`;
+    expect(axiosAuthorization).toBe(expectedAuthorization);
+  });
+
+  it('sets axios authorization with base64 encoded user credentials when storage has logged in user data', () => {
+    localStorage.setItem(
+      'hoax-auth',
+      JSON.stringify({
+        id: 1,
+        username: 'user1',
+        displayName: 'display1',
+        image: 'profile1.png',
+        password: 'P4ssword',
+        isLoggedIn: true,
+      })
+    );
+
+    setup('/');
+    // La cabecera Authorization tendrá las credenciales del usuario codificadas en Base64
+    const axiosAuthorization = axios.defaults.headers.common['Authorization'];
+    const encoded = Buffer.from('user1:P4ssword').toString('base64');
+    const expectedAuthorization = `Basic ${encoded}`;
+    expect(axiosAuthorization).toBe(expectedAuthorization);
+  });
+
+  it('removes axios authorization header when user logout', () => {
+    localStorage.setItem(
+      'hoax-auth',
+      JSON.stringify({
+        id: 1,
+        username: 'user1',
+        displayName: 'display1',
+        image: 'profile1.png',
+        password: 'P4ssword',
+        isLoggedIn: true,
+      })
+    );
+
+    const { queryByText } = setup('/');
+    fireEvent.click(screen.queryByText('Logout'));
+
+    // La cabecera Authorization tendrá las credenciales del usuario codificadas en Base64
+    const axiosAuthorization = axios.defaults.headers.common['Authorization'];
+    // toBeFalsy() indica que es null o undefined
+    expect(axiosAuthorization).toBeFalsy();
   });
 });
