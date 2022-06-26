@@ -29,3 +29,24 @@ export const loginHandler = (credentials) => {
     });
   };
 };
+
+export const signupHandler = (user) => {
+  return function (dispatch) {
+    return apiCalls.signup(user).then((response) => {
+      return dispatch(loginHandler(user));
+      // Este return estaba mal.
+      //
+      // Tras el hacer el submit de la petición de signup, redireccionamos a homepage, pero
+      // nuestro TopBar se actualiza al layout login cuando la petición login se resuelve con éxito.
+      // Como hay otra llamada a la API en progreso (la del login), debemos esperar a que se
+      // resuelva antes de redirigir a homepage
+      // Con la solución, la página se redirige a homepage cuando ambas llamadas, signup y login
+      // han termninado.
+      //
+      // En definitiva, mucho cuidado y poner el return en el dispatch porque si se hace después
+      // se está haciendo el return sin que haya terminado de resolverse ese dispatch.
+      //
+      // return response;
+    });
+  };
+};

@@ -13,6 +13,7 @@ import React from 'react';
 import ButtonWithProgress from '../components/ButtonWithProgress';
 import Input from '../components/Input';
 import { connect } from 'react-redux';
+import * as authActions from '../redux/authActions';
 
 // Statefull compoennt. No se usan hooks
 // Incluimos aquí el export para nuestros tests
@@ -92,43 +93,12 @@ export class UserSignUpPage extends React.Component {
     this.props.actions
       .postSignup(user)
       .then((response) => {
-        // Con esto funciona en el navegador (no pasa el test por temas de configuración)
-        // Hemos introducido aquí responsabilidad relacionada con LoginPage
-        // Pero esta mal porque esto es la página SignUp y no debería importarle como se maneja
-        // el login.
-        const body = {
-          username: this.state.username,
-          password: this.state.password,
-        };
-
-        this.setState({ pendingApiCall: true });
-
-        this.props.actions
-          .postLogin(body)
-          .then((response) => {
-            const action = {
-              type: 'login-success',
-              payload: {
-                ...response.data,
-                password: this.state.password,
-              },
-            };
-            this.props.dispatch(action);
-            this.setState({ pendingApiCall: false }, () => {
-              this.props.history.push('/');
-            });
-          })
-          .catch((error) => {
-            if (error.response) {
-              this.setState({ apiError: error.response.data.message, pendingApiCall: false });
-            }
-          });
-
-        // this.setState({ pendingApiCall: false }, () => {
-        //   this.props.history.push('/');
-        // });
+        this.setState({ pendingApiCall: false }, () => {
+          this.props.history.push('/');
+        });
       })
       .catch((apiError) => {
+        // console.log(JSON.stringify(apiError.response.data));
         let errors = { ...this.state.errors };
         if (apiError.response.data && apiError.response.data.validationErrors) {
           errors = { ...apiError.response.data.validationErrors };
@@ -213,5 +183,12 @@ UserSignUpPage.defaultProps = {
   },
 };
 
-// Este export es para Redux, más adelante
-export default connect()(UserSignUpPage);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    actions: {
+      postSignup: (user) => dispatch(authActions.signupHandler(user)),
+    },
+  };
+};
+
+export default connect(null, mapDispatchToProps)(UserSignUpPage);
