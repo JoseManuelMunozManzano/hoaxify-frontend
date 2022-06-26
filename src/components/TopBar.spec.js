@@ -26,8 +26,9 @@ const defaultState = {
 
 // Para evitar el error: You should not use <Link> outside a <Router>
 // Se añade Redux
-const setup = () => {
-  const store = createStore(authReducer);
+// Se añade state. Como no todos los tests llaman a setup con parámetro se pone un valor por defecto
+const setup = (state = defaultState) => {
+  const store = createStore(authReducer, state);
 
   return render(
     <Provider store={store}>
@@ -63,6 +64,12 @@ describe('TopBar', () => {
       const { queryByText } = setup();
       const loginLink = screen.queryByText('Login');
       expect(loginLink.getAttribute('href')).toBe('/login');
+    });
+
+    it('has link to logout when user logged in', () => {
+      const { queryByText } = setup(loggedInState);
+      const logoutLink = screen.queryByText('Logout');
+      expect(logoutLink).toBeInTheDocument();
     });
   });
 });
