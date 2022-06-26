@@ -1,6 +1,7 @@
 import React from 'react';
 import ButtonWithProgress from '../components/ButtonWithProgress';
 import Input from '../components/Input';
+import { connect } from 'react-redux';
 
 export class LoginPage extends React.Component {
   state = {
@@ -37,7 +38,16 @@ export class LoginPage extends React.Component {
     this.props.actions
       .postLogin(body)
       .then((response) => {
-        // Cuando se completa el setState se ejecuta el callback
+        // Recordar que en nuestro backend deshabilitamos el envío del password.
+        // To-dos los otros datos vienen del backend
+        const action = {
+          type: 'login-success',
+          payload: {
+            ...response.data,
+            password: this.state.password,
+          },
+        };
+        this.props.dispatch(action);
         this.setState({ pendingApiCall: false }, () => {
           this.props.history.push('/');
         });
@@ -105,6 +115,7 @@ LoginPage.defaultProps = {
   history: {
     push: () => {},
   },
+  dispatch: () => {},
 };
 
-export default LoginPage;
+export default connect()(LoginPage);
