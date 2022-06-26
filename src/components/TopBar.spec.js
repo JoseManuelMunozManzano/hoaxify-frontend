@@ -71,5 +71,12 @@ describe('TopBar', () => {
       const logoutLink = screen.queryByText('Logout');
       expect(logoutLink).toBeInTheDocument();
     });
+
+    it('has link to user profile when user logged in', () => {
+      const { queryByText } = setup(loggedInState);
+      const profileLink = screen.queryByText('My Profile');
+      // Es user1 porque en loggedInState hemos puesto ese valor a username
+      expect(profileLink.getAttribute('href')).toBe('/user1');
+    });
   });
 });
