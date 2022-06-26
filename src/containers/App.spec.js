@@ -5,6 +5,11 @@ import { Provider } from 'react-redux';
 import axios from 'axios';
 import configureStore from '../redux/configureStore';
 
+// Para evitar problemas de datos cargados en LocalStorage, los vamos a limpiar antes de cada test
+beforeEach(() => {
+  localStorage.clear();
+});
+
 const setup = (path) => {
   const store = configureStore(false);
 
@@ -155,6 +160,59 @@ describe('App', () => {
     fireEvent.click(button);
 
     const myProfileLink = await screen.findByText('My Profile');
+    expect(myProfileLink).toBeInTheDocument();
+  });
+
+  // Para solucionar el problema de reload cuando se hace login.
+  // Esta volviendo a mostrar Login y SignUp en TopBar. Para evitarlo se guardarán los datos
+  // en Local Storage
+  it('saves logged in user data to localStorage after login success', async () => {
+    const { container } = setup('/login');
+
+    const usernameInput = screen.queryByPlaceholderText('Your username');
+    fireEvent.change(usernameInput, changeEvent('user1'));
+    const passwordInput = screen.queryByPlaceholderText('Your password');
+    fireEvent.change(passwordInput, changeEvent('P4ssword'));
+    const button = container.querySelector('button');
+
+    axios.post = jest.fn().mockResolvedValue({
+      data: {
+        id: 1,
+        username: 'user1',
+        displayName: 'display1',
+        image: 'profile1.png',
+      },
+    });
+
+    fireEvent.click(button);
+
+    await screen.findByText('My Profile');
+    const dataInStorage = JSON.parse(localStorage.getItem('hoax-auth'));
+    expect(dataInStorage).toEqual({
+      id: 1,
+      username: 'user1',
+      displayName: 'display1',
+      image: 'profile1.png',
+      password: 'P4ssword',
+      isLoggedIn: true,
+    });
+  });
+
+  it('displays logged in topBar when storage has logged in user data', () => {
+    localStorage.setItem(
+      'hoax-auth',
+      JSON.stringify({
+        id: 1,
+        username: 'user1',
+        displayName: 'display1',
+        image: 'profile1.png',
+        password: 'P4ssword',
+        isLoggedIn: true,
+      })
+    );
+    // Realmente no importa la página que pongamos
+    const { queryByText } = setup('/');
+    const myProfileLink = screen.queryByText('My Profile');
     expect(myProfileLink).toBeInTheDocument();
   });
 });
