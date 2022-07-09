@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, fireEvent } from '@testing-library/react';
 import UserList from './UserList';
 import * as apiCalls from '../api/apiCalls';
 
@@ -81,6 +81,23 @@ const mockSuccessGetMultiPageFirst = {
   },
 };
 
+const mockSuccessGetMultiPageLast = {
+  data: {
+    content: [
+      {
+        username: 'user4',
+        displayName: 'display4',
+        image: '',
+      },
+    ],
+    number: 1, // estamos en la página 1
+    first: false, // no es la primera página
+    last: true, // es la última página
+    size: 3,
+    totalPages: 2,
+  },
+};
+
 describe('UserList', () => {
   describe('Layout', () => {
     it('has header of Users', () => {
@@ -124,6 +141,23 @@ describe('UserList', () => {
       apiCalls.listUsers = jest.fn().mockResolvedValue(mockedEmptySuccessResponse);
       setup();
       expect(apiCalls.listUsers).toHaveBeenCalledWith({ page: 0, size: 3 });
+    });
+  });
+
+  describe('Interactions', () => {
+    it('loads next page when clicked to next button', async () => {
+      // Cada vez queremos obtener respuestas distintas, de ahí mockResolvedValueOnce
+      apiCalls.listUsers = jest
+        .fn()
+        .mockResolvedValueOnce(mockSuccessGetMultiPageFirst)
+        .mockResolvedValueOnce(mockSuccessGetMultiPageLast);
+      const { findByText } = setup();
+      const nextLink = await findByText('next >');
+      fireEvent.click(nextLink);
+
+      const secondPageUser = await findByText('display4@user4');
+
+      expect(secondPageUser).toBeInTheDocument();
     });
   });
 });

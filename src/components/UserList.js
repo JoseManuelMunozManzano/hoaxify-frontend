@@ -14,12 +14,20 @@ class UserList extends React.Component {
 
   // Ciclo de Vida: llamado cuando este componente se añada a la Page
   componentDidMount() {
-    apiCalls.listUsers({ page: this.state.page.number, size: this.state.page.size }).then((response) => {
+    this.loadData();
+  }
+
+  loadData = (requestedPage = 0) => {
+    apiCalls.listUsers({ page: requestedPage, size: this.state.page.size }).then((response) => {
       this.setState({
         page: response.data,
       });
     });
-  }
+  };
+
+  onClickNext = () => {
+    this.loadData(this.state.page.number + 1);
+  };
 
   render() {
     return (
@@ -31,7 +39,9 @@ class UserList extends React.Component {
           })}
         </div>
         <div>
-          <span className="badge badge-light">next {'>'}</span>
+          <span className="badge badge-light float-right" style={{ cursor: 'pointer' }} onClick={this.onClickNext}>
+            next {'>'}
+          </span>
         </div>
       </div>
     );
