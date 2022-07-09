@@ -30,5 +30,11 @@ describe('UserList', () => {
       setup();
       expect(apiCalls.listUsers).toHaveBeenCalledTimes(1);
     });
+
+    it('calls listUsers method with page zero and size three', () => {
+      apiCalls.listUsers = jest.fn().mockResolvedValue(mockedEmptySuccessResponse);
+      setup();
+      expect(apiCalls.listUsers).toHaveBeenCalledWith({ page: 0, size: 3 });
+    });
   });
 });
