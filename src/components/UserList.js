@@ -28,7 +28,7 @@ class UserList extends React.Component {
           {this.state.page.content.map((user) => {
             return (
               <div key={user.username} className="list-group-item list-group-item-action">
-                {user.username}
+                {`${user.displayName}@${user.username}`}
               </div>
             );
           })}

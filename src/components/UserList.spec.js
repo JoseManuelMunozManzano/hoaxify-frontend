@@ -58,6 +58,13 @@ describe('UserList', () => {
         expect(userGroup.childElementCount).toBe(3);
       });
     });
+
+    it('displays the displayName@username when listUser api returns users', async () => {
+      apiCalls.listUsers = jest.fn().mockResolvedValue(mockSuccessGetSinglePage);
+      const { findByText } = setup();
+      const firstUser = await findByText('display1@user1');
+      expect(firstUser).toBeInTheDocument();
+    });
   });
 
   describe('Lifecycle', () => {
