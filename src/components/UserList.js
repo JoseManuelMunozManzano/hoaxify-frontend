@@ -5,6 +5,7 @@ import * as apiCalls from '../api/apiCalls';
 class UserList extends React.Component {
   state = {
     page: {
+      content: [],
       number: 0,
       size: 3,
     },
@@ -12,13 +13,26 @@ class UserList extends React.Component {
 
   // Ciclo de Vida: llamado cuando este componente se añada a la Page
   componentDidMount() {
-    apiCalls.listUsers({ page: this.state.page.number, size: this.state.page.size }).then(() => {});
+    apiCalls.listUsers({ page: this.state.page.number, size: this.state.page.size }).then((response) => {
+      this.setState({
+        page: response.data,
+      });
+    });
   }
 
   render() {
     return (
       <div className="card">
         <h3 className="card-title m-auto">Users</h3>
+        <div className="list-group list-group-flush" data-testid="usergroup">
+          {this.state.page.content.map((user) => {
+            return (
+              <div key={user.username} className="list-group-item list-group-item-action">
+                {user.username}
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   }
