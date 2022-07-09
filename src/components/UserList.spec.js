@@ -138,6 +138,16 @@ describe('UserList', () => {
         expect(nextLink).not.toBeInTheDocument();
       });
     });
+
+    it('displays the previous button when response has first value as false', async () => {
+      apiCalls.listUsers = jest.fn().mockResolvedValue(mockSuccessGetMultiPageLast);
+      const { queryByTestId } = setup();
+
+      await waitFor(() => {
+        const previousLink = queryByTestId('previous');
+        expect(previousLink).toBeInTheDocument();
+      });
+    });
   });
 
   describe('Lifecycle', () => {

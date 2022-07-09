@@ -38,7 +38,10 @@ class UserList extends React.Component {
             return <UserListItem key={user.username} user={user} />;
           })}
         </div>
-        <div>
+        <div className="clearfix">
+          <span data-testid="previous" className="badge badge-light float-left" style={{ cursor: 'pointer' }}>
+            {`< previous`}
+          </span>
           {!this.state.page.last && (
             <span
               data-testid="next"
