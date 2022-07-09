@@ -30,6 +30,9 @@ class UserList extends React.Component {
             return <UserListItem key={user.username} user={user} />;
           })}
         </div>
+        <div>
+          <span className="badge badge-light">next {'>'}</span>
+        </div>
       </div>
     );
   }

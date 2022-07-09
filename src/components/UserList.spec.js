@@ -54,6 +54,33 @@ const mockSuccessGetSinglePage = {
   },
 };
 
+const mockSuccessGetMultiPageFirst = {
+  data: {
+    content: [
+      {
+        username: 'user1',
+        displayName: 'display1',
+        image: '',
+      },
+      {
+        username: 'user2',
+        displayName: 'display2',
+        image: '',
+      },
+      {
+        username: 'user3',
+        displayName: 'display3',
+        image: '',
+      },
+    ],
+    number: 0,
+    first: true, // es la primera página
+    last: false, // hay más páginas
+    size: 3,
+    totalPages: 2,
+  },
+};
+
 describe('UserList', () => {
   describe('Layout', () => {
     it('has header of Users', () => {
@@ -76,6 +103,13 @@ describe('UserList', () => {
       const { findByText } = setup();
       const firstUser = await findByText('display1@user1');
       expect(firstUser).toBeInTheDocument();
+    });
+
+    it('displays the next button when response has last value as false', async () => {
+      apiCalls.listUsers = jest.fn().mockResolvedValue(mockSuccessGetMultiPageFirst);
+      const { findByText } = setup();
+      const nextLink = await findByText('next >');
+      expect(nextLink).toBeInTheDocument();
     });
   });
 
