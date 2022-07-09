@@ -39,9 +39,16 @@ class UserList extends React.Component {
           })}
         </div>
         <div>
-          <span className="badge badge-light float-right" style={{ cursor: 'pointer' }} onClick={this.onClickNext}>
-            next {'>'}
-          </span>
+          {!this.state.page.last && (
+            <span
+              data-testid="next"
+              className="badge badge-light float-right"
+              style={{ cursor: 'pointer' }}
+              onClick={this.onClickNext}
+            >
+              next {'>'}
+            </span>
+          )}
         </div>
       </div>
     );

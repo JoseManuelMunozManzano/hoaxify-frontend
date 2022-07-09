@@ -128,6 +128,16 @@ describe('UserList', () => {
       const nextLink = await findByText('next >');
       expect(nextLink).toBeInTheDocument();
     });
+
+    it('hides the next button when response has last value as true', async () => {
+      apiCalls.listUsers = jest.fn().mockResolvedValue(mockSuccessGetMultiPageLast);
+      const { queryByTestId } = setup();
+
+      await waitFor(() => {
+        const nextLink = queryByTestId('next');
+        expect(nextLink).not.toBeInTheDocument();
+      });
+    });
   });
 
   describe('Lifecycle', () => {
