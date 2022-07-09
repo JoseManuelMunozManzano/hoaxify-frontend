@@ -227,6 +227,27 @@ describe('UserList', () => {
 
       expect(errorMessage).toBeInTheDocument();
     });
+
+    it('hides error message when successfully loading other page', async () => {
+      // Cada vez queremos obtener respuestas distintas, de ahí mockResolvedValueOnce
+      apiCalls.listUsers = jest
+        .fn()
+        .mockResolvedValueOnce(mockSuccessGetMultiPageLast)
+        .mockRejectedValueOnce(mockFailGet)
+        .mockResolvedValueOnce(mockSuccessGetMultiPageFirst);
+
+      const { findByText, queryByTestId } = setup();
+      const previousLink = await findByText('< previous');
+      fireEvent.click(previousLink);
+
+      await findByText('User load failed');
+      fireEvent.click(previousLink);
+
+      await waitFor(() => {
+        const errorMessage = queryByTestId('load-failed');
+        expect(errorMessage).not.toBeInTheDocument();
+      });
+    });
   });
 });
 

@@ -23,6 +23,7 @@ class UserList extends React.Component {
       .then((response) => {
         this.setState({
           page: response.data,
+          loadError: undefined,
         });
       })
       .catch((error) => {
@@ -71,7 +72,11 @@ class UserList extends React.Component {
             </span>
           )}
         </div>
-        {this.state.loadError && <span className="text-center text-danger">{this.state.loadError}</span>}
+        {this.state.loadError && (
+          <span data-testid="load-failed" className="text-center text-danger">
+            {this.state.loadError}
+          </span>
+        )}
       </div>
     );
   }
