@@ -189,6 +189,21 @@ describe('UserList', () => {
 
       expect(secondPageUser).toBeInTheDocument();
     });
+
+    it('loads previous page when clicked to next button', async () => {
+      // Cada vez queremos obtener respuestas distintas, de ahí mockResolvedValueOnce
+      apiCalls.listUsers = jest
+        .fn()
+        .mockResolvedValueOnce(mockSuccessGetMultiPageLast)
+        .mockResolvedValueOnce(mockSuccessGetMultiPageFirst);
+      const { findByText } = setup();
+      const previousLink = await findByText('< previous');
+      fireEvent.click(previousLink);
+
+      const firstPageUser = await findByText('display1@user1');
+
+      expect(firstPageUser).toBeInTheDocument();
+    });
   });
 });
 

@@ -29,6 +29,10 @@ class UserList extends React.Component {
     this.loadData(this.state.page.number + 1);
   };
 
+  onClickPrevious = () => {
+    this.loadData(this.state.page.number - 1);
+  };
+
   render() {
     return (
       <div className="card">
@@ -40,7 +44,12 @@ class UserList extends React.Component {
         </div>
         <div className="clearfix">
           {!this.state.page.first && (
-            <span data-testid="previous" className="badge badge-light float-left" style={{ cursor: 'pointer' }}>
+            <span
+              data-testid="previous"
+              className="badge badge-light float-left"
+              style={{ cursor: 'pointer' }}
+              onClick={this.onClickPrevious}
+            >
               {`< previous`}
             </span>
           )}
