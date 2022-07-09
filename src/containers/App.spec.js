@@ -5,6 +5,17 @@ import { Provider } from 'react-redux';
 import axios from 'axios';
 import configureStore from '../redux/configureStore';
 import { Buffer } from 'buffer';
+import * as apiCalls from '../api/apiCalls';
+
+// Se pone para que no fallen los tests App.spec.js y HomePage.spec.js que no hacen
+// mocking a UserList aunque lo esté llamando la cadena App.js > HomePage.js
+apiCalls.listUsers = jest.fn().mockResolvedValue({
+  data: {
+    content: [],
+    number: 0,
+    size: 3,
+  },
+});
 
 // Para evitar problemas de datos cargados en LocalStorage, los vamos a limpiar antes de cada test
 beforeEach(() => {

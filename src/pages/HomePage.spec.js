@@ -1,5 +1,16 @@
 import { render, screen } from '@testing-library/react';
 import HomePage from './HomePage';
+import * as apiCalls from '../api/apiCalls';
+
+// Se pone para que no fallen los tests App.spec.js y HomePage.spec.js que no hacen
+// mocking a UserList aunque lo esté llamando la cadena App.js > HomePage.js
+apiCalls.listUsers = jest.fn().mockResolvedValue({
+  data: {
+    content: [],
+    number: 0,
+    size: 3,
+  },
+});
 
 describe('HomePage', () => {
   describe('Layout', () => {

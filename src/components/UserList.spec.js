@@ -1,7 +1,19 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import UserList from './UserList';
 import * as apiCalls from '../api/apiCalls';
+
+// Además de en App.spec.js y HomePage.spec.js, se añade aquí porque
+// en alguno de estos tests, no hacemos mock a la función listUsers.
+// Este apiCalls se dispara con un componente lifecycle. No estamos disparándolo manualmente.
+// Por tanto, todos los tests que usan ese componente debe actualizarse con este código.
+apiCalls.listUsers = jest.fn().mockResolvedValue({
+  data: {
+    content: [],
+    number: 0,
+    size: 3,
+  },
+});
 
 const setup = () => {
   return render(<UserList />);
@@ -81,3 +93,5 @@ describe('UserList', () => {
     });
   });
 });
+
+console.error = () => {};
