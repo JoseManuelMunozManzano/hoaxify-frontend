@@ -18,11 +18,18 @@ class UserList extends React.Component {
   }
 
   loadData = (requestedPage = 0) => {
-    apiCalls.listUsers({ page: requestedPage, size: this.state.page.size }).then((response) => {
-      this.setState({
-        page: response.data,
+    apiCalls
+      .listUsers({ page: requestedPage, size: this.state.page.size })
+      .then((response) => {
+        this.setState({
+          page: response.data,
+        });
+      })
+      .catch((error) => {
+        this.setState({
+          loadError: 'User load failed',
+        });
       });
-    });
   };
 
   onClickNext = () => {
@@ -64,6 +71,7 @@ class UserList extends React.Component {
             </span>
           )}
         </div>
+        {this.state.loadError && <span className="text-center text-danger">{this.state.loadError}</span>}
       </div>
     );
   }

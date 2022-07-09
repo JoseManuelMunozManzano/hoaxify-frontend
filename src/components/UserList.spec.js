@@ -98,6 +98,14 @@ const mockSuccessGetMultiPageLast = {
   },
 };
 
+const mockFailGet = {
+  response: {
+    data: {
+      message: 'Load error',
+    },
+  },
+};
+
 describe('UserList', () => {
   describe('Layout', () => {
     it('has header of Users', () => {
@@ -190,7 +198,7 @@ describe('UserList', () => {
       expect(secondPageUser).toBeInTheDocument();
     });
 
-    it('loads previous page when clicked to next button', async () => {
+    it('loads previous page when clicked to previous button', async () => {
       // Cada vez queremos obtener respuestas distintas, de ahí mockResolvedValueOnce
       apiCalls.listUsers = jest
         .fn()
@@ -203,6 +211,21 @@ describe('UserList', () => {
       const firstPageUser = await findByText('display1@user1');
 
       expect(firstPageUser).toBeInTheDocument();
+    });
+
+    it('displays error message when loading other page fails', async () => {
+      // Cada vez queremos obtener respuestas distintas, de ahí mockResolvedValueOnce
+      apiCalls.listUsers = jest
+        .fn()
+        .mockResolvedValueOnce(mockSuccessGetMultiPageLast)
+        .mockRejectedValueOnce(mockFailGet);
+      const { findByText } = setup();
+      const previousLink = await findByText('< previous');
+      fireEvent.click(previousLink);
+
+      const errorMessage = await findByText('User load failed');
+
+      expect(errorMessage).toBeInTheDocument();
     });
   });
 });
