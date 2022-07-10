@@ -38,5 +38,11 @@ describe('UserPage', () => {
       render(<UserPage match={match} />);
       expect(apiCalls.getUser).toHaveBeenCalledTimes(1);
     });
+
+    it('calls getUser for user1 when it is rendered with user1 in match', () => {
+      apiCalls.getUser = jest.fn().mockResolvedValue(mockSuccessGetUser);
+      render(<UserPage match={match} />);
+      expect(apiCalls.getUser).toHaveBeenCalledWith('user1');
+    });
   });
 });
