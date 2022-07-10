@@ -10,7 +10,7 @@ const ProfileImageWithDefault = (props) => {
 
   // Se pone esta línea de eslint porque no hemos añadido alt a img
   //eslint-disable-next-line
-  return <img src={imageSource} />;
+  return <img {...props} src={imageSource} />;
 };
 
 export default ProfileImageWithDefault;
