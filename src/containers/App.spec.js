@@ -27,8 +27,6 @@ apiCalls.getUser = jest.fn().mockResolvedValue({
   },
 });
 
-// Test para probar el problema indicado en UserPage.js, en componentDidMount
-// Creamos estos 2 mocks, para el user1 y user2
 const mockSuccessGetUser1 = {
   data: {
     id: 1,
@@ -44,6 +42,19 @@ const mockSuccessGetUser2 = {
     username: 'user2',
     displayName: 'display2',
     image: 'profile2.png',
+  },
+};
+
+// Otro problema es si ponemos a mano una url de un usuario inexistente
+// http://localhost:3000/#/user50
+// Aparece el mensaje de error User not found.
+// Si ahora pulsamos en My Profile
+// Cambia la url pero se sigue mostrando el mensaje de error
+const mockFailGetUser = {
+  response: {
+    data: {
+      message: 'User not found',
+    },
   },
 };
 
@@ -348,6 +359,31 @@ describe('App', () => {
 
     const { queryByText } = setup('/user2');
     await screen.findByText('display2@user2');
+
+    const myProfileLink = queryByText('My Profile');
+    fireEvent.click(myProfileLink);
+
+    const user1Info = await screen.findByText('display1@user1');
+    expect(user1Info).toBeInTheDocument();
+  });
+
+  it('updates user page after clicking my profile when another non existing user page was opened', async () => {
+    apiCalls.getUser = jest.fn().mockRejectedValueOnce(mockFailGetUser).mockResolvedValueOnce(mockSuccessGetUser1);
+
+    localStorage.setItem(
+      'hoax-auth',
+      JSON.stringify({
+        id: 1,
+        username: 'user1',
+        displayName: 'display1',
+        image: 'profile1.png',
+        password: 'P4ssword',
+        isLoggedIn: true,
+      })
+    );
+
+    const { queryByText } = setup('/user50');
+    await screen.findByText('User not found');
 
     const myProfileLink = queryByText('My Profile');
     fireEvent.click(myProfileLink);
