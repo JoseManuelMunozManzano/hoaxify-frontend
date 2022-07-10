@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import ProfileImageWithDefault from './ProfileImageWithDefault';
 
 describe('ProfileImageWithDefault', () => {
@@ -20,6 +20,13 @@ describe('ProfileImageWithDefault', () => {
       const { container } = render(<ProfileImageWithDefault image="profile1.png" />);
       const image = container.querySelector('img');
       expect(image.src).toContain('/images/profile/profile1.png');
+    });
+
+    it('displays default image when provided image loading fails', () => {
+      const { container } = render(<ProfileImageWithDefault image="profile1.png" />);
+      const image = container.querySelector('img');
+      fireEvent.error(image);
+      expect(image.src).toContain('/profile.png');
     });
   });
 });

@@ -8,9 +8,17 @@ const ProfileImageWithDefault = (props) => {
     imageSource = `/images/profile/${props.image}`;
   }
 
-  // Se pone esta línea de eslint porque no hemos añadido alt a img
-  //eslint-disable-next-line
-  return <img {...props} src={imageSource} />;
+  return (
+    // Se pone esta línea de eslint porque no hemos añadido alt a img
+    //eslint-disable-next-line
+    <img
+      {...props}
+      src={imageSource}
+      onError={(event) => {
+        event.target.src = defaultPicture;
+      }}
+    />
+  );
 };
 
 export default ProfileImageWithDefault;
