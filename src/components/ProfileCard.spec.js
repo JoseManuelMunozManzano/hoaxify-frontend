@@ -32,5 +32,11 @@ describe('ProfileCard', () => {
       const image = container.querySelector('img');
       expect(image.src).toContain('/profile.png');
     });
+
+    it('displays user image when user have one', () => {
+      const { container } = render(<ProfileCard user={user} />);
+      const image = container.querySelector('img');
+      expect(image.src).toContain('/images/profile/' + user.image);
+    });
   });
 });
