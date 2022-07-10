@@ -16,5 +16,11 @@ describe('ProfileCard', () => {
       const userInfo = screen.queryByText('display1@user1');
       expect(userInfo).toBeInTheDocument();
     });
+
+    it('has image', () => {
+      const { container } = render(<ProfileCard user={user} />);
+      const image = container.querySelector('img');
+      expect(image).toBeInTheDocument();
+    });
   });
 });
