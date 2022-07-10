@@ -2,6 +2,7 @@ import React from 'react';
 import { render, waitFor, fireEvent } from '@testing-library/react';
 import UserList from './UserList';
 import * as apiCalls from '../api/apiCalls';
+import { MemoryRouter } from 'react-router-dom';
 
 // Además de en App.spec.js y HomePage.spec.js, se añade aquí porque
 // en alguno de estos tests, no hacemos mock a la función listUsers.
@@ -16,7 +17,11 @@ apiCalls.listUsers = jest.fn().mockResolvedValue({
 });
 
 const setup = () => {
-  return render(<UserList />);
+  return render(
+    <MemoryRouter>
+      <UserList />
+    </MemoryRouter>
+  );
 };
 
 const mockedEmptySuccessResponse = {
@@ -165,6 +170,18 @@ describe('UserList', () => {
         const previousLink = queryByTestId('previous');
         expect(previousLink).not.toBeInTheDocument();
       });
+    });
+
+    it('has link to UserPage', async () => {
+      apiCalls.listUsers = jest.fn().mockResolvedValue(mockSuccessGetSinglePage);
+      const { findByText, container } = setup();
+      await findByText('display1@user1');
+      const firstAnchor = container.querySelectorAll('a')[0];
+      // Algunos tests fallan y tardan en ejecutarse porque en UserListItem se ha informado la etiqueta Link
+      // que es un react router component, pero no estamos renderizando UserList o UserListItem en sus módulos test
+      // con Router.
+      // Por eso se ha importado MemoryRouter (ver setup(), donde se usa)
+      expect(firstAnchor.getAttribute('href')).toBe('/user1');
     });
   });
 
