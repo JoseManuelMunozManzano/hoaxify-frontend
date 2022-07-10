@@ -15,5 +15,11 @@ describe('ProfileImageWithDefault', () => {
       const image = container.querySelector('img');
       expect(image.src).toContain('/profile.png');
     });
+
+    it('displays user image when image property provided', () => {
+      const { container } = render(<ProfileImageWithDefault image="profile1.png" />);
+      const image = container.querySelector('img');
+      expect(image.src).toContain('/images/profile/profile1.png');
+    });
   });
 });
