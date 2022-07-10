@@ -11,6 +11,14 @@ const mockSuccessGetUser = {
   },
 };
 
+const mockFailGetUser = {
+  response: {
+    data: {
+      message: 'User not found',
+    },
+  },
+};
+
 // Con match estamos replicando lo que se ve en Chrome, en Developer Tools, pestaña Components, y buscar UserPage y click en el.
 // En la parte derecha, en props, se ve este match con el parámetro params y username
 const match = {
@@ -40,6 +48,15 @@ describe('UserPage', () => {
       const { findByText } = setup({ match });
       const text = await findByText('display1@user1');
       expect(text).toBeInTheDocument();
+    });
+
+    // Probar con la siguiente url: http://localhost:3000/#/user301
+    // O cualquier usuario que sepamos que no existe
+    it('displays not found alert when user not found', async () => {
+      apiCalls.getUser = jest.fn().mockRejectedValue(mockFailGetUser);
+      const { findByText } = setup({ match });
+      const alert = await findByText('User not found');
+      expect(alert).toBeInTheDocument();
     });
   });
 
