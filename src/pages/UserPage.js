@@ -6,6 +6,7 @@ class UserPage extends React.Component {
   state = {
     user: undefined,
     userNotFound: false,
+    isLoadingUser: false,
   };
 
   componentDidMount() {
@@ -23,11 +24,11 @@ class UserPage extends React.Component {
     if (!username) {
       return;
     }
-    this.setState({ userNotFound: false });
+    this.setState({ userNotFound: false, isLoadingUser: true });
     apiCalls
       .getUser(username)
       .then((response) => {
-        this.setState({ user: response.data });
+        this.setState({ user: response.data, isLoadingUser: false });
       })
       .catch((error) => {
         // Por ahora no nos importa el motivo del fallo
@@ -38,6 +39,16 @@ class UserPage extends React.Component {
   };
 
   render() {
+    if (this.state.isLoadingUser) {
+      return (
+        <div className="d-flex">
+          <div className="spinner-border text-black-50 m-auto">
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+      );
+    }
+
     if (this.state.userNotFound) {
       return (
         <div className="alert alert-danger text-center" role="alert">

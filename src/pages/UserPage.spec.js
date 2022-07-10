@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { queryByText, render, screen } from '@testing-library/react';
 import UserPage from './UserPage';
 import * as apiCalls from '../api/apiCalls';
 
@@ -57,6 +57,21 @@ describe('UserPage', () => {
       const { findByText } = setup({ match });
       const alert = await findByText('User not found');
       expect(alert).toBeInTheDocument();
+    });
+
+    it('displays spinner while loading user data', () => {
+      const mockDelayedResponse = jest.fn().mockImplementation(() => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve(mockSuccessGetUser);
+          }, 300);
+        });
+      });
+
+      apiCalls.getUser = mockDelayedResponse;
+      const { queryByText } = setup({ match });
+      const spinner = screen.queryByText('Loading...');
+      expect(spinner).toBeInTheDocument();
     });
   });
 
