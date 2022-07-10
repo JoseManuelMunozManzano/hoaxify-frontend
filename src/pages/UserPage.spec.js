@@ -33,6 +33,7 @@ const setup = (props) => {
 
 describe('UserPage', () => {
   describe('Layout', () => {
+    // Este test falla porque no llega a encontrar el testid userpage cuando se carga el spinner
     it('has root page div', () => {
       // Por ahora no sabemos como va a ser esta UserPage. Por tanto, necesitamos tener
       // algún tipo de datos de un usuario no visible para consultar.

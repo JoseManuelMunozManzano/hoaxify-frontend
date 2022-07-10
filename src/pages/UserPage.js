@@ -40,18 +40,18 @@ class UserPage extends React.Component {
   };
 
   render() {
+    let pageContent;
+
     if (this.state.isLoadingUser) {
-      return (
+      pageContent = (
         <div className="d-flex">
           <div className="spinner-border text-black-50 m-auto">
             <span className="sr-only">Loading...</span>
           </div>
         </div>
       );
-    }
-
-    if (this.state.userNotFound) {
-      return (
+    } else if (this.state.userNotFound) {
+      pageContent = (
         <div className="alert alert-danger text-center" role="alert">
           <div className="alert-heading">
             <i class="fas fa-exclamation-triangle fa-3x"></i>
@@ -59,9 +59,11 @@ class UserPage extends React.Component {
           <h5>User not found</h5>
         </div>
       );
+    } else {
+      pageContent = this.state.user && <ProfileCard user={this.state.user} />;
     }
 
-    return <div data-testid="userpage">{this.state.user && <ProfileCard user={this.state.user} />}</div>;
+    return <div data-testid="userpage">{pageContent}</div>;
   }
 }
 
