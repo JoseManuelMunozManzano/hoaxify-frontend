@@ -82,6 +82,20 @@ const changeEvent = (content) => ({
   },
 });
 
+const setUserOneLoggedInStorage = () => {
+  localStorage.setItem(
+    'hoax-auth',
+    JSON.stringify({
+      id: 1,
+      username: 'user1',
+      displayName: 'display1',
+      image: 'profile1.png',
+      password: 'P4ssword',
+      isLoggedIn: true,
+    })
+  );
+};
+
 describe('App', () => {
   it('displays homepage when url is /', () => {
     const { getByTestId } = setup('/');
@@ -253,17 +267,7 @@ describe('App', () => {
   });
 
   it('displays logged in topBar when storage has logged in user data', () => {
-    localStorage.setItem(
-      'hoax-auth',
-      JSON.stringify({
-        id: 1,
-        username: 'user1',
-        displayName: 'display1',
-        image: 'profile1.png',
-        password: 'P4ssword',
-        isLoggedIn: true,
-      })
-    );
+    setUserOneLoggedInStorage();
     // Realmente no importa la página que pongamos
     const { queryByText } = setup('/');
     const myProfileLink = screen.queryByText('My Profile');
@@ -300,17 +304,7 @@ describe('App', () => {
   });
 
   it('sets axios authorization with base64 encoded user credentials when storage has logged in user data', () => {
-    localStorage.setItem(
-      'hoax-auth',
-      JSON.stringify({
-        id: 1,
-        username: 'user1',
-        displayName: 'display1',
-        image: 'profile1.png',
-        password: 'P4ssword',
-        isLoggedIn: true,
-      })
-    );
+    setUserOneLoggedInStorage();
 
     setup('/');
     // La cabecera Authorization tendrá las credenciales del usuario codificadas en Base64
@@ -321,17 +315,7 @@ describe('App', () => {
   });
 
   it('removes axios authorization header when user logout', () => {
-    localStorage.setItem(
-      'hoax-auth',
-      JSON.stringify({
-        id: 1,
-        username: 'user1',
-        displayName: 'display1',
-        image: 'profile1.png',
-        password: 'P4ssword',
-        isLoggedIn: true,
-      })
-    );
+    setUserOneLoggedInStorage();
 
     const { queryByText } = setup('/');
     fireEvent.click(screen.queryByText('Logout'));
@@ -345,17 +329,7 @@ describe('App', () => {
   it('updates user page after clicking my profile when another user page was opened', async () => {
     apiCalls.getUser = jest.fn().mockResolvedValueOnce(mockSuccessGetUser2).mockResolvedValueOnce(mockSuccessGetUser1);
 
-    localStorage.setItem(
-      'hoax-auth',
-      JSON.stringify({
-        id: 1,
-        username: 'user1',
-        displayName: 'display1',
-        image: 'profile1.png',
-        password: 'P4ssword',
-        isLoggedIn: true,
-      })
-    );
+    setUserOneLoggedInStorage();
 
     const { queryByText } = setup('/user2');
     await screen.findByText('display2@user2');
@@ -370,17 +344,7 @@ describe('App', () => {
   it('updates user page after clicking my profile when another non existing user page was opened', async () => {
     apiCalls.getUser = jest.fn().mockRejectedValueOnce(mockFailGetUser).mockResolvedValueOnce(mockSuccessGetUser1);
 
-    localStorage.setItem(
-      'hoax-auth',
-      JSON.stringify({
-        id: 1,
-        username: 'user1',
-        displayName: 'display1',
-        image: 'profile1.png',
-        password: 'P4ssword',
-        isLoggedIn: true,
-      })
-    );
+    setUserOneLoggedInStorage();
 
     const { queryByText } = setup('/user50');
     await screen.findByText('User not found');
