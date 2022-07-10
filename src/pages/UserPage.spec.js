@@ -52,6 +52,8 @@ describe('UserPage', () => {
 
     // Probar con la siguiente url: http://localhost:3000/#/user301
     // O cualquier usuario que sepamos que no existe
+    //
+    // Falla porque se muestra el spinner en vez del texto User not found
     it('displays not found alert when user not found', async () => {
       apiCalls.getUser = jest.fn().mockRejectedValue(mockFailGetUser);
       const { findByText } = setup({ match });

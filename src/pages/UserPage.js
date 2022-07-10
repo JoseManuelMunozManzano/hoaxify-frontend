@@ -34,6 +34,7 @@ class UserPage extends React.Component {
         // Por ahora no nos importa el motivo del fallo
         this.setState({
           userNotFound: true,
+          isLoadingUser: false,
         });
       });
   };
