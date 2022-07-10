@@ -22,5 +22,15 @@ describe('ProfileCard', () => {
       const image = container.querySelector('img');
       expect(image).toBeInTheDocument();
     });
+
+    it('displays default image when user does not have one', () => {
+      const userWithoutImage = {
+        ...user,
+        image: undefined,
+      };
+      const { container } = render(<ProfileCard user={userWithoutImage} />);
+      const image = container.querySelector('img');
+      expect(image.src).toContain('/profile.png');
+    });
   });
 });
