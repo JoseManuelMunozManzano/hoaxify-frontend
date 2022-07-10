@@ -27,6 +27,26 @@ apiCalls.getUser = jest.fn().mockResolvedValue({
   },
 });
 
+// Test para probar el problema indicado en UserPage.js, en componentDidMount
+// Creamos estos 2 mocks, para el user1 y user2
+const mockSuccessGetUser1 = {
+  data: {
+    id: 1,
+    username: 'user1',
+    displayName: 'display1',
+    image: 'profile1.png',
+  },
+};
+
+const mockSuccessGetUser2 = {
+  data: {
+    id: 2,
+    username: 'user2',
+    displayName: 'display2',
+    image: 'profile2.png',
+  },
+};
+
 // Para evitar problemas de datos cargados en LocalStorage, los vamos a limpiar antes de cada test
 beforeEach(() => {
   localStorage.clear();
@@ -309,5 +329,30 @@ describe('App', () => {
     const axiosAuthorization = axios.defaults.headers.common['Authorization'];
     // toBeFalsy() indica que es null o undefined
     expect(axiosAuthorization).toBeFalsy();
+  });
+
+  it('updates user page after clicking my profile when another user page was opened', async () => {
+    apiCalls.getUser = jest.fn().mockResolvedValueOnce(mockSuccessGetUser2).mockResolvedValueOnce(mockSuccessGetUser1);
+
+    localStorage.setItem(
+      'hoax-auth',
+      JSON.stringify({
+        id: 1,
+        username: 'user1',
+        displayName: 'display1',
+        image: 'profile1.png',
+        password: 'P4ssword',
+        isLoggedIn: true,
+      })
+    );
+
+    const { queryByText } = setup('/user2');
+    await screen.findByText('display2@user2');
+
+    const myProfileLink = queryByText('My Profile');
+    fireEvent.click(myProfileLink);
+
+    const user1Info = await screen.findByText('display1@user1');
+    expect(user1Info).toBeInTheDocument();
   });
 });
