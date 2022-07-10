@@ -30,6 +30,13 @@ describe('UserPage', () => {
       const userPageDiv = screen.queryByTestId('userpage');
       expect(userPageDiv).toBeInTheDocument();
     });
+
+    it('displays the displayName@username when user data loaded', async () => {
+      apiCalls.getUser = jest.fn().mockResolvedValue(mockSuccessGetUser);
+      const { findByText } = render(<UserPage match={match} />);
+      const text = await findByText('display1@user1');
+      expect(text).toBeInTheDocument();
+    });
   });
 
   describe('Lifecycle', () => {
