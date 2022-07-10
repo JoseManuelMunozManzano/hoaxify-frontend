@@ -13,7 +13,7 @@ const ProfileImageWithDefault = (props) => {
     //eslint-disable-next-line
     <img
       {...props}
-      src={imageSource}
+      src={props.src || imageSource}
       onError={(event) => {
         event.target.src = defaultPicture;
       }}

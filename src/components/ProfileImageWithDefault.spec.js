@@ -28,5 +28,11 @@ describe('ProfileImageWithDefault', () => {
       fireEvent.error(image);
       expect(image.src).toContain('/profile.png');
     });
+
+    it('displays the image provided through src property', () => {
+      const { container } = render(<ProfileImageWithDefault src="image-from-src.png" />);
+      const image = container.querySelector('img');
+      expect(image.src).toContain('/image-from-src.png');
+    });
   });
 });
