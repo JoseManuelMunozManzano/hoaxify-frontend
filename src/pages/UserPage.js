@@ -9,6 +9,7 @@ class UserPage extends React.Component {
     userNotFound: false,
     isLoadingUser: false,
     inEditMode: false,
+    originalDisplayName: undefined,
   };
 
   componentDidMount() {
@@ -48,7 +49,13 @@ class UserPage extends React.Component {
   };
 
   onClickCancel = () => {
+    const user = { ...this.state.user };
+    if (this.state.originalDisplayName !== undefined) {
+      user.displayName = this.state.originalDisplayName;
+    }
     this.setState({
+      user,
+      originalDisplayName: undefined,
       inEditMode: false,
     });
   };
@@ -67,8 +74,12 @@ class UserPage extends React.Component {
 
   onChangeDisplayName = (event) => {
     const user = { ...this.state.user };
+    let originalDisplayName = this.state.originalDisplayName;
+    if (originalDisplayName === undefined) {
+      originalDisplayName = user.displayName;
+    }
     user.displayName = event.target.value;
-    this.setState({ user });
+    this.setState({ user, originalDisplayName });
   };
 
   render() {

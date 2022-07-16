@@ -205,7 +205,6 @@ describe('UserPage', () => {
       // El body es el segundo parámetro
       const requestBody = apiCalls.updateUser.mock.calls[0][1];
 
-      // estamos probando con user1 que tiene el id 1
       expect(requestBody.displayName).toBe('display1-update');
     });
 
@@ -218,8 +217,20 @@ describe('UserPage', () => {
 
       const editButtonAfterClickingSave = await screen.findByText('Edit');
 
-      // estamos probando con user1 que tiene el id 1
       expect(editButtonAfterClickingSave).toBeInTheDocument();
+    });
+
+    it('returns to original displayName after its changed in edit mode but cancelled', async () => {
+      const { queryByText, container } = await setupForEdit();
+      const displayInput = container.querySelector('input');
+      fireEvent.change(displayInput, { target: { value: 'display1-update' } });
+
+      const cancelButton = screen.queryByText('Cancel');
+      fireEvent.click(cancelButton);
+
+      const originalDisplayText = screen.queryByText('display1@user1');
+
+      expect(originalDisplayText).toBeInTheDocument();
     });
   });
 });
