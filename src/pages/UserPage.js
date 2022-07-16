@@ -54,7 +54,8 @@ class UserPage extends React.Component {
   };
 
   onClickSave = () => {
-    apiCalls.updateUser();
+    const userId = this.props.loggedInUser.id;
+    apiCalls.updateUser(userId);
   };
 
   render() {

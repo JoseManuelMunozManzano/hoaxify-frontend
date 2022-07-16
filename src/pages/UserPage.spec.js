@@ -175,5 +175,18 @@ describe('UserPage', () => {
 
       expect(apiCalls.updateUser).toHaveBeenCalledTimes(1);
     });
+
+    // test del id en el Put Request
+    it('calls updateUser api with user id', async () => {
+      const { queryByText } = await setupForEdit();
+      apiCalls.updateUser = jest.fn().mockResolvedValue(mockSuccessUpdateUser);
+
+      const saveButton = screen.queryByText('Save');
+      fireEvent.click(saveButton);
+      const userId = apiCalls.updateUser.mock.calls[0][0];
+
+      // estamos probando con user1 que tiene el id 1
+      expect(userId).toBe(1);
+    });
   });
 });
