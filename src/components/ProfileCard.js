@@ -26,7 +26,7 @@ const ProfileCard = (props) => {
           </div>
         )}
         {showEditButton && (
-          <button className="btn btn-outline-success">
+          <button className="btn btn-outline-success" onClick={props.onClickEdit}>
             <i className="fas fa-user-edit" /> Edit
           </button>
         )}

@@ -8,6 +8,7 @@ class UserPage extends React.Component {
     user: undefined,
     userNotFound: false,
     isLoadingUser: false,
+    inEditMode: false,
   };
 
   componentDidMount() {
@@ -40,6 +41,12 @@ class UserPage extends React.Component {
       });
   };
 
+  onClickEdit = () => {
+    this.setState({
+      inEditMode: true,
+    });
+  };
+
   render() {
     let pageContent;
 
@@ -62,7 +69,14 @@ class UserPage extends React.Component {
       );
     } else {
       const isEditable = this.props.loggedInUser.username === this.props.match.params.username;
-      pageContent = this.state.user && <ProfileCard user={this.state.user} isEditable={isEditable} />;
+      pageContent = this.state.user && (
+        <ProfileCard
+          user={this.state.user}
+          isEditable={isEditable}
+          inEditMode={this.state.inEditMode}
+          onClickEdit={this.onClickEdit}
+        />
+      );
     }
 
     return <div data-testid="userpage">{pageContent}</div>;

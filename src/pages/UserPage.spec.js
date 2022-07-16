@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import UserPage from './UserPage';
 import * as apiCalls from '../api/apiCalls';
 import axios from 'axios';
@@ -126,6 +126,19 @@ describe('UserPage', () => {
       apiCalls.getUser = jest.fn().mockResolvedValue(mockSuccessGetUser);
       setup({ match });
       expect(apiCalls.getUser).toHaveBeenCalledWith('user1');
+    });
+  });
+
+  describe('ProfileCard Interactions', () => {
+    it('displays edit layout when clicking edit button', async () => {
+      setUserOneLoggedInStorage();
+      apiCalls.getUser = jest.fn().mockResolvedValue(mockSuccessGetUser);
+      const { findByText } = setup({ match });
+
+      const editButton = await findByText('Edit');
+
+      fireEvent.click(editButton);
+      expect(screen.queryByText('Save')).toBeInTheDocument();
     });
   });
 });
