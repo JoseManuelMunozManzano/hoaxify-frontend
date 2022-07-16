@@ -58,7 +58,11 @@ class UserPage extends React.Component {
     const userUpdate = {
       displayName: this.state.user.displayName,
     };
-    apiCalls.updateUser(userId, userUpdate);
+    apiCalls.updateUser(userId, userUpdate).then((response) => {
+      this.setState({
+        inEditMode: false,
+      });
+    });
   };
 
   onChangeDisplayName = (event) => {

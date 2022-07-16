@@ -208,5 +208,20 @@ describe('UserPage', () => {
       // estamos probando con user1 que tiene el id 1
       expect(requestBody.displayName).toBe('display1-update');
     });
+
+    it('returns to non edit mode after successful updateUser api call', async () => {
+      const { queryByText } = await setupForEdit();
+      apiCalls.updateUser = jest.fn().mockResolvedValue(mockSuccessUpdateUser);
+
+      const saveButton = screen.queryByText('Save');
+      fireEvent.click(saveButton);
+
+      const editButtonAfterClickingSave = await screen.findByText('Edit');
+
+      // estamos probando con user1 que tiene el id 1
+      expect(editButtonAfterClickingSave).toBeInTheDocument();
+    });
   });
 });
+
+console.error = () => {};
