@@ -232,6 +232,29 @@ describe('UserPage', () => {
 
       expect(originalDisplayText).toBeInTheDocument();
     });
+
+    // Editar, Salvar, volver a editar y Cancelar --> sale displayName erroneo
+    // No se esta actualizando displayName tras la primera actualización exitosa
+    it('returns to last updated displayName when display name is changed for another time but cancelled', async () => {
+      const { queryByText, container } = await setupForEdit();
+      let displayInput = container.querySelector('input');
+      fireEvent.change(displayInput, { target: { value: 'display1-update' } });
+      apiCalls.updateUser = jest.fn().mockResolvedValue(mockSuccessUpdateUser);
+
+      const saveButton = screen.queryByText('Save');
+      fireEvent.click(saveButton);
+
+      const editButtonAfterClickingSave = await screen.findByText('Edit');
+      fireEvent.click(editButtonAfterClickingSave);
+
+      displayInput = container.querySelector('input');
+      fireEvent.change(displayInput, { target: { value: 'display1-update-second-time' } });
+      const cancelButton = screen.queryByText('Cancel');
+      fireEvent.click(cancelButton);
+
+      const lastSavedData = container.querySelector('h4');
+      expect(lastSavedData).toHaveTextContent('display1-update@user1');
+    });
   });
 });
 
