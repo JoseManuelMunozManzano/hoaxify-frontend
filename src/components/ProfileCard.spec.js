@@ -50,5 +50,11 @@ describe('ProfileCard', () => {
       const editButton = screen.queryByText('Edit');
       expect(editButton).not.toBeInTheDocument();
     });
+
+    it('displays displayName input when inEditMode property set as true', () => {
+      const { container } = render(<ProfileCard user={user} inEditMode={true} />);
+      const displayInput = container.querySelector('input');
+      expect(displayInput).toBeInTheDocument();
+    });
   });
 });
