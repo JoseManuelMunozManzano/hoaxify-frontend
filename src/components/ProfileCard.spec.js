@@ -74,5 +74,11 @@ describe('ProfileCard', () => {
       const label = container.querySelector('label');
       expect(label).toHaveTextContent('Change Display Name for user1');
     });
+
+    it('hides the edit button in edit mode and isEditable provided as true', () => {
+      const { queryByText } = render(<ProfileCard user={user} inEditMode={true} isEditable={true} />);
+      const editButton = screen.queryByText('Edit');
+      expect(editButton).not.toBeInTheDocument();
+    });
   });
 });

@@ -5,6 +5,8 @@ import Input from './Input';
 const ProfileCard = (props) => {
   const { displayName, username, image } = props.user;
 
+  const showEditButton = props.isEditable && !props.inEditMode;
+
   return (
     <div className="card">
       <div className="card-header text-center">
@@ -23,7 +25,7 @@ const ProfileCard = (props) => {
             <Input value={displayName} label={`Change Display Name for ${username}`} />
           </div>
         )}
-        {props.isEditable && (
+        {showEditButton && (
           <button className="btn btn-outline-success">
             <i className="fas fa-user-edit" /> Edit
           </button>
