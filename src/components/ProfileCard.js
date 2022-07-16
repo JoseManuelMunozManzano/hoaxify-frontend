@@ -30,6 +30,11 @@ const ProfileCard = (props) => {
             <i className="fas fa-user-edit" /> Edit
           </button>
         )}
+        {props.inEditMode && (
+          <button className="btn btn-primary">
+            <i className="fas fa-save" /> Save
+          </button>
+        )}
       </div>
     </div>
   );
