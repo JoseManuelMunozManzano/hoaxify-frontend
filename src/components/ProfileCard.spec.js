@@ -68,5 +68,11 @@ describe('ProfileCard', () => {
       const userInfo = screen.queryByText('display1@user1');
       expect(userInfo).not.toBeInTheDocument();
     });
+
+    it('displays label for displayName in edit mode', () => {
+      const { container } = render(<ProfileCard user={user} inEditMode={true} />);
+      const label = container.querySelector('label');
+      expect(label).toHaveTextContent('Change Display Name for user1');
+    });
   });
 });
