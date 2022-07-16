@@ -166,6 +166,8 @@ describe('UserPage', () => {
     // Aunque funciona el test, en la pestaña Network vemos que el servidor nos devuelve Not allowed
     // Falta el id en el Put Request (http://localhost:3000/api/1.0/users/undefined)
     // Falta el body request
+    //
+    // Arreglado esto con los 2 test siguientes, ya funciona la respuesta del servidor.
     it('calls updateUser api when clicking save', async () => {
       const { queryByText } = await setupForEdit();
       apiCalls.updateUser = jest.fn().mockResolvedValue(mockSuccessUpdateUser);
@@ -187,6 +189,24 @@ describe('UserPage', () => {
 
       // estamos probando con user1 que tiene el id 1
       expect(userId).toBe(1);
+    });
+
+    // test del request body
+    it('calls updateUser api with request body having changed displayName', async () => {
+      const { queryByText, container } = await setupForEdit();
+      apiCalls.updateUser = jest.fn().mockResolvedValue(mockSuccessUpdateUser);
+
+      const displayInput = container.querySelector('input');
+      fireEvent.change(displayInput, { target: { value: 'display1-update' } });
+
+      const saveButton = screen.queryByText('Save');
+      fireEvent.click(saveButton);
+
+      // El body es el segundo parámetro
+      const requestBody = apiCalls.updateUser.mock.calls[0][1];
+
+      // estamos probando con user1 que tiene el id 1
+      expect(requestBody.displayName).toBe('display1-update');
     });
   });
 });
