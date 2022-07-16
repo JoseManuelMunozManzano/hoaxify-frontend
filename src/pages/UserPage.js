@@ -10,6 +10,7 @@ class UserPage extends React.Component {
     isLoadingUser: false,
     inEditMode: false,
     originalDisplayName: undefined,
+    pendingUpdateCall: false,
   };
 
   componentDidMount() {
@@ -65,6 +66,7 @@ class UserPage extends React.Component {
     const userUpdate = {
       displayName: this.state.user.displayName,
     };
+    this.setState({ pendingUpdateCall: true });
     apiCalls.updateUser(userId, userUpdate).then((response) => {
       this.setState({
         inEditMode: false,
@@ -114,6 +116,7 @@ class UserPage extends React.Component {
           onClickCancel={this.onClickCancel}
           onClickSave={this.onClickSave}
           onChangeDisplayName={this.onChangeDisplayName}
+          pendingUpdateCall={this.state.pendingUpdateCall}
         />
       );
     }

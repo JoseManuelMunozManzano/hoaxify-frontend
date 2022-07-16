@@ -149,6 +149,16 @@ describe('UserPage', () => {
       return rendered;
     };
 
+    const mockDelayedUpdateSuccess = () => {
+      return jest.fn().mockImplementation(() => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve(mockSuccessUpdateUser);
+          }, 300);
+        });
+      });
+    };
+
     it('displays edit layout when clicking edit button', async () => {
       const { queryByText } = await setupForEdit();
       expect(screen.queryByText('Save')).toBeInTheDocument();
@@ -254,6 +264,17 @@ describe('UserPage', () => {
 
       const lastSavedData = container.querySelector('h4');
       expect(lastSavedData).toHaveTextContent('display1-update@user1');
+    });
+
+    it('displays spinner when there is updateUser api call', async () => {
+      const { queryByText } = await setupForEdit();
+      apiCalls.updateUser = mockDelayedUpdateSuccess();
+
+      const saveButton = screen.queryByText('Save');
+      fireEvent.click(saveButton);
+      const spinner = screen.queryByText('Loading...');
+
+      expect(spinner).toBeInTheDocument();
     });
   });
 });
