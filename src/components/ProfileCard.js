@@ -36,7 +36,7 @@ const ProfileCard = (props) => {
               <i className="fas fa-save" /> Save
             </button>
 
-            <button className="btn btn-outline-secondary ml-1">
+            <button className="btn btn-outline-secondary ml-1" onClick={props.onClickCancel}>
               <i className="fas fa-window-close" /> Cancel
             </button>
           </div>

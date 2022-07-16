@@ -47,6 +47,12 @@ class UserPage extends React.Component {
     });
   };
 
+  onClickCancel = () => {
+    this.setState({
+      inEditMode: false,
+    });
+  };
+
   render() {
     let pageContent;
 
@@ -75,6 +81,7 @@ class UserPage extends React.Component {
           isEditable={isEditable}
           inEditMode={this.state.inEditMode}
           onClickEdit={this.onClickEdit}
+          onClickCancel={this.onClickCancel}
         />
       );
     }

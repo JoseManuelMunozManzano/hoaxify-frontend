@@ -140,5 +140,18 @@ describe('UserPage', () => {
       fireEvent.click(editButton);
       expect(screen.queryByText('Save')).toBeInTheDocument();
     });
+
+    it('returns back to none edit mode after clicking cancel', async () => {
+      setUserOneLoggedInStorage();
+      apiCalls.getUser = jest.fn().mockResolvedValue(mockSuccessGetUser);
+      const { findByText } = setup({ match });
+      const editButton = await findByText('Edit');
+      fireEvent.click(editButton);
+
+      const cancelButton = screen.queryByText('Cancel');
+      fireEvent.click(cancelButton);
+
+      expect(screen.queryByText('Edit')).toBeInTheDocument();
+    });
   });
 });
