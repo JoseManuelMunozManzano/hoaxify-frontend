@@ -86,5 +86,11 @@ describe('ProfileCard', () => {
       const saveButton = screen.queryByText('Save');
       expect(saveButton).toBeInTheDocument();
     });
+
+    it('displays Cancel button in edit mode', () => {
+      const { queryByText } = render(<ProfileCard user={user} inEditMode={true} isEditable={true} />);
+      const cancelButton = screen.queryByText('Cancel');
+      expect(cancelButton).toBeInTheDocument();
+    });
   });
 });

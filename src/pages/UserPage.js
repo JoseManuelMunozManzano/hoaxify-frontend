@@ -62,8 +62,7 @@ class UserPage extends React.Component {
       );
     } else {
       const isEditable = this.props.loggedInUser.username === this.props.match.params.username;
-      // Se incluye inEditMode={true} para poder hacer pruebas manuales. Luego se quitará
-      pageContent = this.state.user && <ProfileCard user={this.state.user} isEditable={isEditable} inEditMode={true} />;
+      pageContent = this.state.user && <ProfileCard user={this.state.user} isEditable={isEditable} />;
     }
 
     return <div data-testid="userpage">{pageContent}</div>;
