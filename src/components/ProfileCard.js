@@ -17,7 +17,7 @@ const ProfileCard = (props) => {
         />
       </div>
       <div className="card-body text-center">
-        <h4>{`${displayName}@${username}`}</h4>
+        {!props.inEditMode && <h4>{`${displayName}@${username}`}</h4>}
         {props.inEditMode && (
           <div className="mb-2">
             <Input value={displayName} />

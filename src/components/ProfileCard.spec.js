@@ -62,5 +62,11 @@ describe('ProfileCard', () => {
       const displayInput = container.querySelector('input');
       expect(displayInput.value).toBe(user.displayName);
     });
+
+    it('hides the displayName@username in edit mode', () => {
+      const { queryByText } = render(<ProfileCard user={user} inEditMode={true} />);
+      const userInfo = screen.queryByText('display1@user1');
+      expect(userInfo).not.toBeInTheDocument();
+    });
   });
 });
