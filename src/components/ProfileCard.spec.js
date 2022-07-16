@@ -44,5 +44,11 @@ describe('ProfileCard', () => {
       const editButton = screen.queryByText('Edit');
       expect(editButton).toBeInTheDocument();
     });
+
+    it('does not display edit button when isEditable not provided', () => {
+      const { queryByText } = render(<ProfileCard user={user} />);
+      const editButton = screen.queryByText('Edit');
+      expect(editButton).not.toBeInTheDocument();
+    });
   });
 });
