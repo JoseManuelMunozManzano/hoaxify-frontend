@@ -53,6 +53,10 @@ class UserPage extends React.Component {
     });
   };
 
+  onClickSave = () => {
+    apiCalls.updateUser();
+  };
+
   render() {
     let pageContent;
 
@@ -82,6 +86,7 @@ class UserPage extends React.Component {
           inEditMode={this.state.inEditMode}
           onClickEdit={this.onClickEdit}
           onClickCancel={this.onClickCancel}
+          onClickSave={this.onClickSave}
         />
       );
     }

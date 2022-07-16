@@ -14,6 +14,15 @@ const mockSuccessGetUser = {
   },
 };
 
+const mockSuccessUpdateUser = {
+  data: {
+    id: 1,
+    username: 'user1',
+    displayName: 'display1-update',
+    image: 'profile1-update.png',
+  },
+};
+
 const mockFailGetUser = {
   response: {
     data: {
@@ -152,6 +161,19 @@ describe('UserPage', () => {
       fireEvent.click(cancelButton);
 
       expect(screen.queryByText('Edit')).toBeInTheDocument();
+    });
+
+    // Aunque funciona el test, en la pestaña Network vemos que el servidor nos devuelve Not allowed
+    // Falta el id en el Put Request (http://localhost:3000/api/1.0/users/undefined)
+    // Falta el body request
+    it('calls updateUser api when clicking save', async () => {
+      const { queryByText } = await setupForEdit();
+      apiCalls.updateUser = jest.fn().mockResolvedValue(mockSuccessUpdateUser);
+
+      const saveButton = screen.queryByText('Save');
+      fireEvent.click(saveButton);
+
+      expect(apiCalls.updateUser).toHaveBeenCalledTimes(1);
     });
   });
 });
