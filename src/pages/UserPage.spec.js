@@ -130,23 +130,23 @@ describe('UserPage', () => {
   });
 
   describe('ProfileCard Interactions', () => {
-    it('displays edit layout when clicking edit button', async () => {
+    const setupForEdit = async () => {
       setUserOneLoggedInStorage();
       apiCalls.getUser = jest.fn().mockResolvedValue(mockSuccessGetUser);
-      const { findByText } = setup({ match });
-
-      const editButton = await findByText('Edit');
-
+      const rendered = setup({ match });
+      const editButton = await rendered.findByText('Edit');
       fireEvent.click(editButton);
+
+      return rendered;
+    };
+
+    it('displays edit layout when clicking edit button', async () => {
+      const { queryByText } = await setupForEdit();
       expect(screen.queryByText('Save')).toBeInTheDocument();
     });
 
     it('returns back to none edit mode after clicking cancel', async () => {
-      setUserOneLoggedInStorage();
-      apiCalls.getUser = jest.fn().mockResolvedValue(mockSuccessGetUser);
-      const { findByText } = setup({ match });
-      const editButton = await findByText('Edit');
-      fireEvent.click(editButton);
+      const { queryByText } = await setupForEdit();
 
       const cancelButton = screen.queryByText('Cancel');
       fireEvent.click(cancelButton);
