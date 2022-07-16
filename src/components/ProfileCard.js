@@ -46,9 +46,14 @@ const ProfileCard = (props) => {
                 </span>
               }
               pendingApiCall={props.pendingUpdateCall}
+              disabled={props.pendingUpdateCall}
             ></ButtonWithProgress>
 
-            <button className="btn btn-outline-secondary ml-1" onClick={props.onClickCancel}>
+            <button
+              className="btn btn-outline-secondary ml-1"
+              onClick={props.onClickCancel}
+              disabled={props.pendingUpdateCall}
+            >
               <i className="fas fa-window-close" /> Cancel
             </button>
           </div>

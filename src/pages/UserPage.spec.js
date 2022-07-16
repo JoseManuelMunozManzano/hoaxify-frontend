@@ -276,6 +276,30 @@ describe('UserPage', () => {
 
       expect(spinner).toBeInTheDocument();
     });
+
+    // Estos 2 tests funcionan pero rompen otros porque ahora
+    // Editar, Salvar y volver a editar muestra el botón disabled y con el spinner
+    it('disables save button when there is updateUser api call', async () => {
+      const { queryByText } = await setupForEdit();
+      apiCalls.updateUser = mockDelayedUpdateSuccess();
+
+      const saveButton = screen.queryByText('Save');
+      fireEvent.click(saveButton);
+
+      expect(saveButton).toBeDisabled();
+    });
+
+    it('disables cancel button when there is updateUser api call', async () => {
+      const { queryByText } = await setupForEdit();
+      apiCalls.updateUser = mockDelayedUpdateSuccess();
+
+      const saveButton = screen.queryByText('Save');
+      fireEvent.click(saveButton);
+
+      const cancelButton = screen.queryByText('Cancel');
+
+      expect(cancelButton).toBeDisabled();
+    });
   });
 });
 
