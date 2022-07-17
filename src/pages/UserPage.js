@@ -71,6 +71,7 @@ class UserPage extends React.Component {
       this.setState({
         inEditMode: false,
         originalDisplayName: undefined,
+        pendingUpdateCall: false,
       });
     });
   };
