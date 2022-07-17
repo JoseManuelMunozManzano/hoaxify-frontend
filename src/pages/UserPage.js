@@ -67,6 +67,7 @@ class UserPage extends React.Component {
     const userId = this.props.loggedInUser.id;
     const userUpdate = {
       displayName: this.state.user.displayName,
+      image: this.state.image && this.state.image.split(',')[1],
     };
     this.setState({ pendingUpdateCall: true });
     apiCalls
