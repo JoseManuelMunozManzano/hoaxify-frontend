@@ -371,6 +371,15 @@ describe('UserPage', () => {
         expect(image.src).toContain('/images/profile/profile1.png');
       });
     });
+
+    // Da error si entramos a My Profile, seleccionamos una imagen y la abrimos, la volvemos a seleccionar y en la ventana para
+    // seleccionarla cancelamos.
+    it('does not throw error after file not selected', async () => {
+      const { container } = await setupForEdit();
+      const inputs = container.querySelectorAll('input');
+      const uploadInput = inputs[1];
+      expect(() => fireEvent.change(uploadInput, { target: { files: [] } })).not.toThrow();
+    });
   });
 });
 

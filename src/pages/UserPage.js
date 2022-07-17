@@ -96,6 +96,10 @@ class UserPage extends React.Component {
   };
 
   onFileSelect = (event) => {
+    if (event.target.files.length === 0) {
+      return;
+    }
+
     const file = event.target.files[0];
     let reader = new FileReader();
     reader.onloadend = () => {
