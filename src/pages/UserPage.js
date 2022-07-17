@@ -67,13 +67,20 @@ class UserPage extends React.Component {
       displayName: this.state.user.displayName,
     };
     this.setState({ pendingUpdateCall: true });
-    apiCalls.updateUser(userId, userUpdate).then((response) => {
-      this.setState({
-        inEditMode: false,
-        originalDisplayName: undefined,
-        pendingUpdateCall: false,
+    apiCalls
+      .updateUser(userId, userUpdate)
+      .then((response) => {
+        this.setState({
+          inEditMode: false,
+          originalDisplayName: undefined,
+          pendingUpdateCall: false,
+        });
+      })
+      .catch((error) => {
+        this.setState({
+          pendingUpdateCall: false,
+        });
       });
-    });
   };
 
   onChangeDisplayName = (event) => {

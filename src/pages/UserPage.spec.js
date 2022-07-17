@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import UserPage from './UserPage';
 import * as apiCalls from '../api/apiCalls';
 import axios from 'axios';
@@ -28,6 +28,12 @@ const mockFailGetUser = {
     data: {
       message: 'User not found',
     },
+  },
+};
+
+const mockFailUpdateUser = {
+  response: {
+    data: {},
   },
 };
 
@@ -291,7 +297,7 @@ describe('UserPage', () => {
       const { queryByText } = await setupForEdit();
       apiCalls.updateUser = mockDelayedUpdateSuccess();
 
-      const saveButton = screen.queryByText('Save');
+      const saveButton = screen.queryByText('Save').closest('button');
       fireEvent.click(saveButton);
 
       const cancelButton = screen.queryByText('Cancel');
@@ -311,9 +317,23 @@ describe('UserPage', () => {
       const editButtonAfterClickingSave = await screen.findByText('Edit');
       fireEvent.click(editButtonAfterClickingSave);
 
-      const saveButtonAfterSecondEdit = queryByText('Save');
+      const saveButtonAfterSecondEdit = queryByText('Save').closest('button');
 
       expect(saveButtonAfterSecondEdit).not.toBeDisabled();
+    });
+
+    it('enables save button after updateUser api call fails', async () => {
+      const { queryByText, container } = await setupForEdit();
+      let displayInput = container.querySelector('input');
+      fireEvent.change(displayInput, { target: { value: 'display1-update' } });
+      apiCalls.updateUser = jest.fn().mockRejectedValue(mockFailUpdateUser);
+
+      const saveButton = screen.queryByText('Save').closest('button');
+      fireEvent.click(saveButton);
+
+      await waitFor(() => {
+        expect(saveButton).not.toBeDisabled();
+      });
     });
   });
 });
