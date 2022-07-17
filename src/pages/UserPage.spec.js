@@ -406,6 +406,41 @@ describe('UserPage', () => {
 
       expect(requestBody.image).not.toContain('data:image/png;base64');
     });
+
+    it('returns to last updated image when image is change for another time but cancelled', async () => {
+      const { queryByText, container, queryByRole, findByText } = await setupForEdit();
+      apiCalls.updateUser = jest.fn().mockResolvedValue(mockSuccessUpdateUser);
+
+      const inputs = container.querySelectorAll('input');
+      const uploadInput = inputs[1];
+
+      const file = new File(['dummy content'], 'example.png', {
+        type: 'image/png',
+      });
+
+      fireEvent.change(uploadInput, { target: { files: [file] } });
+
+      await waitFor(() => {
+        const image = container.querySelector('img');
+        expect(image.src).toContain('data:image/png;base64');
+      });
+      const saveButton = queryByRole('button', { name: 'Save' });
+      fireEvent.click(saveButton);
+
+      const editButtonAfterClickingSave = await findByText('Edit');
+      fireEvent.click(editButtonAfterClickingSave);
+
+      const newFile = new File(['another content'], 'example2.png', {
+        type: 'image/png',
+      });
+
+      fireEvent.change(uploadInput, { target: { files: [newFile] } });
+
+      const cancelButton = queryByText('Cancel');
+      fireEvent.click(cancelButton);
+      const image = container.querySelector('img');
+      expect(image.src).toContain('/images/profile/profile1-update.png');
+    });
   });
 });
 

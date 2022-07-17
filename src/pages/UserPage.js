@@ -73,10 +73,14 @@ class UserPage extends React.Component {
     apiCalls
       .updateUser(userId, userUpdate)
       .then((response) => {
+        const user = { ...this.state.user };
+        user.image = response.data.image;
         this.setState({
           inEditMode: false,
           originalDisplayName: undefined,
           pendingUpdateCall: false,
+          user,
+          image: undefined,
         });
       })
       .catch((error) => {
