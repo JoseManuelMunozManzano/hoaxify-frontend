@@ -335,6 +335,21 @@ describe('UserPage', () => {
         expect(saveButton).not.toBeDisabled();
       });
     });
+
+    it('displays the selected image in edit mode', async () => {
+      const { container } = await setupForEdit();
+
+      const inputs = container.querySelectorAll('input');
+      const uploadInput = inputs[1];
+
+      const file = new File(['dummy content'], 'example.png', { type: 'image/png' });
+      fireEvent.change(uploadInput, { target: { files: [file] } });
+
+      await waitFor(() => {
+        const image = container.querySelector('img');
+        expect(image.src).toContain('data:image/png;base64');
+      });
+    });
   });
 });
 
