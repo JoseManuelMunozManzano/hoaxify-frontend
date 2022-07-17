@@ -59,6 +59,7 @@ class UserPage extends React.Component {
       user,
       originalDisplayName: undefined,
       inEditMode: false,
+      image: undefined,
     });
   };
 

@@ -350,6 +350,27 @@ describe('UserPage', () => {
         expect(image.src).toContain('data:image/png;base64');
       });
     });
+
+    it('returns back to the original image even the new image is added to upload box but cancelled', async () => {
+      const { queryByText, container } = await setupForEdit();
+
+      const inputs = container.querySelectorAll('input');
+      const uploadInput = inputs[1];
+
+      const file = new File(['dummy content'], 'example.png', {
+        type: 'image/png',
+      });
+
+      fireEvent.change(uploadInput, { target: { files: [file] } });
+
+      const cancelButton = queryByText('Cancel');
+      fireEvent.click(cancelButton);
+
+      await waitFor(() => {
+        const image = container.querySelector('img');
+        expect(image.src).toContain('/images/profile/profile1.png');
+      });
+    });
   });
 });
 
