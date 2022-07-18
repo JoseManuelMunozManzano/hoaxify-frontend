@@ -103,7 +103,9 @@ class UserPage extends React.Component {
       originalDisplayName = user.displayName;
     }
     user.displayName = event.target.value;
-    this.setState({ user, originalDisplayName });
+    const errors = { ...this.state.errors };
+    errors.displayName = undefined;
+    this.setState({ user, originalDisplayName, errors });
   };
 
   onFileSelect = (event) => {
