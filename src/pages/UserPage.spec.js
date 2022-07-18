@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 import UserPage from './UserPage';
 import * as apiCalls from '../api/apiCalls';
 import axios from 'axios';
@@ -502,6 +502,20 @@ describe('UserPage', () => {
       await waitFor(() => {
         expect(errorMessage).not.toBeInTheDocument();
       });
+    });
+
+    it('removes validation error if the user cancels', async () => {
+      const { queryByText, queryByRole } = await setupForEdit();
+      apiCalls.updateUser = jest.fn().mockRejectedValue(mockFailUpdateUser);
+
+      const saveButton = screen.queryByRole('button', { name: 'Save' });
+      fireEvent.click(saveButton);
+      await waitForElementToBeRemoved(() => screen.queryByText('Loading...'));
+      fireEvent.click(screen.queryByText('Cancel'));
+
+      fireEvent.click(screen.queryByText('Edit'));
+      const errorMessage = screen.queryByText('It must have minimum 4 and maximum 255 characters');
+      expect(errorMessage).not.toBeInTheDocument();
     });
   });
 });

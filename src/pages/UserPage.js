@@ -58,6 +58,7 @@ class UserPage extends React.Component {
     }
     this.setState({
       user,
+      errors: {},
       originalDisplayName: undefined,
       inEditMode: false,
       image: undefined,
