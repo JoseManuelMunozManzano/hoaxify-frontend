@@ -112,12 +112,14 @@ class UserPage extends React.Component {
     if (event.target.files.length === 0) {
       return;
     }
-
+    const errors = { ...this.state.errors };
+    errors.image = undefined;
     const file = event.target.files[0];
     let reader = new FileReader();
     reader.onloadend = () => {
       this.setState({
         image: reader.result,
+        errors,
       });
     };
 

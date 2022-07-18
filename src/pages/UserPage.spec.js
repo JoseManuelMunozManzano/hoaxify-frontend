@@ -483,6 +483,26 @@ describe('UserPage', () => {
 
       expect(errorMessage).not.toBeInTheDocument();
     });
+
+    it('removes validation error for file when user changes the file', async () => {
+      const { container, queryByRole, findByText } = await setupForEdit();
+      apiCalls.updateUser = jest.fn().mockRejectedValue(mockFailUpdateUser);
+
+      const saveButton = queryByRole('button', { name: 'Save' });
+      fireEvent.click(saveButton);
+      const errorMessage = await findByText('Only PNG and JPG files are allowed');
+
+      const fileInput = container.querySelectorAll('input')[1];
+
+      const newFile = new File(['another content'], 'example2.png', {
+        type: 'image/png',
+      });
+      fireEvent.change(fileInput, { target: { files: [newFile] } });
+
+      await waitFor(() => {
+        expect(errorMessage).not.toBeInTheDocument();
+      });
+    });
   });
 });
 
