@@ -457,6 +457,17 @@ describe('UserPage', () => {
       const errorMessage = await findByText('It must have minimum 4 and maximum 255 characters');
       expect(errorMessage).toBeInTheDocument();
     });
+
+    it('shows validation error for file when update api fails', async () => {
+      const { queryByText, container, queryByRole, findByText } = await setupForEdit();
+      apiCalls.updateUser = jest.fn().mockRejectedValue(mockFailUpdateUser);
+
+      const saveButton = queryByRole('button', { name: 'Save' });
+      fireEvent.click(saveButton);
+
+      const errorMessage = await findByText('Only PNG and JPG files are allowed');
+      expect(errorMessage).toBeInTheDocument();
+    });
   });
 });
 
