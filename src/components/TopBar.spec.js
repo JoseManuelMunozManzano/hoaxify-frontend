@@ -78,6 +78,12 @@ describe('TopBar', () => {
       // Es user1 porque en loggedInState hemos puesto ese valor a username
       expect(profileLink.getAttribute('href')).toBe('/user1');
     });
+
+    it('displays the displayName when user logged in', () => {
+      const { queryByText } = setup(loggedInState);
+      const displayName = screen.queryByText('display1');
+      expect(displayName).toBeInTheDocument();
+    });
   });
 
   describe('Interactions', () => {

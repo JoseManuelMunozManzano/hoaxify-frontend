@@ -31,6 +31,7 @@ class TopBar extends React.Component {
     if (this.props.user.isLoggedIn) {
       links = (
         <ul className="nav navbar-nav ml-auto">
+          <li className="nav-item nav-link">{this.props.user.displayName}</li>
           <li className="nav-item nav-link" onClick={this.onClickLogout} style={{ cursor: 'pointer' }}>
             Logout
           </li>
