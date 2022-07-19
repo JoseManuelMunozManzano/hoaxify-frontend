@@ -24,11 +24,13 @@ const defaultState = {
   isLoggedIn: false,
 };
 
+let store;
+
 // Para evitar el error: You should not use <Link> outside a <Router>
 // Se añade Redux
 // Se añade state. Como no todos los tests llaman a setup con parámetro se pone un valor por defecto
 const setup = (state = defaultState) => {
-  const store = createStore(authReducer, state);
+  store = createStore(authReducer, state);
 
   return render(
     <Provider store={store}>
@@ -83,6 +85,18 @@ describe('TopBar', () => {
       const { queryByText } = setup(loggedInState);
       const displayName = screen.queryByText('display1');
       expect(displayName).toBeInTheDocument();
+    });
+
+    it('displays users image when user logged in', () => {
+      const { container } = setup(loggedInState);
+      const images = container.querySelectorAll('img');
+
+      for (let i = 0; i < images.length; i++) {
+        console.log(images[i].src);
+      }
+
+      const userImage = images[1];
+      expect(userImage.src).toContain('/images/profile/' + loggedInState.image);
     });
   });
 
