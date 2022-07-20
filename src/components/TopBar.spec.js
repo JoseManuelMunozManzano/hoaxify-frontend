@@ -110,5 +110,13 @@ describe('TopBar', () => {
       const loginLink = screen.queryByText('Login');
       expect(loginLink).toBeInTheDocument();
     });
+
+    it('adds show class to drop down menu when clicking username', () => {
+      const { queryByText, queryByTestId } = setup(loggedInState);
+      const displayName = screen.queryByText('display1');
+      fireEvent.click(displayName);
+      const dropDownMenu = screen.queryByTestId('drop-down-menu');
+      expect(dropDownMenu).toHaveClass('show');
+    });
   });
 });

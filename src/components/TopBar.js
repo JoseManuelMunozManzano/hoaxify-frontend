@@ -5,6 +5,16 @@ import { connect } from 'react-redux';
 import ProfileImageWithDefault from './ProfileImageWithDefault';
 
 class TopBar extends React.Component {
+  state = {
+    dropDownVisible: false,
+  };
+
+  onClickDisplayName = () => {
+    this.setState({
+      dropDownVisible: true,
+    });
+  };
+
   onClickLogout = () => {
     const action = {
       type: 'logout-success',
@@ -30,10 +40,15 @@ class TopBar extends React.Component {
     );
 
     if (this.props.user.isLoggedIn) {
+      let dropDownClass = 'p-0 shadow dropdown-menu';
+      if (this.state.dropDownVisible) {
+        dropDownClass += ' show';
+      }
+
       links = (
         <ul className="nav navbar-nav ml-auto">
           <li className="nav-item dropdown">
-            <div className="d-flex" style={{ cursor: 'pointer' }}>
+            <div className="d-flex" style={{ cursor: 'pointer' }} onClick={this.onClickDisplayName}>
               <ProfileImageWithDefault
                 image={this.props.user.image}
                 className="rounded-circle m-auto"
@@ -43,7 +58,7 @@ class TopBar extends React.Component {
               <span className="nav-link dropdown-toggle">{this.props.user.displayName}</span>
             </div>
 
-            <div className="p-0 shadow dropdown-menu">
+            <div className={dropDownClass} data-testid="drop-down-menu">
               <Link to={`/${this.props.user.username}`} className="dropdown-item">
                 <i className="fas fa-user text-info"></i> My Profile
               </Link>
