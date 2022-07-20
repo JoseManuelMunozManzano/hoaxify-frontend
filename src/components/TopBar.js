@@ -42,6 +42,12 @@ class TopBar extends React.Component {
     this.props.dispatch(action);
   };
 
+  onClickMyProfile = () => {
+    this.setState({
+      dropDownVisible: false,
+    });
+  };
+
   assignActionArea = (area) => {
     this.actionArea = area;
   };
@@ -83,7 +89,7 @@ class TopBar extends React.Component {
             </div>
 
             <div className={dropDownClass} data-testid="drop-down-menu">
-              <Link to={`/${this.props.user.username}`} className="dropdown-item">
+              <Link to={`/${this.props.user.username}`} className="dropdown-item" onClick={this.onClickMyProfile}>
                 <i className="fas fa-user text-info"></i> My Profile
               </Link>
               <span className="dropdown-item" onClick={this.onClickLogout} style={{ cursor: 'pointer' }}>

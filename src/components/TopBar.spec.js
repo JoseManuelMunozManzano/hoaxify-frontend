@@ -139,5 +139,16 @@ describe('TopBar', () => {
       const dropDownMenu = screen.queryByTestId('drop-down-menu');
       expect(dropDownMenu).not.toHaveClass('show');
     });
+
+    it('removes show class to drop down menu when clicking My Profile', () => {
+      const { queryByText, queryByTestId } = setup(loggedInState);
+      const displayName = screen.queryByText('display1');
+      fireEvent.click(displayName);
+
+      fireEvent.click(screen.queryByText('My Profile'));
+
+      const dropDownMenu = screen.queryByTestId('drop-down-menu');
+      expect(dropDownMenu).not.toHaveClass('show');
+    });
   });
 });
