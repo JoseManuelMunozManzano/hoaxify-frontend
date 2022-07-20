@@ -9,6 +9,22 @@ class TopBar extends React.Component {
     dropDownVisible: false,
   };
 
+  componentDidMount() {
+    document.addEventListener('click', this.onClickTracker);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('click', this.onClickTracker);
+  }
+
+  onClickTracker = (event) => {
+    if (this.actionArea && !this.actionArea.contains(event.target)) {
+      this.setState({
+        dropDownVisible: false,
+      });
+    }
+  };
+
   onClickDisplayName = () => {
     this.setState({
       dropDownVisible: true,
@@ -20,6 +36,10 @@ class TopBar extends React.Component {
       type: 'logout-success',
     };
     this.props.dispatch(action);
+  };
+
+  assignActionArea = (area) => {
+    this.actionArea = area;
   };
 
   render() {
@@ -46,7 +66,7 @@ class TopBar extends React.Component {
       }
 
       links = (
-        <ul className="nav navbar-nav ml-auto">
+        <ul className="nav navbar-nav ml-auto" ref={this.assignActionArea}>
           <li className="nav-item dropdown">
             <div className="d-flex" style={{ cursor: 'pointer' }} onClick={this.onClickDisplayName}>
               <ProfileImageWithDefault

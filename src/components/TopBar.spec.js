@@ -90,11 +90,6 @@ describe('TopBar', () => {
     it('displays users image when user logged in', () => {
       const { container } = setup(loggedInState);
       const images = container.querySelectorAll('img');
-
-      for (let i = 0; i < images.length; i++) {
-        console.log(images[i].src);
-      }
-
       const userImage = images[1];
       expect(userImage.src).toContain('/images/profile/' + loggedInState.image);
     });
@@ -117,6 +112,18 @@ describe('TopBar', () => {
       fireEvent.click(displayName);
       const dropDownMenu = screen.queryByTestId('drop-down-menu');
       expect(dropDownMenu).toHaveClass('show');
+    });
+
+    it('removes show class to drop down menu when clicking app logo', () => {
+      const { queryByText, queryByTestId, container } = setup(loggedInState);
+      const displayName = screen.queryByText('display1');
+      fireEvent.click(displayName);
+
+      const logo = container.querySelector('img');
+      fireEvent.click(logo);
+
+      const dropDownMenu = screen.queryByTestId('drop-down-menu');
+      expect(dropDownMenu).not.toHaveClass('show');
     });
   });
 });
