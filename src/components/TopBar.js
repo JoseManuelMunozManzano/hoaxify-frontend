@@ -32,6 +32,10 @@ class TopBar extends React.Component {
   };
 
   onClickLogout = () => {
+    this.setState({
+      dropDownVisible: false,
+    });
+
     const action = {
       type: 'logout-success',
     };

@@ -5,6 +5,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import authReducer from '../redux/authReducer';
+import * as authActions from '../redux/authActions';
 
 const loggedInState = {
   id: 1,
@@ -121,6 +122,19 @@ describe('TopBar', () => {
 
       const logo = container.querySelector('img');
       fireEvent.click(logo);
+
+      const dropDownMenu = screen.queryByTestId('drop-down-menu');
+      expect(dropDownMenu).not.toHaveClass('show');
+    });
+
+    it('removes show class to drop down menu when clicking logout', async () => {
+      const { queryByText, queryByTestId } = setup(loggedInState);
+      const displayName = screen.queryByText('display1');
+      fireEvent.click(displayName);
+
+      fireEvent.click(screen.queryByText('Logout'));
+
+      await store.dispatch(authActions.loginSuccess(loggedInState));
 
       const dropDownMenu = screen.queryByTestId('drop-down-menu');
       expect(dropDownMenu).not.toHaveClass('show');
