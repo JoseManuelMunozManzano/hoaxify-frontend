@@ -25,7 +25,11 @@ class HoaxSubmit extends Component {
       content: this.state.content,
     };
 
-    apiCalls.postHoax(body);
+    apiCalls.postHoax(body).then((response) => {
+      this.setState({
+        focused: false,
+      });
+    });
   };
 
   onClickCancel = () => {
