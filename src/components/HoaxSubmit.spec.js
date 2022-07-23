@@ -48,5 +48,11 @@ describe('HoaxSubmit', () => {
       const textArea = container.querySelector('textarea');
       expect(textArea.rows).toBe(1);
     });
+
+    it('displays user image', () => {
+      const { container } = setup();
+      const image = container.querySelector('img');
+      expect(image.src).toContain('/images/profile/' + defaultState.image);
+    });
   });
 });
