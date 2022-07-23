@@ -1,6 +1,6 @@
 const ButtonWithProgress = (props) => {
   return (
-    <button className="btn btn-primary" onClick={props.onClick} disabled={props.disabled}>
+    <button className={props.className || 'btn btn-primary'} onClick={props.onClick} disabled={props.disabled}>
       {props.pendingApiCall && (
         <div className="spinner-border text-light spinner-border-sm mr-sm-1" role="status">
           <span className="sr-only">Loading...</span>
