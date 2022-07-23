@@ -13,6 +13,12 @@ class HoaxSubmit extends Component {
     });
   };
 
+  onClickCancel = () => {
+    this.setState({
+      focused: false,
+    });
+  };
+
   render() {
     return (
       <div className="card d-flex flex-row p-1">
@@ -27,7 +33,7 @@ class HoaxSubmit extends Component {
           {this.state.focused && (
             <div className="text-right mt-1">
               <button className="btn btn-success">Hoaxify</button>
-              <button className="btn btn-light ml-1">
+              <button className="btn btn-light ml-1" onClick={this.onClickCancel}>
                 <i className="fas fa-times"></i> Cancel
               </button>
             </div>

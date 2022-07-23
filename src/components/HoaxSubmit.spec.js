@@ -88,5 +88,14 @@ describe('HoaxSubmit', () => {
       const cancelButton = screen.queryByText('Cancel');
       expect(cancelButton).not.toBeInTheDocument();
     });
+
+    it('returns back to unfocused state after clicking the cancel', () => {
+      const { container } = setup();
+      const textArea = container.querySelector('textarea');
+      fireEvent.focus(textArea);
+      const cancelButton = screen.queryByText('Cancel');
+      fireEvent.click(cancelButton);
+      expect(screen.queryByText('Cancel')).not.toBeInTheDocument();
+    });
   });
 });
