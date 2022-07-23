@@ -15,5 +15,11 @@ describe('HoaxSubmit', () => {
       const image = container.querySelector('img');
       expect(image).toBeInTheDocument();
     });
+
+    it('displays textarea 1 line', () => {
+      const { container } = render(<HoaxSubmit />);
+      const textArea = container.querySelector('textarea');
+      expect(textArea.rows).toBe(1);
+    });
   });
 });
