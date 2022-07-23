@@ -28,6 +28,7 @@ class HoaxSubmit extends Component {
     apiCalls.postHoax(body).then((response) => {
       this.setState({
         focused: false,
+        content: '',
       });
     });
   };

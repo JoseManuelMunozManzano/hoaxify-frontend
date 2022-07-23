@@ -130,5 +130,21 @@ describe('HoaxSubmit', () => {
         expect(screen.queryByText('Hoaxify')).not.toBeInTheDocument();
       });
     });
+
+    it('clear content after successful postHoax action', async () => {
+      const { container } = setup();
+      const textArea = container.querySelector('textarea');
+      fireEvent.focus(textArea);
+      fireEvent.change(textArea, { target: { value: 'Test hoax content' } });
+
+      const hoaxifyButton = screen.queryByText('Hoaxify');
+
+      apiCalls.postHoax = jest.fn().mockResolvedValue({});
+      fireEvent.click(hoaxifyButton);
+
+      await waitFor(() => {
+        expect(screen.queryByText('Test hoax content')).not.toBeInTheDocument();
+      });
+    });
   });
 });
