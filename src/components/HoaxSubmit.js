@@ -20,7 +20,7 @@ class HoaxSubmit extends Component {
 
   onChangeContent = (event) => {
     const value = event.target.value;
-    this.setState({ content: value });
+    this.setState({ content: value, errors: {} });
   };
 
   onClickHoaxify = () => {

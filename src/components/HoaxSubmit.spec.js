@@ -353,5 +353,34 @@ describe('HoaxSubmit', () => {
 
       expect(error).not.toBeInTheDocument();
     });
+
+    it('clear validation error after content is changed', async () => {
+      const { container } = setup();
+      const textArea = container.querySelector('textarea');
+      fireEvent.focus(textArea);
+      fireEvent.change(textArea, { target: { value: 'Test hoax content' } });
+
+      const hoaxifyButton = screen.queryByText('Hoaxify');
+
+      const mockFunction = jest.fn().mockRejectedValueOnce({
+        response: {
+          data: {
+            validationErrors: {
+              content: 'It must have minimum 10 and maximum 5000 characters',
+            },
+          },
+        },
+      });
+
+      apiCalls.postHoax = mockFunction;
+      fireEvent.click(hoaxifyButton);
+      const error = await screen.findByText('It must have minimum 10 and maximum 5000 characters');
+
+      fireEvent.change(textArea, { target: { value: 'Test hoax content updated' } });
+
+      expect(error).not.toBeInTheDocument();
+    });
   });
 });
+
+console.error = () => {};
