@@ -295,8 +295,35 @@ describe('HoaxSubmit', () => {
 
       await waitForElementToBeRemoved(hoaxifyButton);
       fireEvent.focus(textArea);
+
       await waitFor(() => {
         expect(screen.queryByText('Hoaxify')).not.toBeDisabled();
+      });
+    });
+
+    it('displays validation error for content', async () => {
+      const { container } = setup();
+      const textArea = container.querySelector('textarea');
+      fireEvent.focus(textArea);
+      fireEvent.change(textArea, { target: { value: 'Test hoax content' } });
+
+      const hoaxifyButton = screen.queryByText('Hoaxify');
+
+      const mockFunction = jest.fn().mockRejectedValueOnce({
+        response: {
+          data: {
+            validationErrors: {
+              content: 'It must have minimum 10 and maximum 5000 characters',
+            },
+          },
+        },
+      });
+
+      apiCalls.postHoax = mockFunction;
+      fireEvent.click(hoaxifyButton);
+
+      await waitFor(() => {
+        expect(screen.getByText('It must have minimum 10 and maximum 5000 characters')).toBeInTheDocument();
       });
     });
   });
