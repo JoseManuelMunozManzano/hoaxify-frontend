@@ -157,5 +157,32 @@ describe('HoaxSubmit', () => {
 
       expect(screen.queryByText('Test hoax content')).not.toBeInTheDocument();
     });
+
+    it('disables Hoaxify button when there is postHoax api call', async () => {
+      const { container } = setup();
+      const textArea = container.querySelector('textarea');
+      fireEvent.focus(textArea);
+      fireEvent.change(textArea, { target: { value: 'Test hoax content' } });
+
+      const hoaxifyButton = screen.queryByText('Hoaxify');
+
+      // En vez de mockResolvedValue vamos a definir una implementación con un comportamiento
+      // que retrasa la respuesta
+      const mockFunction = jest.fn().mockImplementation(() => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve({});
+          }, 300);
+        });
+      });
+
+      apiCalls.postHoax = mockFunction;
+      fireEvent.click(hoaxifyButton);
+
+      // Pulsmos el botón Hoaxify de nuevo
+      fireEvent.click(hoaxifyButton);
+
+      expect(mockFunction).toHaveBeenCalledTimes(1);
+    });
   });
 });

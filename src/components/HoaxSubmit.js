@@ -6,12 +6,13 @@ import * as apiCalls from '../api/apiCalls';
 class HoaxSubmit extends Component {
   state = {
     focused: false,
+    content: undefined,
+    pendingApiCall: false,
   };
 
   onFocus = () => {
     this.setState({
       focused: true,
-      content: undefined,
     });
   };
 
@@ -25,6 +26,7 @@ class HoaxSubmit extends Component {
       content: this.state.content,
     };
 
+    this.setState({ pendingApiCall: true });
     apiCalls.postHoax(body).then((response) => {
       this.setState({
         focused: false,
@@ -59,7 +61,7 @@ class HoaxSubmit extends Component {
           />
           {this.state.focused && (
             <div className="text-right mt-1">
-              <button className="btn btn-success" onClick={this.onClickHoaxify}>
+              <button className="btn btn-success" disabled={this.state.pendingApiCall} onClick={this.onClickHoaxify}>
                 Hoaxify
               </button>
               <button className="btn btn-light ml-1" onClick={this.onClickCancel}>
