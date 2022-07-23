@@ -47,5 +47,11 @@ describe('HomePage', () => {
       const homePageDiv = screen.queryByTestId('homepage');
       expect(homePageDiv).toBeInTheDocument();
     });
+
+    it('displays hoax submit when user logged in', () => {
+      const { container } = setup();
+      const textArea = container.querySelector('textarea');
+      expect(textArea).toBeInTheDocument();
+    });
   });
 });
