@@ -103,5 +103,12 @@ describe('apiCalls', () => {
       // por el que ordenar y la dirección (asc o desc)
       expect(mockGetHoaxes).toBeCalledWith('/api/1.0/hoaxes?page=0&size=5&sort=id,desc');
     });
+
+    it('calls /api/1.0/users/user1/hoaxes?page=0&size=5&sort=id,desc when user param provided', () => {
+      const mockGetHoaxes = jest.fn();
+      axios.get = mockGetHoaxes;
+      apiCalls.loadHoaxes('user1');
+      expect(mockGetHoaxes).toBeCalledWith('/api/1.0/users/user1/hoaxes?page=0&size=5&sort=id,desc');
+    });
   });
 });
