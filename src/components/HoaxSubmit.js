@@ -64,7 +64,7 @@ class HoaxSubmit extends Component {
               <button className="btn btn-success" disabled={this.state.pendingApiCall} onClick={this.onClickHoaxify}>
                 Hoaxify
               </button>
-              <button className="btn btn-light ml-1" onClick={this.onClickCancel}>
+              <button className="btn btn-light ml-1" disabled={this.state.pendingApiCall} onClick={this.onClickCancel}>
                 <i className="fas fa-times"></i> Cancel
               </button>
             </div>

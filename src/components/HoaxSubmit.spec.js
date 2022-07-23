@@ -184,5 +184,28 @@ describe('HoaxSubmit', () => {
 
       expect(mockFunction).toHaveBeenCalledTimes(1);
     });
+
+    it('disables Cancel button when there is postHoax api call', async () => {
+      const { container } = setup();
+      const textArea = container.querySelector('textarea');
+      fireEvent.focus(textArea);
+      fireEvent.change(textArea, { target: { value: 'Test hoax content' } });
+
+      const hoaxifyButton = screen.queryByText('Hoaxify');
+
+      const mockFunction = jest.fn().mockImplementation(() => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve({});
+          }, 300);
+        });
+      });
+
+      apiCalls.postHoax = mockFunction;
+      fireEvent.click(hoaxifyButton);
+
+      const cancelButton = screen.queryByText('Cancel');
+      expect(cancelButton).toBeDisabled();
+    });
   });
 });
