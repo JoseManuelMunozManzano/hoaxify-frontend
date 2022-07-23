@@ -24,12 +24,14 @@ class HoaxSubmit extends Component {
         />
         <div className="flex-fill">
           <textarea className="form-control w-100" rows={this.state.focused ? 3 : 1} onFocus={this.onFocus} />
-          <div className="text-right mt-1">
-            <button className="btn btn-success">Hoaxify</button>
-            <button className="btn btn-light ml-1">
-              <i className="fas fa-times"></i> Cancel
-            </button>
-          </div>
+          {this.state.focused && (
+            <div className="text-right mt-1">
+              <button className="btn btn-success">Hoaxify</button>
+              <button className="btn btn-light ml-1">
+                <i className="fas fa-times"></i> Cancel
+              </button>
+            </div>
+          )}
         </div>
       </div>
     );

@@ -76,5 +76,17 @@ describe('HoaxSubmit', () => {
       const cancelButton = screen.queryByText('Cancel');
       expect(cancelButton).toBeInTheDocument();
     });
+
+    it('does not display Hoaxify button when not focused to textarea', () => {
+      setup();
+      const hoaxifyButton = screen.queryByText('Hoaxify');
+      expect(hoaxifyButton).not.toBeInTheDocument();
+    });
+
+    it('does not display Cancel button when not focused to textarea', () => {
+      setup();
+      const cancelButton = screen.queryByText('Cancel');
+      expect(cancelButton).not.toBeInTheDocument();
+    });
   });
 });
