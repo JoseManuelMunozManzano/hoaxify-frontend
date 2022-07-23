@@ -16,9 +16,6 @@ const defaultState = {
 
 let store;
 
-// Para evitar el error: You should not use <Link> outside a <Router>
-// Se añade Redux
-// Se añade state. Como no todos los tests llaman a setup con parámetro se pone un valor por defecto
 const setup = (state = defaultState) => {
   store = createStore(authReducer, state);
 
