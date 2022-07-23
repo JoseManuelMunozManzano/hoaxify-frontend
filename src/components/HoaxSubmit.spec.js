@@ -4,6 +4,7 @@ import HoaxSubmit from './HoaxSubmit';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import authReducer from '../redux/authReducer';
+import * as apiCalls from '../api/apiCalls';
 
 const defaultState = {
   id: 1,
@@ -96,6 +97,22 @@ describe('HoaxSubmit', () => {
       const cancelButton = screen.queryByText('Cancel');
       fireEvent.click(cancelButton);
       expect(screen.queryByText('Cancel')).not.toBeInTheDocument();
+    });
+
+    it('calls postHoax with hoax request object when clicking Hoaxify', () => {
+      const { container } = setup();
+      const textArea = container.querySelector('textarea');
+      fireEvent.focus(textArea);
+      fireEvent.change(textArea, { target: { value: 'Test hoax content' } });
+
+      const hoaxifyButton = screen.queryByText('Hoaxify');
+
+      apiCalls.postHoax = jest.fn().mockResolvedValue({});
+      fireEvent.click(hoaxifyButton);
+
+      expect(apiCalls.postHoax).toHaveBeenCalledWith({
+        content: 'Test hoax content',
+      });
     });
   });
 });
