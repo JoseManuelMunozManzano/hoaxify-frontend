@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ProfileImageWithDefault from './ProfileImageWithDefault';
 import { connect } from 'react-redux';
 import * as apiCalls from '../api/apiCalls';
+import ButtonWithProgress from './ButtonWithProgress';
 
 class HoaxSubmit extends Component {
   state = {
@@ -61,9 +62,13 @@ class HoaxSubmit extends Component {
           />
           {this.state.focused && (
             <div className="text-right mt-1">
-              <button className="btn btn-success" disabled={this.state.pendingApiCall} onClick={this.onClickHoaxify}>
-                Hoaxify
-              </button>
+              <ButtonWithProgress
+                className="btn btn-success"
+                disabled={this.state.pendingApiCall}
+                onClick={this.onClickHoaxify}
+                pendingApiCall={this.state.pendingApiCall}
+                text="Hoaxify"
+              />
               <button className="btn btn-light ml-1" disabled={this.state.pendingApiCall} onClick={this.onClickCancel}>
                 <i className="fas fa-times"></i> Cancel
               </button>
