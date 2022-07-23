@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, screen } from '@testing-library/react';
 import HoaxSubmit from './HoaxSubmit';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
@@ -59,6 +59,14 @@ describe('HoaxSubmit', () => {
       const textArea = container.querySelector('textarea');
       fireEvent.focus(textArea);
       expect(textArea.rows).toBe(3);
+    });
+
+    it('displays hoaxify button when focused to textarea', () => {
+      const { container } = setup();
+      const textArea = container.querySelector('textarea');
+      fireEvent.focus(textArea);
+      const hoaxifyButton = screen.queryByText('Hoaxify');
+      expect(hoaxifyButton).toBeInTheDocument();
     });
   });
 });
