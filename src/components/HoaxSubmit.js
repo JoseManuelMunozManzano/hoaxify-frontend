@@ -28,12 +28,17 @@ class HoaxSubmit extends Component {
     };
 
     this.setState({ pendingApiCall: true });
-    apiCalls.postHoax(body).then((response) => {
-      this.setState({
-        focused: false,
-        content: '',
+    apiCalls
+      .postHoax(body)
+      .then((response) => {
+        this.setState({
+          focused: false,
+          content: '',
+        });
+      })
+      .catch((error) => {
+        this.setState({ pendingApiCall: false });
       });
-    });
   };
 
   onClickCancel = () => {
