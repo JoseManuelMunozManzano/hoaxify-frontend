@@ -9,5 +9,11 @@ describe('HoaxSubmit', () => {
       const textArea = container.querySelector('textarea');
       expect(textArea).toBeInTheDocument();
     });
+
+    it('has image', () => {
+      const { container } = render(<HoaxSubmit />);
+      const image = container.querySelector('img');
+      expect(image).toBeInTheDocument();
+    });
   });
 });
