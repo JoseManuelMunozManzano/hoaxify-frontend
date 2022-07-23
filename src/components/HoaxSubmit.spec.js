@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, screen, waitFor } from '@testing-library/react';
+import { render, fireEvent, screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 import HoaxSubmit from './HoaxSubmit';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
@@ -279,6 +279,24 @@ describe('HoaxSubmit', () => {
 
       await waitFor(() => {
         expect(screen.getByText('Cancel')).not.toBeDisabled();
+      });
+    });
+
+    it('enables Hoaxify button after successful postHoax action', async () => {
+      const { container } = setup();
+      const textArea = container.querySelector('textarea');
+      fireEvent.focus(textArea);
+      fireEvent.change(textArea, { target: { value: 'Test hoax content' } });
+
+      const hoaxifyButton = screen.queryByText('Hoaxify');
+
+      apiCalls.postHoax = jest.fn().mockResolvedValue({});
+      fireEvent.click(hoaxifyButton);
+
+      await waitForElementToBeRemoved(hoaxifyButton);
+      fireEvent.focus(textArea);
+      await waitFor(() => {
+        expect(screen.queryByText('Hoaxify')).not.toBeDisabled();
       });
     });
   });
