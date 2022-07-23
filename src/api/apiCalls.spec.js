@@ -93,4 +93,15 @@ describe('apiCalls', () => {
       expect(path).toBe('/api/1.0/hoaxes');
     });
   });
+
+  describe('loadHoaxes', () => {
+    it('calls /api/1.0/hoaxes?page=0&size=5&sort=id,desc when no param provided', () => {
+      const mockGetHoaxes = jest.fn();
+      axios.get = mockGetHoaxes;
+      apiCalls.loadHoaxes();
+      // Pagination del backed ya viene con la funcionalidad para ordenar. Se indica el parámetro sort indicando el campo
+      // por el que ordenar y la dirección (asc o desc)
+      expect(mockGetHoaxes).toBeCalledWith('/api/1.0/hoaxes?page=0&size=5&sort=id,desc');
+    });
+  });
 });

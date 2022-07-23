@@ -38,3 +38,7 @@ export const updateUser = (userId, body) => {
 export const postHoax = (hoax) => {
   return axios.post('/api/1.0/hoaxes', hoax);
 };
+
+export const loadHoaxes = () => {
+  return axios.get('/api/1.0/hoaxes?page=0&size=5&sort=id,desc');
+};
