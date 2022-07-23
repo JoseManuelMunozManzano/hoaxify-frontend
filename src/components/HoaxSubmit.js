@@ -36,6 +36,7 @@ class HoaxSubmit extends Component {
   onClickCancel = () => {
     this.setState({
       focused: false,
+      content: '',
     });
   };
 

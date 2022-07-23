@@ -146,5 +146,16 @@ describe('HoaxSubmit', () => {
         expect(screen.queryByText('Test hoax content')).not.toBeInTheDocument();
       });
     });
+
+    it('clear content after clicking cancel', () => {
+      const { container } = setup();
+      const textArea = container.querySelector('textarea');
+      fireEvent.focus(textArea);
+      fireEvent.change(textArea, { target: { value: 'Test hoax content' } });
+
+      fireEvent.click(screen.queryByText('Cancel'));
+
+      expect(screen.queryByText('Test hoax content')).not.toBeInTheDocument();
+    });
   });
 });
