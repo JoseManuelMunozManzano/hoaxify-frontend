@@ -51,6 +51,7 @@ class HoaxSubmit extends Component {
     this.setState({
       focused: false,
       content: '',
+      errors: {},
     });
   };
 
