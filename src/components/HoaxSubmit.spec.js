@@ -68,5 +68,13 @@ describe('HoaxSubmit', () => {
       const hoaxifyButton = screen.queryByText('Hoaxify');
       expect(hoaxifyButton).toBeInTheDocument();
     });
+
+    it('displays Cancel button when focused to textarea', () => {
+      const { container } = setup();
+      const textArea = container.querySelector('textarea');
+      fireEvent.focus(textArea);
+      const cancelButton = screen.queryByText('Cancel');
+      expect(cancelButton).toBeInTheDocument();
+    });
   });
 });
