@@ -1,5 +1,5 @@
 import React from 'react';
-import { getByText, render, screen, waitFor } from '@testing-library/react';
+import { findByText, getByText, render, screen, waitFor } from '@testing-library/react';
 import HoaxFeed from './HoaxFeed';
 import * as apiCalls from '../api/apiCalls';
 
@@ -60,10 +60,11 @@ describe('HoaxFeed', () => {
   });
 
   describe('Layout', () => {
-    it('displays no hoax message when the response has empty page', () => {
+    it('displays no hoax message when the response has empty page', async () => {
       apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockEmptyResponse);
       setup();
-      expect(screen.getByText('There are no hoaxes')).toBeInTheDocument();
+      const message = await screen.findByText('There are no hoaxes');
+      expect(message).toBeInTheDocument();
     });
 
     it('does not display no hoax message when the response has page of hoax', async () => {

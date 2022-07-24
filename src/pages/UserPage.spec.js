@@ -121,6 +121,7 @@ describe('UserPage', () => {
       expect(alert).toBeInTheDocument();
     });
 
+    // Ahora aparecen 2 spinners, uno al cargar data y otro al cargar hoaxes
     it('displays spinner while loading user data', () => {
       const mockDelayedResponse = jest.fn().mockImplementation(() => {
         return new Promise((resolve, reject) => {
@@ -131,9 +132,9 @@ describe('UserPage', () => {
       });
 
       apiCalls.getUser = mockDelayedResponse;
-      const { queryByText } = setup({ match });
-      const spinner = screen.queryByText('Loading...');
-      expect(spinner).toBeInTheDocument();
+      setup({ match });
+      const spinners = screen.queryAllByText('Loading...');
+      expect(spinners.length).not.toBe(0);
     });
 
     it('displays the edit button when loggedInUser matches to user in url', async () => {
