@@ -73,5 +73,17 @@ describe('HoaxFeed', () => {
         expect(screen.queryByText('There are no hoaxes')).not.toBeInTheDocument();
       });
     });
+
+    it('displays spinner when loading the hoaxes', () => {
+      apiCalls.loadHoaxes = jest.fn().mockImplementation(() => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve(mockSuccessGetHoaxesSinglePage);
+          }, 300);
+        });
+      });
+      setup();
+      expect(screen.getByText('Loading...')).toBeInTheDocument();
+    });
   });
 });
