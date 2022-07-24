@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { getByText, render, screen, waitFor } from '@testing-library/react';
 import HoaxFeed from './HoaxFeed';
 import * as apiCalls from '../api/apiCalls';
 
@@ -10,6 +10,30 @@ const setup = (props) => {
 const mockEmptyResponse = {
   data: {
     content: [],
+  },
+};
+
+// HoaxVM y Page
+const mockSuccessGetHoaxesSinglePage = {
+  data: {
+    content: [
+      {
+        id: 10,
+        content: 'This is the latest hoax',
+        date: 1561294668539,
+        user: {
+          id: 1,
+          username: 'user1',
+          displayName: 'display1',
+          image: 'profile1.png',
+        },
+      },
+    ],
+    number: 0,
+    first: true,
+    last: true,
+    size: 5,
+    totalPages: 1,
   },
 };
 
@@ -40,6 +64,14 @@ describe('HoaxFeed', () => {
       apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockEmptyResponse);
       setup();
       expect(screen.getByText('There are no hoaxes')).toBeInTheDocument();
+    });
+
+    it('does not display no hoax message when the response has page of hoax', async () => {
+      apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesSinglePage);
+      setup();
+      await waitFor(() => {
+        expect(screen.queryByText('There are no hoaxes')).not.toBeInTheDocument();
+      });
     });
   });
 });
