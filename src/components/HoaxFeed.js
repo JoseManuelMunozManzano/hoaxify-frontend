@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import * as apiCalls from '../api/apiCalls';
+import Spinner from './Spinner';
 
 class HoaxFeed extends Component {
   state = {
@@ -18,13 +19,7 @@ class HoaxFeed extends Component {
 
   render() {
     if (this.state.isLoadingHoaxes) {
-      return (
-        <div className="d-flex">
-          <div className="spinner-border text-black-50 m-auto">
-            <span className="sr-only">Loading...</span>
-          </div>
-        </div>
-      );
+      return <Spinner />;
     }
     if (this.state.page.content.length === 0) {
       return <div className="card card-header text-center">There are no hoaxes</div>;
