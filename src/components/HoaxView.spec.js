@@ -23,5 +23,11 @@ describe('HoaxView', () => {
       setup();
       expect(screen.queryByText('This is the first hoax')).toBeInTheDocument();
     });
+
+    it('displays users image', () => {
+      const { container } = setup();
+      const image = container.querySelector('img');
+      expect(image.src).toContain('/images/profile/profile1.png');
+    });
   });
 });
