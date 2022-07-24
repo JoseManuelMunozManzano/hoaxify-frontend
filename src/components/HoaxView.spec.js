@@ -3,10 +3,14 @@ import { render, screen } from '@testing-library/react';
 import HoaxView from './HoaxView';
 
 const setup = () => {
+  // milisegundos
+  const oneMinute = 60 * 1000;
+  const date = new Date(new Date() - oneMinute);
+
   const hoax = {
     id: 10,
     content: 'This is the first hoax',
-    date: 1561294668539,
+    date,
     user: {
       id: 1,
       username: 'user1',
@@ -33,6 +37,11 @@ describe('HoaxView', () => {
     it('displays displayName@user', () => {
       setup();
       expect(screen.getByText('display1@user1')).toBeInTheDocument();
+    });
+
+    it('displays relative time', () => {
+      setup();
+      expect(screen.getByText('1 minute ago')).toBeInTheDocument();
     });
   });
 });
