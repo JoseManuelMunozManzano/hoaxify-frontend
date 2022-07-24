@@ -88,6 +88,7 @@ describe('HoaxFeed', () => {
     });
 
     // Para que muestre hoax, ir a Postman y ejecutar Create Hoax
+    // También se pueden crear Hoax directamente desde la app
     it('displays hoax content', async () => {
       apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesSinglePage);
       setup();

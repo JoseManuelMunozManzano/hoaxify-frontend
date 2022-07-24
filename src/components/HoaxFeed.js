@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import * as apiCalls from '../api/apiCalls';
+import HoaxView from './HoaxView';
 import Spinner from './Spinner';
 
 class HoaxFeed extends Component {
@@ -28,7 +29,7 @@ class HoaxFeed extends Component {
     return (
       <div>
         {this.state.page.content.map((hoax) => {
-          return <span key={hoax.id}>{hoax.content}</span>;
+          return <HoaxView key={hoax.id} hoax={hoax} />;
         })}
       </div>
     );
