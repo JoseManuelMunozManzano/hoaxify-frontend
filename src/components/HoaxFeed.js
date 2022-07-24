@@ -3,7 +3,7 @@ import * as apiCalls from '../api/apiCalls';
 
 class HoaxFeed extends Component {
   componentDidMount() {
-    apiCalls.loadHoaxes();
+    apiCalls.loadHoaxes(this.props.user);
   }
 
   render() {
