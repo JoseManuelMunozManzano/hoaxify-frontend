@@ -21,13 +21,18 @@ describe('HoaxView', () => {
   describe('Layout', () => {
     it('displays hoax content', () => {
       setup();
-      expect(screen.queryByText('This is the first hoax')).toBeInTheDocument();
+      expect(screen.getByText('This is the first hoax')).toBeInTheDocument();
     });
 
     it('displays users image', () => {
       const { container } = setup();
       const image = container.querySelector('img');
       expect(image.src).toContain('/images/profile/profile1.png');
+    });
+
+    it('displays displayName@user', () => {
+      setup();
+      expect(screen.getByText('display1@user1')).toBeInTheDocument();
     });
   });
 });
