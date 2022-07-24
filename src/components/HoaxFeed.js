@@ -25,7 +25,13 @@ class HoaxFeed extends Component {
       return <div className="card card-header text-center">There are no hoaxes</div>;
     }
 
-    return <div></div>;
+    return (
+      <div>
+        {this.state.page.content.map((hoax) => {
+          return <span key={hoax.id}>{hoax.content}</span>;
+        })}
+      </div>
+    );
   }
 }
 

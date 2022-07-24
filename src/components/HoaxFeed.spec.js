@@ -86,5 +86,14 @@ describe('HoaxFeed', () => {
       setup();
       expect(screen.getByText('Loading...')).toBeInTheDocument();
     });
+
+    // Para que muestre hoax, ir a Postman y ejecutar Create Hoax
+    it('displays hoax content', async () => {
+      apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesSinglePage);
+      setup();
+
+      const hoaxContent = await screen.findByText('This is the latest hoax');
+      expect(hoaxContent).toBeInTheDocument();
+    });
   });
 });
