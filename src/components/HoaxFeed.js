@@ -7,7 +7,7 @@ class HoaxFeed extends Component {
   }
 
   render() {
-    return <div>HoaxFeed</div>;
+    return <div className="card card-header text-center">There are no hoaxes</div>;
   }
 }
 

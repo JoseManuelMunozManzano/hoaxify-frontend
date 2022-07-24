@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import HoaxFeed from './HoaxFeed';
 import * as apiCalls from '../api/apiCalls';
 
@@ -32,6 +32,14 @@ describe('HoaxFeed', () => {
       setup();
       const parameter = apiCalls.loadHoaxes.mock.calls[0][0];
       expect(parameter).toBeUndefined();
+    });
+  });
+
+  describe('Layout', () => {
+    it('displays no hoax message when the response has empty page', () => {
+      apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockEmptyResponse);
+      setup();
+      expect(screen.getByText('There are no hoaxes')).toBeInTheDocument();
     });
   });
 });

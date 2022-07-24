@@ -36,6 +36,15 @@ apiCalls.listUsers = jest.fn().mockResolvedValue({
   },
 });
 
+// Se añade por el mismo motivo de arriba
+apiCalls.loadHoaxes = jest.fn().mockResolvedValue({
+  data: {
+    content: [],
+    number: 0,
+    size: 3,
+  },
+});
+
 describe('HomePage', () => {
   describe('Layout', () => {
     it('has root page div', () => {

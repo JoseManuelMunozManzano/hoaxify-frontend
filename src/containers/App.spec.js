@@ -17,6 +17,15 @@ apiCalls.listUsers = jest.fn().mockResolvedValue({
   },
 });
 
+// Se añade por el mismo motivo de arriba
+apiCalls.loadHoaxes = jest.fn().mockResolvedValue({
+  data: {
+    content: [],
+    number: 0,
+    size: 3,
+  },
+});
+
 // Añadido por la misma razón que apiCalls.listUsers
 apiCalls.getUser = jest.fn().mockResolvedValue({
   data: {

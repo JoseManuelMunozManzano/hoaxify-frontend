@@ -5,6 +5,15 @@ import axios from 'axios';
 import configureStore from '../redux/configureStore';
 import { Provider } from 'react-redux';
 
+// Se añade porque en la cadena de llamadas se acaba llamando a loadHoaxes. Si no se informa esto falla
+apiCalls.loadHoaxes = jest.fn().mockResolvedValue({
+  data: {
+    content: [],
+    number: 0,
+    size: 3,
+  },
+});
+
 const mockSuccessGetUser = {
   data: {
     id: 1,
