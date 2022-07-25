@@ -127,4 +127,20 @@ describe('apiCalls', () => {
       expect(mockGetHoaxes).toBeCalledWith('/api/1.0/users/user3/hoaxes/5?direction=before&page=0&size=5&sort=id,desc');
     });
   });
+
+  describe('loadNewHoaxes', () => {
+    it('calls /api/1.0/hoaxes/5?direction=after&sort=id,desc when hoax id param provided', () => {
+      const mockGetHoaxes = jest.fn();
+      axios.get = mockGetHoaxes;
+      apiCalls.loadNewHoaxes(5);
+      expect(mockGetHoaxes).toBeCalledWith('/api/1.0/hoaxes/5?direction=after&sort=id,desc');
+    });
+
+    it('calls /api/1.0/users/user3/hoaxes/5?direction=after&sort=id,desc when hoax id and username param provided', () => {
+      const mockGetHoaxes = jest.fn();
+      axios.get = mockGetHoaxes;
+      apiCalls.loadNewHoaxes(5, 'user3');
+      expect(mockGetHoaxes).toBeCalledWith('/api/1.0/users/user3/hoaxes/5?direction=after&sort=id,desc');
+    });
+  });
 });
