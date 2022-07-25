@@ -139,6 +139,15 @@ describe('HoaxFeed', () => {
       await screen.findByText('This is the latest hoax');
       expect(apiCalls.loadNewHoaxCount).toHaveBeenCalledWith(10, 'user1');
     });
+
+    it('displays new hoax count as 1 after loadNewHoaxCount success', async () => {
+      apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
+      apiCalls.loadNewHoaxCount = jest.fn().mockResolvedValue({ data: { count: 1 } });
+      setup({ user: 'user1' });
+
+      const newHoaxCount = await screen.findByText('There is 1 new hoax');
+      expect(newHoaxCount).toBeInTheDocument();
+    });
   });
 
   describe('Layout', () => {
