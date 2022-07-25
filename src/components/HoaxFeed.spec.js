@@ -177,7 +177,8 @@ describe('HoaxFeed', () => {
 
       const loadMore = await screen.findByText('Load More');
       fireEvent.click(loadMore);
-      expect(apiCalls.loadOldHoaxes).toHaveBeenCalledWith(9);
+      const firstParam = apiCalls.loadOldHoaxes.mock.calls[0][0];
+      expect(firstParam).toBe(9);
     });
 
     it('calls loadOldHoaxes with hoax id and username when clicking Load More when rendered with user property', async () => {
