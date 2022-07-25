@@ -120,6 +120,16 @@ describe('HoaxFeed', () => {
       const parameter = apiCalls.loadHoaxes.mock.calls[0][0];
       expect(parameter).toBeUndefined();
     });
+
+    it('calls loadNewHoaxCount with topHoax id', async () => {
+      apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
+      apiCalls.loadNewHoaxCount = jest.fn().mockResolvedValue({ data: { count: 1 } });
+      setup();
+
+      await screen.findByText('This is the latest hoax');
+      const firstParam = apiCalls.loadNewHoaxCount.mock.calls[0][0];
+      expect(firstParam).toBe(10);
+    });
   });
 
   describe('Layout', () => {

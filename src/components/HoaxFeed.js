@@ -14,9 +14,19 @@ class HoaxFeed extends Component {
   componentDidMount() {
     this.setState({ isLoadingHoaxes: true });
     apiCalls.loadHoaxes(this.props.user).then((response) => {
-      this.setState({ page: response.data, isLoadingHoaxes: false });
+      this.setState({ page: response.data, isLoadingHoaxes: false }, this.checkCount);
     });
   }
+
+  checkCount = () => {
+    const hoaxes = this.state.page.content;
+    if (hoaxes.length === 0) {
+      return;
+    }
+
+    const topHoax = hoaxes[0];
+    apiCalls.loadNewHoaxCount(topHoax.id);
+  };
 
   onClickLoadMore = () => {
     const hoaxes = this.state.page.content;
