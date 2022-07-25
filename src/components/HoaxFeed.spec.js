@@ -346,16 +346,23 @@ describe('HoaxFeed', () => {
       jest.useRealTimers();
     });
 
-    // it('displays loaded old hoax when loadOldHoaxes api call success', async () => {
-    //   apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
-    //   apiCalls.loadOldHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesLastOfMultiPage);
-    //   setup();
+    it('displays loaded new hoax when loadNewHoaxes api call success', async () => {
+      jest.useFakeTimers();
+      apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
+      apiCalls.loadNewHoaxCount = jest.fn().mockResolvedValue({ data: { count: 1 } });
+      apiCalls.loadNewHoaxes = jest.fn().mockResolvedValue(mockSuccessGetNewHoaxesList);
+      setup({ user: 'user1' });
 
-    //   const loadMore = await screen.findByText('Load More');
-    //   fireEvent.click(loadMore);
-    //   const oldHoax = await screen.findByText('This is the oldest hoax');
-    //   expect(oldHoax).toBeInTheDocument();
-    // });
+      await screen.findByText('This is the latest hoax');
+      jest.runOnlyPendingTimers();
+      const newHoaxCount = await screen.findByText('There is 1 new hoax');
+      jest.runOnlyPendingTimers();
+      fireEvent.click(newHoaxCount);
+      const newHoax = await screen.findByText('This is the newest hoax');
+      jest.runOnlyPendingTimers();
+      expect(newHoax).toBeInTheDocument();
+      jest.useRealTimers();
+    });
 
     // it('hides Load More when loadOldHoaxes api call returns last page', async () => {
     //   apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);

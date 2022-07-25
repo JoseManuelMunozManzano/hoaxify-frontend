@@ -66,7 +66,11 @@ class HoaxFeed extends Component {
       topHoaxId = hoaxes[0].id;
     }
 
-    apiCalls.loadNewHoaxes(topHoaxId, this.props.user);
+    apiCalls.loadNewHoaxes(topHoaxId, this.props.user).then((response) => {
+      const page = { ...this.state.page };
+      page.content = [...response.data, ...page.content];
+      this.setState({ page });
+    });
   };
 
   render() {
