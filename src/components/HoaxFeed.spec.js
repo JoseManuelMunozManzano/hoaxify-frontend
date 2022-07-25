@@ -190,5 +190,16 @@ describe('HoaxFeed', () => {
       fireEvent.click(loadMore);
       expect(apiCalls.loadOldHoaxes).toHaveBeenCalledWith(9, 'user1');
     });
+
+    it('displays loaded old hoax when loadOldHoaxes api call success', async () => {
+      apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
+      apiCalls.loadOldHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesLastOfMultiPage);
+      setup();
+
+      const loadMore = await screen.findByText('Load More');
+      fireEvent.click(loadMore);
+      const oldHoax = await screen.findByText('This is the oldest hoax');
+      expect(oldHoax).toBeInTheDocument();
+    });
   });
 });
