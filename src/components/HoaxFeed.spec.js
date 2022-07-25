@@ -214,3 +214,5 @@ describe('HoaxFeed', () => {
     });
   });
 });
+
+console.error = () => {};
