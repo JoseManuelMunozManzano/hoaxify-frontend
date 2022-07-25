@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import HoaxFeed from './HoaxFeed';
 import * as apiCalls from '../api/apiCalls';
 import { MemoryRouter } from 'react-router-dom';
@@ -56,10 +56,45 @@ const mockSuccessGetHoaxesFirstOfMultiPage = {
           image: 'profile1.png',
         },
       },
+      {
+        // Porque el contenido es ordenado en forma descendente basado en el id
+        id: 9,
+        content: 'This is hoax 9',
+        date: 1561294668539,
+        user: {
+          id: 1,
+          username: 'user1',
+          displayName: 'display1',
+          image: 'profile1.png',
+        },
+      },
     ],
     number: 0,
     first: true,
     last: false,
+    size: 5,
+    totalPages: 2,
+  },
+};
+
+const mockSuccessGetHoaxesLastOfMultiPage = {
+  data: {
+    content: [
+      {
+        id: 1,
+        content: 'This is the oldest hoax',
+        date: 1561294668539,
+        user: {
+          id: 1,
+          username: 'user1',
+          displayName: 'display1',
+          image: 'profile1.png',
+        },
+      },
+    ],
+    number: 0,
+    first: true,
+    last: true,
     size: 5,
     totalPages: 2,
   },
@@ -131,6 +166,18 @@ describe('HoaxFeed', () => {
 
       const loadMore = await screen.findByText('Load More');
       expect(loadMore).toBeInTheDocument();
+    });
+  });
+
+  describe('Interactions', () => {
+    it('calls loadOldHoaxes with hoax id when clicking Load More', async () => {
+      apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
+      apiCalls.loadOldHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesLastOfMultiPage);
+      setup();
+
+      const loadMore = await screen.findByText('Load More');
+      fireEvent.click(loadMore);
+      expect(apiCalls.loadOldHoaxes).toHaveBeenCalledWith(9);
     });
   });
 });
