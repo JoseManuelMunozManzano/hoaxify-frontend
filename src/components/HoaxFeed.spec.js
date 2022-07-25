@@ -179,5 +179,15 @@ describe('HoaxFeed', () => {
       fireEvent.click(loadMore);
       expect(apiCalls.loadOldHoaxes).toHaveBeenCalledWith(9);
     });
+
+    it('calls loadOldHoaxes with hoax id and username when clicking Load More when rendered with user property', async () => {
+      apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
+      apiCalls.loadOldHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesLastOfMultiPage);
+      setup({ user: 'user1' });
+
+      const loadMore = await screen.findByText('Load More');
+      fireEvent.click(loadMore);
+      expect(apiCalls.loadOldHoaxes).toHaveBeenCalledWith(9, 'user1');
+    });
   });
 });
