@@ -176,6 +176,23 @@ describe('HoaxFeed', () => {
       expect(newHoaxCount).toBeInTheDocument();
       jest.useRealTimers();
     });
+
+    it('does not call loadNewHoaxCount after component is unmounted', async (done) => {
+      jest.useFakeTimers();
+      apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
+      apiCalls.loadNewHoaxCount = jest.fn().mockResolvedValue({ data: { count: 1 } });
+      setup({ user: 'user1' });
+
+      await screen.findByText('This is the latest hoax');
+      jest.runOnlyPendingTimers();
+      await screen.findByText('There is 1 new hoax');
+      screen.unmount();
+      setTimeout(() => {
+        expect(apiCalls.loadNewHoaxCount).toHaveBeenCalledTimes(1);
+        done();
+      }, 3500);
+      jest.useRealTimers();
+    }, 7000);
   });
 
   describe('Layout', () => {

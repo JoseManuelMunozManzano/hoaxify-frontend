@@ -13,12 +13,21 @@ class HoaxFeed extends Component {
   };
 
   componentDidMount() {
+    // Ahora tenemos un error porque cada vez que nuestro componente se monta, se crea un nuevo interval y nunca se destruye.
+    // De esto nos damos cuenta mirando en Chrome, en las herramientas para desarrolladores, pestaña Network, que no para
+    // de hacer llamadas al backend
+    // Este error se ve al ir a la página de login
     this.setState({ isLoadingHoaxes: true });
     apiCalls.loadHoaxes(this.props.user).then((response) => {
       this.setState({ page: response.data, isLoadingHoaxes: false }, () => {
-        setInterval(this.checkCount, 3000);
+        this.counter = setInterval(this.checkCount, 3000);
       });
     });
+  }
+
+  // Se corrige limpiando el setInterval aquí
+  componentWillUnmount() {
+    clearInterval(this.counter);
   }
 
   checkCount = () => {
