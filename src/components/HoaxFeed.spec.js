@@ -122,43 +122,59 @@ describe('HoaxFeed', () => {
     });
 
     it('calls loadNewHoaxCount with topHoax id', async () => {
+      jest.useFakeTimers();
       apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
       apiCalls.loadNewHoaxCount = jest.fn().mockResolvedValue({ data: { count: 1 } });
       setup();
 
       await screen.findByText('This is the latest hoax');
+      jest.runOnlyPendingTimers();
+      await screen.findByText('There is 1 new hoax');
       const firstParam = apiCalls.loadNewHoaxCount.mock.calls[0][0];
       expect(firstParam).toBe(10);
+      jest.useRealTimers();
     });
 
     it('calls loadNewHoaxCount with topHoax id and username when rendered with user property', async () => {
+      jest.useFakeTimers();
       apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
       apiCalls.loadNewHoaxCount = jest.fn().mockResolvedValue({ data: { count: 1 } });
       setup({ user: 'user1' });
 
       await screen.findByText('This is the latest hoax');
+      jest.runOnlyPendingTimers();
+      await screen.findByText('There is 1 new hoax');
       expect(apiCalls.loadNewHoaxCount).toHaveBeenCalledWith(10, 'user1');
+      jest.useRealTimers();
     });
 
     it('displays new hoax count as 1 after loadNewHoaxCount success', async () => {
+      jest.useFakeTimers();
       apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
       apiCalls.loadNewHoaxCount = jest.fn().mockResolvedValue({ data: { count: 1 } });
       setup({ user: 'user1' });
 
+      await screen.findByText('This is the latest hoax');
+      jest.runOnlyPendingTimers();
       const newHoaxCount = await screen.findByText('There is 1 new hoax');
       expect(newHoaxCount).toBeInTheDocument();
+      jest.useRealTimers();
     });
 
     it('displays new hoax count constantly', async () => {
+      jest.useFakeTimers();
       apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
       apiCalls.loadNewHoaxCount = jest.fn().mockResolvedValue({ data: { count: 1 } });
       setup({ user: 'user1' });
 
+      await screen.findByText('This is the latest hoax');
+      jest.runOnlyPendingTimers();
       await screen.findByText('There is 1 new hoax');
       apiCalls.loadNewHoaxCount = jest.fn().mockResolvedValue({ data: { count: 2 } });
+      jest.runOnlyPendingTimers();
       const newHoaxCount = await screen.findByText('There are 2 new hoaxes');
-      // Fallan tests porque ahora se esperan 3 segundos (setInterval) y mientras tanto aparece el texto This is the latest hoax
       expect(newHoaxCount).toBeInTheDocument();
+      jest.useRealTimers();
     });
   });
 
