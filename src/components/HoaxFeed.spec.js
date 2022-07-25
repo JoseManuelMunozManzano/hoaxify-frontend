@@ -177,22 +177,32 @@ describe('HoaxFeed', () => {
       jest.useRealTimers();
     });
 
-    it('does not call loadNewHoaxCount after component is unmounted', async (done) => {
+    it('does not call loadNewHoaxCount after component is unmounted', async () => {
       jest.useFakeTimers();
       apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
       apiCalls.loadNewHoaxCount = jest.fn().mockResolvedValue({ data: { count: 1 } });
-      setup({ user: 'user1' });
+      const { unmount } = setup({ user: 'user1' });
 
       await screen.findByText('This is the latest hoax');
       jest.runOnlyPendingTimers();
       await screen.findByText('There is 1 new hoax');
-      screen.unmount();
-      setTimeout(() => {
-        expect(apiCalls.loadNewHoaxCount).toHaveBeenCalledTimes(1);
-        done();
-      }, 3500);
+      unmount();
+      expect(apiCalls.loadNewHoaxCount).toHaveBeenCalledTimes(1);
       jest.useRealTimers();
     }, 7000);
+
+    it('displays new hoax count as 1 after loadNewHoaxCount success when user does not have hoaxes initially', async () => {
+      jest.useFakeTimers();
+      apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockEmptyResponse);
+      apiCalls.loadNewHoaxCount = jest.fn().mockResolvedValue({ data: { count: 1 } });
+      setup({ user: 'user1' });
+
+      await screen.findByText('There are no hoaxes');
+      jest.runOnlyPendingTimers();
+      const newHoaxCount = await screen.findByText('There is 1 new hoax');
+      expect(newHoaxCount).toBeInTheDocument();
+      jest.useRealTimers();
+    });
   });
 
   describe('Layout', () => {

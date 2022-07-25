@@ -30,14 +30,16 @@ class HoaxFeed extends Component {
     clearInterval(this.counter);
   }
 
+  // Se corrige el programa para que la cuenta de hoax funcione en distintas sesiones de navegador para el mismo usuario
+  // al añadir un hoax y que en la otra sesión se vea refrescado que existe un hoax.
   checkCount = () => {
     const hoaxes = this.state.page.content;
-    if (hoaxes.length === 0) {
-      return;
+    let topHoaxId = 0;
+    if (hoaxes.length > 0) {
+      topHoaxId = hoaxes[0].id;
     }
 
-    const topHoax = hoaxes[0];
-    apiCalls.loadNewHoaxCount(topHoax.id, this.props.user).then((response) => {
+    apiCalls.loadNewHoaxCount(topHoaxId, this.props.user).then((response) => {
       this.setState({ newHoaxCount: response.data.count });
     });
   };
@@ -61,7 +63,7 @@ class HoaxFeed extends Component {
     if (this.state.isLoadingHoaxes) {
       return <Spinner />;
     }
-    if (this.state.page.content.length === 0) {
+    if (this.state.page.content.length === 0 && this.state.newHoaxCount === 0) {
       return <div className="card card-header text-center">There are no hoaxes</div>;
     }
 
