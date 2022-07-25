@@ -44,7 +44,8 @@ export const loadHoaxes = (username) => {
   return axios.get(basePath + '?page=0&size=5&sort=id,desc');
 };
 
-export const loadOldHoaxes = (hoaxId) => {
-  const path = `/api/1.0/hoaxes/${hoaxId}?direction=before&page=0&size=5&sort=id,desc`;
+export const loadOldHoaxes = (hoaxId, username) => {
+  const basePath = username ? `/api/1.0/users/${username}/hoaxes` : '/api/1.0/hoaxes';
+  const path = `${basePath}/${hoaxId}?direction=before&page=0&size=5&sort=id,desc`;
   return axios.get(path);
 };
