@@ -18,6 +18,22 @@ const mockEmptyResponse = {
   },
 };
 
+const mockSuccessGetNewHoaxesList = {
+  data: [
+    {
+      id: 21,
+      content: 'This is the newest hoax',
+      date: 1561294668539,
+      user: {
+        id: 1,
+        username: 'user1',
+        displayName: 'display1',
+        image: 'profile1.png',
+      },
+    },
+  ],
+};
+
 // HoaxVM y Page
 const mockSuccessGetHoaxesSinglePage = {
   data: {
@@ -295,6 +311,56 @@ describe('HoaxFeed', () => {
       await screen.findByText('This is the oldest hoax');
       expect(screen.queryByText('Load More')).not.toBeInTheDocument();
     });
+
+    // load new hoaxes
+    it('calls loadNewHoaxes with hoax id when clicking New Hoax Count Card', async () => {
+      jest.useFakeTimers();
+      apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
+      apiCalls.loadNewHoaxCount = jest.fn().mockResolvedValue({ data: { count: 1 } });
+      apiCalls.loadNewHoaxes = jest.fn().mockResolvedValue(mockSuccessGetNewHoaxesList);
+      setup();
+
+      await screen.findByText('This is the latest hoax');
+      jest.runOnlyPendingTimers();
+      const newHoaxCount = await screen.findByText('There is 1 new hoax');
+      jest.runOnlyPendingTimers();
+      fireEvent.click(newHoaxCount);
+      const firstParam = apiCalls.loadNewHoaxes.mock.calls[0][0];
+      expect(firstParam).toBe(10);
+      jest.useRealTimers();
+    });
+
+    // it('calls loadOldHoaxes with hoax id and username when clicking Load More when rendered with user property', async () => {
+    //   apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
+    //   apiCalls.loadOldHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesLastOfMultiPage);
+    //   setup({ user: 'user1' });
+
+    //   const loadMore = await screen.findByText('Load More');
+    //   fireEvent.click(loadMore);
+    //   expect(apiCalls.loadOldHoaxes).toHaveBeenCalledWith(9, 'user1');
+    // });
+
+    // it('displays loaded old hoax when loadOldHoaxes api call success', async () => {
+    //   apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
+    //   apiCalls.loadOldHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesLastOfMultiPage);
+    //   setup();
+
+    //   const loadMore = await screen.findByText('Load More');
+    //   fireEvent.click(loadMore);
+    //   const oldHoax = await screen.findByText('This is the oldest hoax');
+    //   expect(oldHoax).toBeInTheDocument();
+    // });
+
+    // it('hides Load More when loadOldHoaxes api call returns last page', async () => {
+    //   apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
+    //   apiCalls.loadOldHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesLastOfMultiPage);
+    //   setup();
+
+    //   const loadMore = await screen.findByText('Load More');
+    //   fireEvent.click(loadMore);
+    //   await screen.findByText('This is the oldest hoax');
+    //   expect(screen.queryByText('Load More')).not.toBeInTheDocument();
+    // });
   });
 });
 
