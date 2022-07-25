@@ -28,6 +28,7 @@ class HoaxFeed extends Component {
     apiCalls.loadOldHoaxes(hoaxAtBottom.id, this.props.user).then((response) => {
       const page = { ...this.state.page };
       page.content = [...page.content, ...response.data.content];
+      page.last = response.data.last;
       this.setState({ page });
     });
   };

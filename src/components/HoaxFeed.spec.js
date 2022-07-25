@@ -201,5 +201,16 @@ describe('HoaxFeed', () => {
       const oldHoax = await screen.findByText('This is the oldest hoax');
       expect(oldHoax).toBeInTheDocument();
     });
+
+    it('hides Load More when loadOldHoaxes api call returns last page', async () => {
+      apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
+      apiCalls.loadOldHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesLastOfMultiPage);
+      setup();
+
+      const loadMore = await screen.findByText('Load More');
+      fireEvent.click(loadMore);
+      await screen.findByText('This is the oldest hoax');
+      expect(screen.queryByText('Load More')).not.toBeInTheDocument();
+    });
   });
 });
