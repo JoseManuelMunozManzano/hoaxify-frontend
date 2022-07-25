@@ -148,6 +148,18 @@ describe('HoaxFeed', () => {
       const newHoaxCount = await screen.findByText('There is 1 new hoax');
       expect(newHoaxCount).toBeInTheDocument();
     });
+
+    it('displays new hoax count constantly', async () => {
+      apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
+      apiCalls.loadNewHoaxCount = jest.fn().mockResolvedValue({ data: { count: 1 } });
+      setup({ user: 'user1' });
+
+      await screen.findByText('There is 1 new hoax');
+      apiCalls.loadNewHoaxCount = jest.fn().mockResolvedValue({ data: { count: 2 } });
+      const newHoaxCount = await screen.findByText('There are 2 new hoaxes');
+      // Fallan tests porque ahora se esperan 3 segundos (setInterval) y mientras tanto aparece el texto This is the latest hoax
+      expect(newHoaxCount).toBeInTheDocument();
+    });
   });
 
   describe('Layout', () => {

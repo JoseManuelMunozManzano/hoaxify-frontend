@@ -15,7 +15,9 @@ class HoaxFeed extends Component {
   componentDidMount() {
     this.setState({ isLoadingHoaxes: true });
     apiCalls.loadHoaxes(this.props.user).then((response) => {
-      this.setState({ page: response.data, isLoadingHoaxes: false }, this.checkCount);
+      this.setState({ page: response.data, isLoadingHoaxes: false }, () => {
+        setInterval(this.checkCount, 3000);
+      });
     });
   }
 
@@ -56,7 +58,11 @@ class HoaxFeed extends Component {
 
     return (
       <div>
-        {this.state.newHoaxCount > 0 && <div className="card card-header text-center">There is 1 new hoax</div>}
+        {this.state.newHoaxCount > 0 && (
+          <div className="card card-header text-center">
+            {this.state.newHoaxCount === 1 ? 'There is 1 new hoax' : `There are ${this.state.newHoaxCount} new hoaxes`}
+          </div>
+        )}
         {this.state.page.content.map((hoax) => {
           return <HoaxView key={hoax.id} hoax={hoax} />;
         })}
