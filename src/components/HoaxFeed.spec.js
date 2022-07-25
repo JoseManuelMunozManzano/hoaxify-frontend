@@ -380,6 +380,18 @@ describe('HoaxFeed', () => {
       expect(screen.queryByText('There is 1 new hoax')).not.toBeInTheDocument();
       jest.useRealTimers();
     });
+
+    it('does not allow loadOldHoaxes to be called when there is an active api call about it', async () => {
+      apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
+      apiCalls.loadOldHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesLastOfMultiPage);
+      setup();
+
+      const loadMore = await screen.findByText('Load More');
+      fireEvent.click(loadMore);
+      fireEvent.click(loadMore);
+
+      expect(apiCalls.loadOldHoaxes).toHaveBeenCalledTimes(1);
+    });
   });
 });
 

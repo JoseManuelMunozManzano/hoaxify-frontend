@@ -10,6 +10,7 @@ class HoaxFeed extends Component {
     },
     isLoadingHoaxes: false,
     newHoaxCount: 0,
+    isLoadingOldHoaxes: false,
   };
 
   componentDidMount() {
@@ -45,12 +46,17 @@ class HoaxFeed extends Component {
   };
 
   onClickLoadMore = () => {
+    if (this.state.isLoadingOldHoaxes) {
+      return;
+    }
+
     const hoaxes = this.state.page.content;
     if (hoaxes.length === 0) {
       return;
     }
 
     const hoaxAtBottom = hoaxes[hoaxes.length - 1];
+    this.setState({ isLoadingOldHoaxes: true });
     apiCalls.loadOldHoaxes(hoaxAtBottom.id, this.props.user).then((response) => {
       const page = { ...this.state.page };
       page.content = [...page.content, ...response.data.content];
@@ -92,7 +98,11 @@ class HoaxFeed extends Component {
           return <HoaxView key={hoax.id} hoax={hoax} />;
         })}
         {this.state.page.last === false && (
-          <div className="card card-header text-center" style={{ cursor: 'pointer' }} onClick={this.onClickLoadMore}>
+          <div
+            className="card card-header text-center"
+            style={{ cursor: this.state.isLoadingOldHoaxes ? 'not-allowed' : 'pointer' }}
+            onClick={this.onClickLoadMore}
+          >
             Load More
           </div>
         )}
