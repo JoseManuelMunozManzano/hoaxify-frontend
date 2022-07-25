@@ -69,7 +69,7 @@ class HoaxFeed extends Component {
     apiCalls.loadNewHoaxes(topHoaxId, this.props.user).then((response) => {
       const page = { ...this.state.page };
       page.content = [...response.data, ...page.content];
-      this.setState({ page });
+      this.setState({ page, newHoaxCount: 0 });
     });
   };
 
