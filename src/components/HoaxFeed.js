@@ -25,7 +25,7 @@ class HoaxFeed extends Component {
     }
 
     const topHoax = hoaxes[0];
-    apiCalls.loadNewHoaxCount(topHoax.id);
+    apiCalls.loadNewHoaxCount(topHoax.id, this.props.user);
   };
 
   onClickLoadMore = () => {
