@@ -189,7 +189,7 @@ describe('HoaxFeed', () => {
       unmount();
       expect(apiCalls.loadNewHoaxCount).toHaveBeenCalledTimes(1);
       jest.useRealTimers();
-    }, 7000);
+    });
 
     it('displays new hoax count as 1 after loadNewHoaxCount success when user does not have hoaxes initially', async () => {
       jest.useFakeTimers();
