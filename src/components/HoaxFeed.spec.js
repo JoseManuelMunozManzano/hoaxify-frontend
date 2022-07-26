@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
 import HoaxFeed from './HoaxFeed';
 import * as apiCalls from '../api/apiCalls';
 import { MemoryRouter } from 'react-router-dom';
@@ -449,6 +449,30 @@ describe('HoaxFeed', () => {
       const loadMore = await screen.findByText('Load More');
       fireEvent.click(loadMore);
       await screen.findByText('This hoax is in middle page');
+
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+      expect(screen.getByText('Load More')).toBeInTheDocument();
+    });
+
+    // Por si nos quedamos sin conexión
+    // Para esta prueba informar 15 hoaxes desde la app
+    // Ir a Chrome, herramientas de desarrollador, pestaña Network y seleccionar del drop down offline.
+    // Pulsar el botón Load More
+    it('replaces Spinner with Load More after active api call for loadOldHoaxes finishes with error', async () => {
+      apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
+      apiCalls.loadOldHoaxes = jest.fn().mockImplementation(() => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            reject({ response: { data: {} } });
+          }, 300);
+        });
+      });
+      setup();
+
+      const loadMore = await screen.findByText('Load More');
+      fireEvent.click(loadMore);
+      const spinner = await screen.findByText('Loading...');
+      await waitForElementToBeRemoved(spinner);
 
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
       expect(screen.getByText('Load More')).toBeInTheDocument();

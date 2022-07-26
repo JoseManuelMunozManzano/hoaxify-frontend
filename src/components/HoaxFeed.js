@@ -57,12 +57,17 @@ class HoaxFeed extends Component {
 
     const hoaxAtBottom = hoaxes[hoaxes.length - 1];
     this.setState({ isLoadingOldHoaxes: true });
-    apiCalls.loadOldHoaxes(hoaxAtBottom.id, this.props.user).then((response) => {
-      const page = { ...this.state.page };
-      page.content = [...page.content, ...response.data.content];
-      page.last = response.data.last;
-      this.setState({ page, isLoadingOldHoaxes: false });
-    });
+    apiCalls
+      .loadOldHoaxes(hoaxAtBottom.id, this.props.user)
+      .then((response) => {
+        const page = { ...this.state.page };
+        page.content = [...page.content, ...response.data.content];
+        page.last = response.data.last;
+        this.setState({ page, isLoadingOldHoaxes: false });
+      })
+      .catch((error) => {
+        this.setState({ isLoadingOldHoaxes: false });
+      });
   };
 
   onClickLoadNew = () => {
