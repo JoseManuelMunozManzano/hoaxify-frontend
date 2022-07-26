@@ -103,7 +103,7 @@ class HoaxFeed extends Component {
             style={{ cursor: this.state.isLoadingOldHoaxes ? 'not-allowed' : 'pointer' }}
             onClick={this.onClickLoadMore}
           >
-            Load More
+            {this.state.isLoadingOldHoaxes ? <Spinner /> : 'Load More'}
           </div>
         )}
       </div>

@@ -392,6 +392,25 @@ describe('HoaxFeed', () => {
 
       expect(apiCalls.loadOldHoaxes).toHaveBeenCalledTimes(1);
     });
+
+    it('replace Load More with spinner when there is an active api call about loadOldHoaxes', async () => {
+      apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
+      apiCalls.loadOldHoaxes = jest.fn().mockImplementation(() => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve(mockSuccessGetHoaxesLastOfMultiPage);
+          }, 300);
+        });
+      });
+      setup();
+
+      const loadMore = await screen.findByText('Load More');
+      fireEvent.click(loadMore);
+      const spinner = await screen.findByText('Loading...');
+
+      expect(spinner).toBeInTheDocument();
+      expect(screen.queryByText('Load More')).not.toBeInTheDocument();
+    });
   });
 });
 
