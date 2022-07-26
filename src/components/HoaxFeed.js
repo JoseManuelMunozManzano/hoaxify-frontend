@@ -11,6 +11,7 @@ class HoaxFeed extends Component {
     isLoadingHoaxes: false,
     newHoaxCount: 0,
     isLoadingOldHoaxes: false,
+    isLoadingNewHoaxes: false,
   };
 
   componentDidMount() {
@@ -71,17 +72,28 @@ class HoaxFeed extends Component {
   };
 
   onClickLoadNew = () => {
+    if (this.state.isLoadingNewHoaxes) {
+      return;
+    }
+
     const hoaxes = this.state.page.content;
     let topHoaxId = 0;
     if (hoaxes.length > 0) {
       topHoaxId = hoaxes[0].id;
     }
 
-    apiCalls.loadNewHoaxes(topHoaxId, this.props.user).then((response) => {
-      const page = { ...this.state.page };
-      page.content = [...response.data, ...page.content];
-      this.setState({ page, newHoaxCount: 0 });
-    });
+    this.setState({ isLoadingNewHoaxes: true });
+
+    apiCalls
+      .loadNewHoaxes(topHoaxId, this.props.user)
+      .then((response) => {
+        const page = { ...this.state.page };
+        page.content = [...response.data, ...page.content];
+        this.setState({ page, newHoaxCount: 0, isLoadingNewHoaxes: false });
+      })
+      .catch((error) => {
+        this.setState({ isLoadingNewHoaxes: false });
+      });
   };
 
   render() {
@@ -92,11 +104,18 @@ class HoaxFeed extends Component {
       return <div className="card card-header text-center">There are no hoaxes</div>;
     }
 
+    const newHoaxCountMessage =
+      this.state.newHoaxCount === 1 ? 'There is 1 new hoax' : `There are ${this.state.newHoaxCount} new hoaxes`;
+
     return (
       <div>
         {this.state.newHoaxCount > 0 && (
-          <div className="card card-header text-center" style={{ cursor: 'pointer' }} onClick={this.onClickLoadNew}>
-            {this.state.newHoaxCount === 1 ? 'There is 1 new hoax' : `There are ${this.state.newHoaxCount} new hoaxes`}
+          <div
+            className="card card-header text-center"
+            style={{ cursor: this.state.isLoadingNewHoaxes ? 'not-allowed' : 'pointer' }}
+            onClick={this.onClickLoadNew}
+          >
+            {this.state.isLoadingNewHoaxes ? <Spinner /> : newHoaxCountMessage}
           </div>
         )}
         {this.state.page.content.map((hoax) => {

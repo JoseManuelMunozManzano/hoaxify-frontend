@@ -454,7 +454,7 @@ describe('HoaxFeed', () => {
       expect(screen.getByText('Load More')).toBeInTheDocument();
     });
 
-    // Por si nos quedamos sin conexión
+    // Por si nos quedamos sin conexión u otro tipo de error
     // Para esta prueba informar 15 hoaxes desde la app
     // Ir a Chrome, herramientas de desarrollador, pestaña Network y seleccionar del drop down offline.
     // Pulsar el botón Load More
@@ -476,6 +476,95 @@ describe('HoaxFeed', () => {
 
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
       expect(screen.getByText('Load More')).toBeInTheDocument();
+    });
+
+    // loadNewHoaxes
+    it('does not allow loadNewHoaxes to be called when there is an active api call about it', async () => {
+      jest.useFakeTimers();
+      apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
+      apiCalls.loadNewHoaxCount = jest.fn().mockResolvedValue({ data: { count: 1 } });
+      apiCalls.loadNewHoaxes = jest.fn().mockResolvedValue(mockSuccessGetNewHoaxesList);
+      setup({ user: 'user1' });
+
+      await screen.findByText('This is the latest hoax');
+      jest.runOnlyPendingTimers();
+      const newHoaxCount = await screen.findByText('There is 1 new hoax');
+      jest.runOnlyPendingTimers();
+      fireEvent.click(newHoaxCount);
+      fireEvent.click(newHoaxCount);
+
+      expect(apiCalls.loadNewHoaxes).toHaveBeenCalledTimes(1);
+      jest.useRealTimers();
+    });
+
+    it('replaces There is 1 new hoax with spinner when there is an active api call about loadOldHoaxes', async () => {
+      jest.useFakeTimers();
+      apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
+      apiCalls.loadNewHoaxCount = jest.fn().mockResolvedValue({ data: { count: 1 } });
+      apiCalls.loadNewHoaxes = jest.fn().mockImplementation(() => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve(mockSuccessGetNewHoaxesList);
+          }, 300);
+        });
+      });
+      setup();
+
+      await screen.findByText('This is the latest hoax');
+      jest.runOnlyPendingTimers();
+      const newHoaxCount = await screen.findByText('There is 1 new hoax');
+      jest.runOnlyPendingTimers();
+      fireEvent.click(newHoaxCount);
+      const spinner = await screen.findByText('Loading...');
+
+      expect(spinner).toBeInTheDocument();
+      expect(screen.queryByText('There is 1 new hoax')).not.toBeInTheDocument();
+      jest.useRealTimers();
+    });
+
+    it('removes Spinner and There is 1 new hoax after active api call for loadNewHoaxes finishes with success', async () => {
+      jest.useFakeTimers();
+      apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
+      apiCalls.loadNewHoaxCount = jest.fn().mockResolvedValue({ data: { count: 1 } });
+      apiCalls.loadNewHoaxes = jest.fn().mockResolvedValue(mockSuccessGetNewHoaxesList);
+      setup({ user: 'user1' });
+
+      await screen.findByText('This is the latest hoax');
+      jest.runOnlyPendingTimers();
+      const newHoaxCount = await screen.findByText('There is 1 new hoax');
+      jest.runOnlyPendingTimers();
+      fireEvent.click(newHoaxCount);
+      await screen.findByText('This is the newest hoax');
+
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+      expect(screen.queryByText('There is 1 new hoax')).not.toBeInTheDocument();
+      jest.useRealTimers();
+    });
+
+    it('replaces Spinner with There is 1 new hoax after active api call for loadNewHoaxes fails', async () => {
+      jest.useFakeTimers();
+      apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
+      apiCalls.loadNewHoaxCount = jest.fn().mockResolvedValue({ data: { count: 1 } });
+      apiCalls.loadNewHoaxes = jest.fn().mockImplementation(() => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            reject({ response: { data: {} } });
+          }, 300);
+        });
+      });
+      setup();
+
+      await screen.findByText('This is the latest hoax');
+      jest.runOnlyPendingTimers();
+      const newHoaxCount = await screen.findByText('There is 1 new hoax');
+      jest.runOnlyPendingTimers();
+      fireEvent.click(newHoaxCount);
+      const spinner = await screen.findByText('Loading...');
+      await waitForElementToBeRemoved(spinner);
+
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+      expect(screen.getByText('There is 1 new hoax')).toBeInTheDocument();
+      jest.useRealTimers();
     });
   });
 });
