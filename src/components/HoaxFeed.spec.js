@@ -34,6 +34,29 @@ const mockSuccessGetNewHoaxesList = {
   ],
 };
 
+const mockSuccessGetHoaxesMiddleOfMultiPage = {
+  data: {
+    content: [
+      {
+        id: 5,
+        content: 'This hoax is in middle page',
+        date: 1561294668539,
+        user: {
+          id: 1,
+          username: 'user1',
+          displayName: 'display1',
+          image: 'profile1.png',
+        },
+      },
+    ],
+    number: 0,
+    first: false,
+    last: false,
+    size: 5,
+    totalPages: 2,
+  },
+};
+
 // HoaxVM y Page
 const mockSuccessGetHoaxesSinglePage = {
   data: {
@@ -410,6 +433,25 @@ describe('HoaxFeed', () => {
 
       expect(spinner).toBeInTheDocument();
       expect(screen.queryByText('Load More')).not.toBeInTheDocument();
+    });
+
+    it('replaces Spinner with Load More after active api call for loadOldHoaxes finishes with middle page response', async () => {
+      apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
+      apiCalls.loadOldHoaxes = jest.fn().mockImplementation(() => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve(mockSuccessGetHoaxesMiddleOfMultiPage);
+          }, 300);
+        });
+      });
+      setup();
+
+      const loadMore = await screen.findByText('Load More');
+      fireEvent.click(loadMore);
+      await screen.findByText('This hoax is in middle page');
+
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+      expect(screen.getByText('Load More')).toBeInTheDocument();
     });
   });
 });

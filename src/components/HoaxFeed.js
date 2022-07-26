@@ -61,7 +61,7 @@ class HoaxFeed extends Component {
       const page = { ...this.state.page };
       page.content = [...page.content, ...response.data.content];
       page.last = response.data.last;
-      this.setState({ page });
+      this.setState({ page, isLoadingOldHoaxes: false });
     });
   };
 
