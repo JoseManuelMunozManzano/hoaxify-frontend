@@ -407,6 +407,31 @@ describe('HoaxSubmit', () => {
         expect(attachmentImage.src).toContain('data:image/png;base64');
       });
     });
+
+    it('removes selected image after clicking cancel', async () => {
+      const { container } = setup();
+      const textArea = container.querySelector('textarea');
+      fireEvent.focus(textArea);
+
+      const uploadInput = container.querySelector('input');
+      expect(uploadInput.type).toBe('file');
+
+      const file = new File(['dummy content'], 'example.png', { type: 'image/png' });
+      fireEvent.change(uploadInput, { target: { files: [file] } });
+
+      await waitFor(() => {
+        const images = container.querySelectorAll('img');
+        expect(images.length).toBe(2);
+      });
+
+      fireEvent.click(screen.queryByText('Cancel'));
+      fireEvent.focus(textArea);
+
+      await waitFor(() => {
+        const images = container.querySelectorAll('img');
+        expect(images.length).toBe(1);
+      });
+    });
   });
 });
 

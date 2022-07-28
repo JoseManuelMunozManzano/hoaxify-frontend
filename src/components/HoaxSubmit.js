@@ -71,6 +71,8 @@ class HoaxSubmit extends Component {
       focused: false,
       content: '',
       errors: {},
+      image: undefined,
+      file: undefined,
     });
   };
 
