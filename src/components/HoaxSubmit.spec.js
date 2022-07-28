@@ -55,25 +55,27 @@ describe('HoaxSubmit', () => {
   });
 
   describe('Interactions', () => {
-    it('displays 3 rows when focused to textarea', () => {
-      const { container } = setup();
-      const textArea = container.querySelector('textarea');
+    let textArea;
+    const setupFocused = () => {
+      const rendered = setup();
+      textArea = rendered.container.querySelector('textarea');
       fireEvent.focus(textArea);
+      return rendered;
+    };
+
+    it('displays 3 rows when focused to textarea', () => {
+      setupFocused();
       expect(textArea.rows).toBe(3);
     });
 
     it('displays hoaxify button when focused to textarea', () => {
-      const { container } = setup();
-      const textArea = container.querySelector('textarea');
-      fireEvent.focus(textArea);
+      setupFocused();
       const hoaxifyButton = screen.queryByText('Hoaxify');
       expect(hoaxifyButton).toBeInTheDocument();
     });
 
     it('displays Cancel button when focused to textarea', () => {
-      const { container } = setup();
-      const textArea = container.querySelector('textarea');
-      fireEvent.focus(textArea);
+      setupFocused();
       const cancelButton = screen.queryByText('Cancel');
       expect(cancelButton).toBeInTheDocument();
     });
@@ -91,18 +93,14 @@ describe('HoaxSubmit', () => {
     });
 
     it('returns back to unfocused state after clicking the cancel', () => {
-      const { container } = setup();
-      const textArea = container.querySelector('textarea');
-      fireEvent.focus(textArea);
+      setupFocused();
       const cancelButton = screen.queryByText('Cancel');
       fireEvent.click(cancelButton);
       expect(screen.queryByText('Cancel')).not.toBeInTheDocument();
     });
 
     it('calls postHoax with hoax request object when clicking Hoaxify', () => {
-      const { container } = setup();
-      const textArea = container.querySelector('textarea');
-      fireEvent.focus(textArea);
+      setupFocused();
       fireEvent.change(textArea, { target: { value: 'Test hoax content' } });
 
       const hoaxifyButton = screen.queryByText('Hoaxify');
@@ -116,9 +114,7 @@ describe('HoaxSubmit', () => {
     });
 
     it('returns back to unfocused state after successful postHoax action', async () => {
-      const { container } = setup();
-      const textArea = container.querySelector('textarea');
-      fireEvent.focus(textArea);
+      setupFocused();
       fireEvent.change(textArea, { target: { value: 'Test hoax content' } });
 
       const hoaxifyButton = screen.queryByText('Hoaxify');
@@ -132,9 +128,7 @@ describe('HoaxSubmit', () => {
     });
 
     it('clear content after successful postHoax action', async () => {
-      const { container } = setup();
-      const textArea = container.querySelector('textarea');
-      fireEvent.focus(textArea);
+      setupFocused();
       fireEvent.change(textArea, { target: { value: 'Test hoax content' } });
 
       const hoaxifyButton = screen.queryByText('Hoaxify');
@@ -148,9 +142,7 @@ describe('HoaxSubmit', () => {
     });
 
     it('clear content after clicking cancel', () => {
-      const { container } = setup();
-      const textArea = container.querySelector('textarea');
-      fireEvent.focus(textArea);
+      setupFocused();
       fireEvent.change(textArea, { target: { value: 'Test hoax content' } });
 
       fireEvent.click(screen.queryByText('Cancel'));
@@ -159,9 +151,7 @@ describe('HoaxSubmit', () => {
     });
 
     it('disables Hoaxify button when there is postHoax api call', async () => {
-      const { container } = setup();
-      const textArea = container.querySelector('textarea');
-      fireEvent.focus(textArea);
+      setupFocused();
       fireEvent.change(textArea, { target: { value: 'Test hoax content' } });
 
       const hoaxifyButton = screen.queryByText('Hoaxify');
@@ -186,9 +176,7 @@ describe('HoaxSubmit', () => {
     });
 
     it('disables Cancel button when there is postHoax api call', async () => {
-      const { container } = setup();
-      const textArea = container.querySelector('textarea');
-      fireEvent.focus(textArea);
+      setupFocused();
       fireEvent.change(textArea, { target: { value: 'Test hoax content' } });
 
       const hoaxifyButton = screen.queryByText('Hoaxify');
@@ -209,9 +197,7 @@ describe('HoaxSubmit', () => {
     });
 
     it('displays spinner when there is postHoax api call', async () => {
-      const { container } = setup();
-      const textArea = container.querySelector('textarea');
-      fireEvent.focus(textArea);
+      setupFocused();
       fireEvent.change(textArea, { target: { value: 'Test hoax content' } });
 
       const hoaxifyButton = screen.queryByText('Hoaxify');
@@ -231,9 +217,7 @@ describe('HoaxSubmit', () => {
     });
 
     it('enables Hoaxify button when postHoax api call fails', async () => {
-      const { container } = setup();
-      const textArea = container.querySelector('textarea');
-      fireEvent.focus(textArea);
+      setupFocused();
       fireEvent.change(textArea, { target: { value: 'Test hoax content' } });
 
       const hoaxifyButton = screen.queryByText('Hoaxify');
@@ -257,9 +241,7 @@ describe('HoaxSubmit', () => {
     });
 
     it('enables Cancel button when postHoax api call fails', async () => {
-      const { container } = setup();
-      const textArea = container.querySelector('textarea');
-      fireEvent.focus(textArea);
+      setupFocused();
       fireEvent.change(textArea, { target: { value: 'Test hoax content' } });
 
       const hoaxifyButton = screen.queryByText('Hoaxify');
@@ -283,9 +265,7 @@ describe('HoaxSubmit', () => {
     });
 
     it('enables Hoaxify button after successful postHoax action', async () => {
-      const { container } = setup();
-      const textArea = container.querySelector('textarea');
-      fireEvent.focus(textArea);
+      setupFocused();
       fireEvent.change(textArea, { target: { value: 'Test hoax content' } });
 
       const hoaxifyButton = screen.queryByText('Hoaxify');
@@ -302,9 +282,7 @@ describe('HoaxSubmit', () => {
     });
 
     it('displays validation error for content', async () => {
-      const { container } = setup();
-      const textArea = container.querySelector('textarea');
-      fireEvent.focus(textArea);
+      setupFocused();
       fireEvent.change(textArea, { target: { value: 'Test hoax content' } });
 
       const hoaxifyButton = screen.queryByText('Hoaxify');
@@ -328,9 +306,7 @@ describe('HoaxSubmit', () => {
     });
 
     it('clear validation error after clicking cancel', async () => {
-      const { container } = setup();
-      const textArea = container.querySelector('textarea');
-      fireEvent.focus(textArea);
+      setupFocused();
       fireEvent.change(textArea, { target: { value: 'Test hoax content' } });
 
       const hoaxifyButton = screen.queryByText('Hoaxify');
@@ -355,9 +331,7 @@ describe('HoaxSubmit', () => {
     });
 
     it('clear validation error after content is changed', async () => {
-      const { container } = setup();
-      const textArea = container.querySelector('textarea');
-      fireEvent.focus(textArea);
+      setupFocused();
       fireEvent.change(textArea, { target: { value: 'Test hoax content' } });
 
       const hoaxifyButton = screen.queryByText('Hoaxify');
@@ -391,9 +365,7 @@ describe('HoaxSubmit', () => {
     });
 
     it('displays image component when file selected', async () => {
-      const { container } = setup();
-      const textArea = container.querySelector('textarea');
-      fireEvent.focus(textArea);
+      const { container } = setupFocused();
 
       const uploadInput = container.querySelector('input');
       expect(uploadInput.type).toBe('file');
@@ -409,9 +381,7 @@ describe('HoaxSubmit', () => {
     });
 
     it('removes selected image after clicking cancel', async () => {
-      const { container } = setup();
-      const textArea = container.querySelector('textarea');
-      fireEvent.focus(textArea);
+      const { container } = setupFocused();
 
       const uploadInput = container.querySelector('input');
       expect(uploadInput.type).toBe('file');
