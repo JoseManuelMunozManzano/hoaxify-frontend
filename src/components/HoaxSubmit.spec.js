@@ -380,6 +380,15 @@ describe('HoaxSubmit', () => {
 
       expect(error).not.toBeInTheDocument();
     });
+
+    it('displays file attachment input when text area focused', () => {
+      const { container } = setup();
+      const textArea = container.querySelector('textarea');
+      fireEvent.focus(textArea);
+
+      const uploadInput = container.querySelector('input');
+      expect(uploadInput.type).toBe('file');
+    });
   });
 });
 

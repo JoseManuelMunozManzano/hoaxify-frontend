@@ -3,6 +3,7 @@ import ProfileImageWithDefault from './ProfileImageWithDefault';
 import { connect } from 'react-redux';
 import * as apiCalls from '../api/apiCalls';
 import ButtonWithProgress from './ButtonWithProgress';
+import Input from './Input';
 
 class HoaxSubmit extends Component {
   state = {
@@ -81,17 +82,26 @@ class HoaxSubmit extends Component {
           {this.state.errors.content && <span className="invalid-feedback">{this.state.errors.content}</span>}
 
           {this.state.focused && (
-            <div className="text-right mt-1">
-              <ButtonWithProgress
-                className="btn btn-success"
-                disabled={this.state.pendingApiCall}
-                onClick={this.onClickHoaxify}
-                pendingApiCall={this.state.pendingApiCall}
-                text="Hoaxify"
-              />
-              <button className="btn btn-light ml-1" disabled={this.state.pendingApiCall} onClick={this.onClickCancel}>
-                <i className="fas fa-times"></i> Cancel
-              </button>
+            <div>
+              <div className="pt-1">
+                <Input type="file" />
+              </div>
+              <div className="text-right mt-1">
+                <ButtonWithProgress
+                  className="btn btn-success"
+                  disabled={this.state.pendingApiCall}
+                  onClick={this.onClickHoaxify}
+                  pendingApiCall={this.state.pendingApiCall}
+                  text="Hoaxify"
+                />
+                <button
+                  className="btn btn-light ml-1"
+                  disabled={this.state.pendingApiCall}
+                  onClick={this.onClickCancel}
+                >
+                  <i className="fas fa-times"></i> Cancel
+                </button>
+              </div>
             </div>
           )}
         </div>
