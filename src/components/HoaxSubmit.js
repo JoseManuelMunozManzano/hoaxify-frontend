@@ -11,6 +11,8 @@ class HoaxSubmit extends Component {
     content: undefined,
     pendingApiCall: false,
     errors: {},
+    file: undefined,
+    image: undefined,
   };
 
   onFocus = () => {
@@ -22,6 +24,22 @@ class HoaxSubmit extends Component {
   onChangeContent = (event) => {
     const value = event.target.value;
     this.setState({ content: value, errors: {} });
+  };
+
+  onFileSelect = (event) => {
+    if (event.target.files.length === 0) {
+      return;
+    }
+    const file = event.target.files[0];
+    let reader = new FileReader();
+    reader.onloadend = () => {
+      this.setState({
+        image: reader.result,
+        file,
+      });
+    };
+
+    reader.readAsDataURL(file);
   };
 
   onClickHoaxify = () => {
@@ -84,7 +102,10 @@ class HoaxSubmit extends Component {
           {this.state.focused && (
             <div>
               <div className="pt-1">
-                <Input type="file" />
+                <Input type="file" onChange={this.onFileSelect} />
+                {this.state.image && (
+                  <img className="mt-1 img-thumbnail" src={this.state.image} alt="upload" width="128" height="64" />
+                )}
               </div>
               <div className="text-right mt-1">
                 <ButtonWithProgress

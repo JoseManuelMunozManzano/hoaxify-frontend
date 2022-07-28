@@ -389,6 +389,24 @@ describe('HoaxSubmit', () => {
       const uploadInput = container.querySelector('input');
       expect(uploadInput.type).toBe('file');
     });
+
+    it('displays image component when file selected', async () => {
+      const { container } = setup();
+      const textArea = container.querySelector('textarea');
+      fireEvent.focus(textArea);
+
+      const uploadInput = container.querySelector('input');
+      expect(uploadInput.type).toBe('file');
+
+      const file = new File(['dummy content'], 'example.png', { type: 'image/png' });
+      fireEvent.change(uploadInput, { target: { files: [file] } });
+
+      await waitFor(() => {
+        const images = container.querySelectorAll('img');
+        const attachmentImage = images[1];
+        expect(attachmentImage.src).toContain('data:image/png;base64');
+      });
+    });
   });
 });
 
