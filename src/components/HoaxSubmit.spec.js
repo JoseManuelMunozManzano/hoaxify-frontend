@@ -438,6 +438,47 @@ describe('HoaxSubmit', () => {
       });
       expect(apiCalls.postHoaxFile).toHaveBeenCalledTimes(1);
     });
+
+    it('calls postHoaxFile with selected file', async () => {
+      apiCalls.postHoaxFile = jest.fn().mockResolvedValue({
+        data: {
+          id: 1,
+          name: 'random-name.png',
+        },
+      });
+
+      const { container } = setupFocused();
+
+      const uploadInput = container.querySelector('input');
+      expect(uploadInput.type).toBe('file');
+
+      const file = new File(['dummy content'], 'example.png', {
+        type: 'image/png',
+      });
+      fireEvent.change(uploadInput, { target: { files: [file] } });
+
+      await waitFor(() => {
+        const images = container.querySelectorAll('img');
+        expect(images.length).toBe(2);
+      });
+
+      const body = apiCalls.postHoaxFile.mock.calls[0][0];
+
+      const readFile = () => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+
+          reader.onloadend = () => {
+            resolve(reader.result);
+          };
+          reader.readAsText(body.get('file'));
+        });
+      };
+
+      const result = await readFile();
+
+      expect(result).toBe('dummy content');
+    });
   });
 });
 

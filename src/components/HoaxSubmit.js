@@ -48,7 +48,10 @@ class HoaxSubmit extends Component {
   };
 
   uploadFile = () => {
-    apiCalls.postHoaxFile();
+    // Creamos Multipart request
+    const body = new FormData();
+    body.append('file', this.state.file);
+    apiCalls.postHoaxFile(body);
   };
 
   onClickHoaxify = () => {
