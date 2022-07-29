@@ -33,13 +33,22 @@ class HoaxSubmit extends Component {
     const file = event.target.files[0];
     let reader = new FileReader();
     reader.onloadend = () => {
-      this.setState({
-        image: reader.result,
-        file,
-      });
+      this.setState(
+        {
+          image: reader.result,
+          file,
+        },
+        () => {
+          this.uploadFile();
+        }
+      );
     };
 
     reader.readAsDataURL(file);
+  };
+
+  uploadFile = () => {
+    apiCalls.postHoaxFile();
   };
 
   onClickHoaxify = () => {

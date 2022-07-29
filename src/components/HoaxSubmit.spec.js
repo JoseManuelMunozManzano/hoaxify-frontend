@@ -57,10 +57,10 @@ describe('HoaxSubmit', () => {
   describe('Interactions', () => {
     let textArea;
     const setupFocused = () => {
-      const rendered = setup();
-      textArea = rendered.container.querySelector('textarea');
+      const view = setup();
+      textArea = view.container.querySelector('textarea');
       fireEvent.focus(textArea);
-      return rendered;
+      return view;
     };
 
     it('displays 3 rows when focused to textarea', () => {
@@ -365,7 +365,15 @@ describe('HoaxSubmit', () => {
     });
 
     it('displays image component when file selected', async () => {
-      const { container } = setupFocused();
+      apiCalls.postHoaxFile = jest.fn().mockResolvedValue({
+        data: {
+          id: 1,
+          name: 'random-name.png',
+        },
+      });
+      const { container } = setup();
+      const textArea = container.querySelector('textarea');
+      fireEvent.focus(textArea);
 
       const uploadInput = container.querySelector('input');
       expect(uploadInput.type).toBe('file');
@@ -381,7 +389,13 @@ describe('HoaxSubmit', () => {
     });
 
     it('removes selected image after clicking cancel', async () => {
-      const { container } = setupFocused();
+      apiCalls.postHoaxFile = jest.fn().mockResolvedValue({
+        data: {
+          id: 1,
+          name: 'random-name.png',
+        },
+      });
+      const { queryByText, container } = setupFocused();
 
       const uploadInput = container.querySelector('input');
       expect(uploadInput.type).toBe('file');
@@ -394,13 +408,35 @@ describe('HoaxSubmit', () => {
         expect(images.length).toBe(2);
       });
 
-      fireEvent.click(screen.queryByText('Cancel'));
+      fireEvent.click(queryByText('Cancel'));
       fireEvent.focus(textArea);
 
       await waitFor(() => {
         const images = container.querySelectorAll('img');
         expect(images.length).toBe(1);
       });
+    });
+
+    it('calls postHoaxFile when file selected', async () => {
+      apiCalls.postHoaxFile = jest.fn().mockResolvedValue({
+        data: {
+          id: 1,
+          name: 'random-name.png',
+        },
+      });
+      const { container } = setupFocused();
+
+      const uploadInput = container.querySelector('input');
+      expect(uploadInput.type).toBe('file');
+
+      const file = new File(['dummy content'], 'example.png', { type: 'image/png' });
+      fireEvent.change(uploadInput, { target: { files: [file] } });
+
+      await waitFor(() => {
+        const images = container.querySelectorAll('img');
+        expect(images.length).toBe(2);
+      });
+      expect(apiCalls.postHoaxFile).toHaveBeenCalledTimes(1);
     });
   });
 });
