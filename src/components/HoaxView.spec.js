@@ -2,6 +2,27 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import HoaxView from './HoaxView';
 import { MemoryRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import authReducer from '../redux/authReducer';
+
+const loggedInStateUser1 = {
+  id: 1,
+  username: 'user1',
+  displayName: 'display1',
+  image: 'profile1.png',
+  password: 'P4ssword',
+  isLoggedIn: true,
+};
+
+const loggedInStateUser2 = {
+  id: 2,
+  username: 'user2',
+  displayName: 'display2',
+  image: 'profile2.png',
+  password: 'P4ssword',
+  isLoggedIn: true,
+};
 
 const hoaxWithoutAttachment = {
   id: 10,
@@ -44,16 +65,19 @@ const hoaxWithPdfAttachment = {
   },
 };
 
-const setup = (hoax = hoaxWithoutAttachment) => {
+const setup = (hoax = hoaxWithoutAttachment, state = loggedInStateUser1) => {
   // milisegundos
   const oneMinute = 60 * 1000;
   const date = new Date(new Date() - oneMinute);
   hoax.date = date;
+  const store = createStore(authReducer, state);
 
   return render(
-    <MemoryRouter>
-      <HoaxView hoax={hoax} />
-    </MemoryRouter>
+    <Provider store={store}>
+      <MemoryRouter>
+        <HoaxView hoax={hoax} />
+      </MemoryRouter>
+    </Provider>
   );
 };
 
