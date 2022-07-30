@@ -12,5 +12,10 @@ describe('Modal', () => {
       expect(modalRootDiv).toHaveClass('modal fade d-block show');
       expect(modalRootDiv).toHaveStyle(`background-color: #000000b0`);
     });
+
+    it('displays the title provided as prop', () => {
+      render(<Modal title="Test Title" />);
+      expect(screen.getByText('Test Title')).toBeInTheDocument();
+    });
   });
 });

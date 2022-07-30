@@ -131,8 +131,7 @@ class HoaxFeed extends Component {
             {this.state.isLoadingOldHoaxes ? <Spinner /> : 'Load More'}
           </div>
         )}
-        {/* Para ver el modal informar informar aquí: visible={true} */}
-        <Modal visible={true} />
+        <Modal />
       </div>
     );
   }
