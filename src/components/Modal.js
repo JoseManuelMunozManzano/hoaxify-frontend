@@ -24,7 +24,7 @@ class Modal extends Component {
               <button className="btn btn-secondary" onClick={onClickCancel}>
                 {cancelButton}
               </button>
-              <button className="btn btn-primary" onClick={onClickOk}>
+              <button className="btn btn-danger" onClick={onClickOk}>
                 {okButton}
               </button>
             </div>
