@@ -65,6 +65,7 @@ class HoaxSubmit extends Component {
       errors: {},
       image: undefined,
       file: undefined,
+      attachment: undefined,
     });
   };
 
