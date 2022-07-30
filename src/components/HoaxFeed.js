@@ -131,9 +131,8 @@ class HoaxFeed extends Component {
             {this.state.isLoadingOldHoaxes ? <Spinner /> : 'Load More'}
           </div>
         )}
-        {/* Para ver el modal informar en Chrome, herramientas de desarrollador, elements, en el div con class modal, 
-        las nuevas clases d-block shadow show */}
-        <Modal />
+        {/* Para ver el modal informar informar aquí: visible={true} */}
+        <Modal visible={true} />
       </div>
     );
   }
