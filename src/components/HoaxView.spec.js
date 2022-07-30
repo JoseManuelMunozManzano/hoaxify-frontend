@@ -29,6 +29,21 @@ const hoaxWithAttachment = {
   },
 };
 
+const hoaxWithPdfAttachment = {
+  id: 10,
+  content: 'This is the first hoax',
+  user: {
+    id: 1,
+    username: 'user1',
+    displayName: 'display1',
+    image: 'profile1.png',
+  },
+  attachment: {
+    fileType: 'application/pdf',
+    name: 'attached.pdf',
+  },
+};
+
 const setup = (hoax = hoaxWithoutAttachment) => {
   // milisegundos
   const oneMinute = 60 * 1000;
@@ -75,6 +90,12 @@ describe('HoaxView', () => {
       const { container } = setup(hoaxWithAttachment);
       const images = container.querySelectorAll('img');
       expect(images.length).toBe(2);
+    });
+
+    it('does not displays file attachment when attachment type is not image', () => {
+      const { container } = setup(hoaxWithPdfAttachment);
+      const images = container.querySelectorAll('img');
+      expect(images.length).toBe(1);
     });
   });
 });
