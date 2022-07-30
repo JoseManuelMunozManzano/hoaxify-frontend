@@ -711,7 +711,7 @@ describe('HoaxFeed', () => {
       expect(screen.queryByText('Cancel')).toBeDisabled();
     });
 
-    it('disables spinner when api call in progress', async () => {
+    it('displays spinner when api call in progress', async () => {
       apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
       apiCalls.loadNewHoaxCount = jest.fn().mockResolvedValue({ data: { count: 1 } });
       apiCalls.deleteHoax = jest.fn().mockImplementation(() => {
@@ -732,6 +732,32 @@ describe('HoaxFeed', () => {
       fireEvent.click(deleteHoaxButton);
       const spinner = screen.queryByText('Loading...');
       expect(spinner).toBeInTheDocument();
+    });
+
+    it('hides spinner when api call finishes', async () => {
+      apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
+      apiCalls.loadNewHoaxCount = jest.fn().mockResolvedValue({ data: { count: 1 } });
+      apiCalls.deleteHoax = jest.fn().mockImplementation(() => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve({});
+          }, 300);
+        });
+      });
+      const { container } = setup();
+
+      await screen.findByText('This is the latest hoax');
+
+      const deleteButton = container.querySelectorAll('button')[0];
+      fireEvent.click(deleteButton);
+
+      const deleteHoaxButton = screen.queryByText('Delete Hoax');
+      fireEvent.click(deleteHoaxButton);
+
+      await waitFor(() => {
+        const spinner = screen.queryByText('Loading...');
+        expect(spinner).not.toBeInTheDocument();
+      });
     });
   });
 });
