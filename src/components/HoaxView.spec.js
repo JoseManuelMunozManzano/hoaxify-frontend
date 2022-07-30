@@ -3,22 +3,38 @@ import { render, screen } from '@testing-library/react';
 import HoaxView from './HoaxView';
 import { MemoryRouter } from 'react-router-dom';
 
-const setup = () => {
+const hoaxWithoutAttachment = {
+  id: 10,
+  content: 'This is the first hoax',
+  user: {
+    id: 1,
+    username: 'user1',
+    displayName: 'display1',
+    image: 'profile1.png',
+  },
+};
+
+const hoaxWithAttachment = {
+  id: 10,
+  content: 'This is the first hoax',
+  user: {
+    id: 1,
+    username: 'user1',
+    displayName: 'display1',
+    image: 'profile1.png',
+  },
+  attachment: {
+    fileType: 'image/png',
+    name: 'attached-image.png',
+  },
+};
+
+const setup = (hoax = hoaxWithoutAttachment) => {
   // milisegundos
   const oneMinute = 60 * 1000;
   const date = new Date(new Date() - oneMinute);
+  hoax.date = date;
 
-  const hoax = {
-    id: 10,
-    content: 'This is the first hoax',
-    date,
-    user: {
-      id: 1,
-      username: 'user1',
-      displayName: 'display1',
-      image: 'profile1.png',
-    },
-  };
   return render(
     <MemoryRouter>
       <HoaxView hoax={hoax} />
@@ -53,6 +69,12 @@ describe('HoaxView', () => {
       const { container } = setup();
       const anchor = container.querySelector('a');
       expect(anchor.getAttribute('href')).toBe('/user1');
+    });
+
+    it('displays file attachment image', () => {
+      const { container } = setup(hoaxWithAttachment);
+      const images = container.querySelectorAll('img');
+      expect(images.length).toBe(2);
     });
   });
 });

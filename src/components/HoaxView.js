@@ -25,6 +25,9 @@ class HoaxView extends Component {
           </div>
         </div>
         <div className="pl-5">{hoax.content}</div>
+        <div className="pl-5">
+          <img alt="attachment" />
+        </div>
       </div>
     );
   }
