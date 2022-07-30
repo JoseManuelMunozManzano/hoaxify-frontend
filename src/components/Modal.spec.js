@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import Modal from './Modal';
 
 describe('Modal', () => {
@@ -37,6 +37,20 @@ describe('Modal', () => {
       render(<Modal />);
       expect(screen.getByText('Ok')).toBeInTheDocument();
       expect(screen.getByText('Cancel')).toBeInTheDocument();
+    });
+
+    it('calls callback function provided as prop when clicking ok button', () => {
+      const mockFn = jest.fn();
+      render(<Modal onClickOk={mockFn} />);
+      fireEvent.click(screen.getByText('Ok'));
+      expect(mockFn).toHaveBeenCalled();
+    });
+
+    it('calls callback function provided as prop when clicking cancel button', () => {
+      const mockFn = jest.fn();
+      render(<Modal onClickCancel={mockFn} />);
+      fireEvent.click(screen.getByText('Cancel'));
+      expect(mockFn).toHaveBeenCalled();
     });
   });
 });
