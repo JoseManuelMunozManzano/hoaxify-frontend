@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import * as apiCalls from '../api/apiCalls';
 import HoaxView from './HoaxView';
+import Modal from './Modal';
 import Spinner from './Spinner';
 
 class HoaxFeed extends Component {
@@ -130,6 +131,9 @@ class HoaxFeed extends Component {
             {this.state.isLoadingOldHoaxes ? <Spinner /> : 'Load More'}
           </div>
         )}
+        {/* Para ver el modal informar en Chrome, herramientas de desarrollador, elements, en el div con class modal, 
+        las nuevas clases d-block shadow show */}
+        <Modal />
       </div>
     );
   }
