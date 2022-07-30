@@ -31,4 +31,9 @@ class Modal extends Component {
   }
 }
 
+Modal.defaultProps = {
+  okButton: 'Ok',
+  cancelButton: 'Cancel',
+};
+
 export default Modal;

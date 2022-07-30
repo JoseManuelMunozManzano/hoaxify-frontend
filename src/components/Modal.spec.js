@@ -32,5 +32,11 @@ describe('Modal', () => {
       render(<Modal cancelButton="Cancel" />);
       expect(screen.getByText('Cancel')).toBeInTheDocument();
     });
+
+    it('displays defaults for buttons when corresponding props not provided', () => {
+      render(<Modal />);
+      expect(screen.getByText('Ok')).toBeInTheDocument();
+      expect(screen.getByText('Cancel')).toBeInTheDocument();
+    });
   });
 });
