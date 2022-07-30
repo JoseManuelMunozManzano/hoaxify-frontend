@@ -98,11 +98,11 @@ class HoaxFeed extends Component {
   };
 
   onClickDeleteHoax = (hoax) => {
-    this.setState({ modalVisible: true, hoaxToBeDeleted: hoax });
+    this.setState({ hoaxToBeDeleted: hoax });
   };
 
   onClickModalCancel = () => {
-    this.setState({ modalVisible: false });
+    this.setState({ hoaxToBeDeleted: undefined });
   };
 
   render() {
@@ -140,7 +140,7 @@ class HoaxFeed extends Component {
           </div>
         )}
         <Modal
-          visible={this.state.modalVisible}
+          visible={this.state.hoaxToBeDeleted && true}
           onClickCancel={this.onClickModalCancel}
           body={this.state.hoaxToBeDeleted && `Are you sure to delete '${this.state.hoaxToBeDeleted.content}'?`}
           title="Delete!"
