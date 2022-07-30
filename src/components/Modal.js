@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ButtonWithProgress from './ButtonWithProgress';
 
 class Modal extends Component {
   render() {
@@ -24,9 +25,13 @@ class Modal extends Component {
               <button className="btn btn-secondary" onClick={onClickCancel} disabled={pendingApiCall}>
                 {cancelButton}
               </button>
-              <button className="btn btn-danger" onClick={onClickOk} disabled={pendingApiCall}>
-                {okButton}
-              </button>
+              <ButtonWithProgress
+                className="btn btn-danger"
+                onClick={onClickOk}
+                disabled={pendingApiCall}
+                pendingApiCall={pendingApiCall}
+                text={okButton}
+              />
             </div>
           </div>
         </div>
