@@ -105,6 +105,10 @@ class HoaxFeed extends Component {
     this.setState({ hoaxToBeDeleted: undefined });
   };
 
+  onClickModalOk = () => {
+    apiCalls.deleteHoax(this.state.hoaxToBeDeleted.id);
+  };
+
   render() {
     if (this.state.isLoadingHoaxes) {
       return <Spinner />;
@@ -145,6 +149,7 @@ class HoaxFeed extends Component {
           body={this.state.hoaxToBeDeleted && `Are you sure to delete '${this.state.hoaxToBeDeleted.content}'?`}
           title="Delete!"
           okButton="Delete Hoax"
+          onClickOk={this.onClickModalOk}
         />
       </div>
     );
