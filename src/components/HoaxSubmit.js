@@ -57,6 +57,17 @@ class HoaxSubmit extends Component {
     });
   };
 
+  resetState = () => {
+    this.setState({
+      pendingApiCall: false,
+      focused: false,
+      content: '',
+      errors: {},
+      image: undefined,
+      file: undefined,
+    });
+  };
+
   onClickHoaxify = () => {
     const body = {
       content: this.state.content,
@@ -67,11 +78,7 @@ class HoaxSubmit extends Component {
     apiCalls
       .postHoax(body)
       .then((response) => {
-        this.setState({
-          focused: false,
-          content: '',
-          pendingApiCall: false,
-        });
+        this.resetState();
       })
       .catch((error) => {
         let errors = {};
@@ -80,16 +87,6 @@ class HoaxSubmit extends Component {
         }
         this.setState({ pendingApiCall: false, errors });
       });
-  };
-
-  onClickCancel = () => {
-    this.setState({
-      focused: false,
-      content: '',
-      errors: {},
-      image: undefined,
-      file: undefined,
-    });
   };
 
   render() {
@@ -133,11 +130,7 @@ class HoaxSubmit extends Component {
                   pendingApiCall={this.state.pendingApiCall}
                   text="Hoaxify"
                 />
-                <button
-                  className="btn btn-light ml-1"
-                  disabled={this.state.pendingApiCall}
-                  onClick={this.onClickCancel}
-                >
+                <button className="btn btn-light ml-1" disabled={this.state.pendingApiCall} onClick={this.resetState}>
                   <i className="fas fa-times"></i> Cancel
                 </button>
               </div>
