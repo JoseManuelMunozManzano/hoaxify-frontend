@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 class Modal extends Component {
   render() {
-    const { title, visible, body, okButton, cancelButton, onClickOk, onClickCancel } = this.props;
+    const { title, visible, body, okButton, cancelButton, onClickOk, onClickCancel, pendingApiCall } = this.props;
 
     let rootClass = 'modal fade';
     let rootStyle;
@@ -21,10 +21,10 @@ class Modal extends Component {
             </div>
             <div className="modal-body">{body}</div>
             <div className="modal-footer">
-              <button className="btn btn-secondary" onClick={onClickCancel}>
+              <button className="btn btn-secondary" onClick={onClickCancel} disabled={pendingApiCall}>
                 {cancelButton}
               </button>
-              <button className="btn btn-danger" onClick={onClickOk}>
+              <button className="btn btn-danger" onClick={onClickOk} disabled={pendingApiCall}>
                 {okButton}
               </button>
             </div>

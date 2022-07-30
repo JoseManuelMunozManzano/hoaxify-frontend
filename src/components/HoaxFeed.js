@@ -13,6 +13,7 @@ class HoaxFeed extends Component {
     newHoaxCount: 0,
     isLoadingOldHoaxes: false,
     isLoadingNewHoaxes: false,
+    isDeletingHoax: false,
   };
 
   componentDidMount() {
@@ -106,6 +107,7 @@ class HoaxFeed extends Component {
   };
 
   onClickModalOk = () => {
+    this.setState({ isDeletingHoax: true });
     apiCalls.deleteHoax(this.state.hoaxToBeDeleted.id).then((response) => {
       const page = { ...this.state.page };
       page.content = page.content.filter((hoax) => hoax.id !== this.state.hoaxToBeDeleted.id);
@@ -154,6 +156,7 @@ class HoaxFeed extends Component {
           title="Delete!"
           okButton="Delete Hoax"
           onClickOk={this.onClickModalOk}
+          pendingApiCall={this.state.isDeletingHoax}
         />
       </div>
     );
