@@ -101,6 +101,10 @@ class HoaxFeed extends Component {
     this.setState({ modalVisible: true });
   };
 
+  onClickModalCancel = () => {
+    this.setState({ modalVisible: false });
+  };
+
   render() {
     if (this.state.isLoadingHoaxes) {
       return <Spinner />;
@@ -135,7 +139,7 @@ class HoaxFeed extends Component {
             {this.state.isLoadingOldHoaxes ? <Spinner /> : 'Load More'}
           </div>
         )}
-        <Modal visible={this.state.modalVisible} />
+        <Modal visible={this.state.modalVisible} onClickCancel={this.onClickModalCancel} />
       </div>
     );
   }
