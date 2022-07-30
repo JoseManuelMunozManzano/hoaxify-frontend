@@ -133,5 +133,10 @@ describe('HoaxView', () => {
       const { container } = setup();
       expect(container.querySelector('button')).toBeInTheDocument();
     });
+
+    it('does not displays delete button when hoax is not owned by logged in user', () => {
+      const { container } = setup(hoaxWithoutAttachment, loggedInStateUser2);
+      expect(container.querySelector('button')).not.toBeInTheDocument();
+    });
   });
 });
