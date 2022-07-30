@@ -13,6 +13,7 @@ class HoaxSubmit extends Component {
     errors: {},
     file: undefined,
     image: undefined,
+    attachment: undefined,
   };
 
   onFocus = () => {
@@ -51,12 +52,15 @@ class HoaxSubmit extends Component {
     // Creamos Multipart request
     const body = new FormData();
     body.append('file', this.state.file);
-    apiCalls.postHoaxFile(body);
+    apiCalls.postHoaxFile(body).then((response) => {
+      this.setState({ attachment: response.data });
+    });
   };
 
   onClickHoaxify = () => {
     const body = {
       content: this.state.content,
+      attachment: this.state.attachment,
     };
 
     this.setState({ pendingApiCall: true });
