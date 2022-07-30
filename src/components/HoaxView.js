@@ -24,7 +24,9 @@ class HoaxView extends Component {
             <span className="text-black-50"> - </span>
             <span className="text-black-50">{relativeDate}</span>
           </div>
-          <button>Delete</button>
+          <button className="btn btn-outline-danger btn-sm">
+            <i className="far fa-trash-alt" />
+          </button>
         </div>
         <div className="pl-5">{hoax.content}</div>
         {attachmentImageVisible && (
