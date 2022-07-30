@@ -22,5 +22,15 @@ describe('Modal', () => {
       render(<Modal body="Test Body" />);
       expect(screen.getByText('Test Body')).toBeInTheDocument();
     });
+
+    it('displays OK button text provided as prop', () => {
+      render(<Modal okButton="OK" />);
+      expect(screen.getByText('OK')).toBeInTheDocument();
+    });
+
+    it('displays Cancel button text provided as prop', () => {
+      render(<Modal cancelButton="Cancel" />);
+      expect(screen.getByText('Cancel')).toBeInTheDocument();
+    });
   });
 });

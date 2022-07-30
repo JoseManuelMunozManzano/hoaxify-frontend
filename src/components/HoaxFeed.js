@@ -131,7 +131,8 @@ class HoaxFeed extends Component {
             {this.state.isLoadingOldHoaxes ? <Spinner /> : 'Load More'}
           </div>
         )}
-        <Modal />
+        {/* NO OLVIDAR QUITAR ESTO. Lo dejamos para hacer pruebas. Tiene que haber creado un hoax */}
+        <Modal visible={true} />
       </div>
     );
   }
