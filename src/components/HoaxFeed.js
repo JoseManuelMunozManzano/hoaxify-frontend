@@ -97,6 +97,10 @@ class HoaxFeed extends Component {
       });
   };
 
+  onClickDeleteHoax = () => {
+    this.setState({ modalVisible: true });
+  };
+
   render() {
     if (this.state.isLoadingHoaxes) {
       return <Spinner />;
@@ -120,7 +124,7 @@ class HoaxFeed extends Component {
           </div>
         )}
         {this.state.page.content.map((hoax) => {
-          return <HoaxView key={hoax.id} hoax={hoax} />;
+          return <HoaxView key={hoax.id} hoax={hoax} onClickDelete={this.onClickDeleteHoax} />;
         })}
         {this.state.page.last === false && (
           <div
@@ -131,8 +135,7 @@ class HoaxFeed extends Component {
             {this.state.isLoadingOldHoaxes ? <Spinner /> : 'Load More'}
           </div>
         )}
-        {/* NO OLVIDAR QUITAR ESTO. Lo dejamos para hacer pruebas. Tiene que haber creado un hoax */}
-        <Modal visible={true} />
+        <Modal visible={this.state.modalVisible} />
       </div>
     );
   }
