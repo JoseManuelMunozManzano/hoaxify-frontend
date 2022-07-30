@@ -614,6 +614,21 @@ describe('HoaxFeed', () => {
       const modalRootDiv = screen.queryByTestId('modal-root');
       expect(modalRootDiv).not.toHaveClass('d-block show');
     });
+
+    it('displays modal with information about the action', async () => {
+      apiCalls.loadHoaxes = jest.fn().mockResolvedValue(mockSuccessGetHoaxesFirstOfMultiPage);
+      apiCalls.loadNewHoaxCount = jest.fn().mockResolvedValue({ data: { count: 1 } });
+      const { container } = setup();
+
+      await screen.findByText('This is the latest hoax');
+
+      // Aunque el modal no este visible, sigue estando en nuestro html y tiene botones
+      const deleteButton = container.querySelectorAll('button')[0];
+      fireEvent.click(deleteButton);
+
+      const message = screen.queryByText(`Are you sure to delete 'This is the latest hoax'?`);
+      expect(message).toBeInTheDocument();
+    });
   });
 });
 
