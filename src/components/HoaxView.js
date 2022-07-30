@@ -28,7 +28,7 @@ class HoaxView extends Component {
         <div className="pl-5">{hoax.content}</div>
         {attachmentImageVisible && (
           <div className="pl-5">
-            <img alt="attachment" />
+            <img alt="attachment" src={`/images/attachments/${hoax.attachment.name}`} className="img-fluid" />
           </div>
         )}
       </div>
