@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 class Modal extends Component {
   render() {
-    const { title, visible } = this.props;
+    const { title, visible, body } = this.props;
 
     let rootClass = 'modal fade';
     let rootStyle;
@@ -19,7 +19,7 @@ class Modal extends Component {
             <div className="modal-header">
               <h5 className="modal-title">{title}</h5>
             </div>
-            <div className="modal-body"></div>
+            <div className="modal-body">{body}</div>
             <div className="modal-footer">
               <button className="btn btn-secondary">Close</button>
               <button className="btn btn-primary">Save changes</button>

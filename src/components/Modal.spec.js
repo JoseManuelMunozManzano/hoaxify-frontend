@@ -17,5 +17,10 @@ describe('Modal', () => {
       render(<Modal title="Test Title" />);
       expect(screen.getByText('Test Title')).toBeInTheDocument();
     });
+
+    it('displays the body provided as prop', () => {
+      render(<Modal body="Test Body" />);
+      expect(screen.getByText('Test Body')).toBeInTheDocument();
+    });
   });
 });
