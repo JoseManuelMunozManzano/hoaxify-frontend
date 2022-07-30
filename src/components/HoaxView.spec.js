@@ -128,5 +128,10 @@ describe('HoaxView', () => {
       const attachmentImage = images[1];
       expect(attachmentImage.src).toContain('/images/attachments/' + hoaxWithAttachment.attachment.name);
     });
+
+    it('displays delete button when hoax owned by logged in user', () => {
+      const { container } = setup();
+      expect(container.querySelector('button')).toBeInTheDocument();
+    });
   });
 });
