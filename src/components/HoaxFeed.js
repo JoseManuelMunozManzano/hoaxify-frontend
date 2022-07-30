@@ -106,7 +106,9 @@ class HoaxFeed extends Component {
   };
 
   onClickModalOk = () => {
-    apiCalls.deleteHoax(this.state.hoaxToBeDeleted.id);
+    apiCalls.deleteHoax(this.state.hoaxToBeDeleted.id).then((response) => {
+      this.setState({ hoaxToBeDeleted: undefined });
+    });
   };
 
   render() {
