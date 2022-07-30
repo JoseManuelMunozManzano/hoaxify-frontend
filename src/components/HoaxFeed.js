@@ -143,6 +143,8 @@ class HoaxFeed extends Component {
           visible={this.state.modalVisible}
           onClickCancel={this.onClickModalCancel}
           body={this.state.hoaxToBeDeleted && `Are you sure to delete '${this.state.hoaxToBeDeleted.content}'?`}
+          title="Delete!"
+          okButton="Delete Hoax"
         />
       </div>
     );
