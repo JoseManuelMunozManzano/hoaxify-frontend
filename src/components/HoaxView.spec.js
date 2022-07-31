@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import HoaxView from './HoaxView';
 import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
@@ -143,6 +143,14 @@ describe('HoaxView', () => {
       setup();
       const dropDownMenu = screen.queryByTestId('hoax-action-dropdown');
       expect(dropDownMenu).not.toHaveClass('show');
+    });
+
+    it('shows the dropdown menu after clicking the indicator', () => {
+      setup();
+      const indicator = screen.queryByTestId('hoax-actions');
+      fireEvent.click(indicator);
+      const dropDownMenu = screen.queryByTestId('hoax-action-dropdown');
+      expect(dropDownMenu).toHaveClass('show');
     });
   });
 });

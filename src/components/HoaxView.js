@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import ProfileImageWithDefault from './ProfileImageWithDefault';
 import { format } from 'timeago.js';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import useClickTracker from '../shared/useClickTracker';
 
 const HoaxView = (props) => {
+  const actionArea = useRef();
+  const dropDownVisible = useClickTracker(actionArea);
   const { hoax, onClickDelete } = props;
   const { user, date } = hoax;
   const { username, displayName, image } = user;
@@ -12,6 +15,11 @@ const HoaxView = (props) => {
   const attachmentImageVisible = hoax.attachment && hoax.attachment.fileType.startsWith('image');
 
   const ownedByLoggedInUser = user.id === props.loggedInUser.id;
+
+  let dropDownClass = 'p-0 shadow dropdown-menu';
+  if (dropDownVisible) {
+    dropDownClass += ' show';
+  }
 
   return (
     <div className="card p-1">
@@ -28,9 +36,10 @@ const HoaxView = (props) => {
         </div>
         {ownedByLoggedInUser && (
           <div className="dropdown">
-            <div className="dropdown-menu" data-testid="hoax-action-dropdown">
-              <button className="btn btn-outline-danger btn-sm" onClick={onClickDelete}>
-                <i className="far fa-trash-alt" />
+            <span className="btn btn-sm btn-light dropdown-toggle" data-testid="hoax-actions" ref={actionArea} />
+            <div className={dropDownClass} data-testid="hoax-action-dropdown">
+              <button className="btn btn-outline-danger btn-sm btn-block text-left" onClick={onClickDelete}>
+                <i className="far fa-trash-alt" /> Delete
               </button>
             </div>
           </div>
