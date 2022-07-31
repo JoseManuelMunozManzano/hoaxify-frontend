@@ -1,128 +1,107 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import logo from '../assets/hoaxify-logo.png';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ProfileImageWithDefault from './ProfileImageWithDefault';
 
-class TopBar extends React.Component {
-  state = {
-    dropDownVisible: false,
-  };
+const TopBar = (props) => {
+  const [dropDownVisible, setDropDownVisible] = useState(false);
+  const actionArea = useRef();
 
-  componentDidMount() {
-    document.addEventListener('click', this.onClickTracker);
-  }
+  useEffect(() => {
+    const onClickTracker = (event) => {
+      if (!actionArea.current) {
+        setDropDownVisible(false);
+        return;
+      }
 
-  componentWillUnmount() {
-    document.removeEventListener('click', this.onClickTracker);
-  }
+      if (dropDownVisible) {
+        setDropDownVisible(false);
+      } else if (actionArea.current.contains(event.target)) {
+        setDropDownVisible(true);
+      }
+    };
 
-  onClickTracker = (event) => {
-    if (this.actionArea && !this.actionArea.contains(event.target)) {
-      this.setState({
-        dropDownVisible: false,
-      });
-    }
-  };
+    document.addEventListener('click', onClickTracker);
 
-  onClickDisplayName = () => {
-    this.setState({
-      dropDownVisible: true,
-    });
-  };
+    return function cleanup() {
+      document.removeEventListener('click', onClickTracker);
+    };
+  }, [actionArea, dropDownVisible]);
 
-  onClickLogout = () => {
-    this.setState({
-      dropDownVisible: false,
-    });
-
+  const onClickLogout = () => {
     const action = {
       type: 'logout-success',
     };
-    this.props.dispatch(action);
+    props.dispatch(action);
   };
 
-  onClickMyProfile = () => {
-    this.setState({
-      dropDownVisible: false,
-    });
-  };
+  let links = (
+    <ul className="nav navbar-nav ml-auto">
+      <li className="nav-item">
+        <Link to="/signup" className="nav-link">
+          Sign Up
+        </Link>
+      </li>
 
-  assignActionArea = (area) => {
-    this.actionArea = area;
-  };
+      <li className="nav-item">
+        <Link to="/login" className="nav-link">
+          Login
+        </Link>
+      </li>
+    </ul>
+  );
 
-  render() {
-    let links = (
-      <ul className="nav navbar-nav ml-auto">
-        <li className="nav-item">
-          <Link to="/signup" className="nav-link">
-            Sign Up
-          </Link>
-        </li>
+  if (props.user.isLoggedIn) {
+    let dropDownClass = 'p-0 shadow dropdown-menu';
+    if (dropDownVisible) {
+      dropDownClass += ' show';
+    }
 
-        <li className="nav-item">
-          <Link to="/login" className="nav-link">
-            Login
-          </Link>
+    links = (
+      <ul className="nav navbar-nav ml-auto" ref={actionArea}>
+        <li className="nav-item dropdown">
+          <div className="d-flex" style={{ cursor: 'pointer' }}>
+            <ProfileImageWithDefault
+              image={props.user.image}
+              className="rounded-circle m-auto"
+              width="32"
+              height="32"
+            />
+            <span className="nav-link dropdown-toggle">{props.user.displayName}</span>
+          </div>
+
+          <div className={dropDownClass} data-testid="drop-down-menu">
+            <Link to={`/${props.user.username}`} className="dropdown-item">
+              <i className="fas fa-user text-info"></i> My Profile
+            </Link>
+            <span className="dropdown-item" onClick={onClickLogout} style={{ cursor: 'pointer' }}>
+              <i className="fas fa-sign-out-alt text-danger"></i> Logout
+            </span>
+          </div>
         </li>
       </ul>
     );
-
-    if (this.props.user.isLoggedIn) {
-      let dropDownClass = 'p-0 shadow dropdown-menu';
-      if (this.state.dropDownVisible) {
-        dropDownClass += ' show';
-      }
-
-      links = (
-        <ul className="nav navbar-nav ml-auto" ref={this.assignActionArea}>
-          <li className="nav-item dropdown">
-            <div className="d-flex" style={{ cursor: 'pointer' }} onClick={this.onClickDisplayName}>
-              <ProfileImageWithDefault
-                image={this.props.user.image}
-                className="rounded-circle m-auto"
-                width="32"
-                height="32"
-              />
-              <span className="nav-link dropdown-toggle">{this.props.user.displayName}</span>
-            </div>
-
-            <div className={dropDownClass} data-testid="drop-down-menu">
-              <Link to={`/${this.props.user.username}`} className="dropdown-item" onClick={this.onClickMyProfile}>
-                <i className="fas fa-user text-info"></i> My Profile
-              </Link>
-              <span className="dropdown-item" onClick={this.onClickLogout} style={{ cursor: 'pointer' }}>
-                <i className="fas fa-sign-out-alt text-danger"></i> Logout
-              </span>
-            </div>
-          </li>
-        </ul>
-      );
-    }
-
-    return (
-      <div className="bg-white shadow-sm mb-2">
-        <div className="container">
-          <nav className="navbar navbar-light navbar-expand">
-            <Link to="/" className="navbar-brand">
-              <img src={logo} width="60" alt="Hoaxify" /> Hoaxify
-            </Link>
-            {links}
-          </nav>
-        </div>
-      </div>
-    );
   }
-}
 
-// Este state viene de Redux
+  return (
+    <div className="bg-white shadow-sm mb-2">
+      <div className="container">
+        <nav className="navbar navbar-light navbar-expand">
+          <Link to="/" className="navbar-brand">
+            <img src={logo} width="60" alt="Hoaxify" /> Hoaxify
+          </Link>
+          {links}
+        </nav>
+      </div>
+    </div>
+  );
+};
+
 const mapStateToProps = (state) => {
   return {
     user: state,
   };
 };
 
-// connect es una función que devuelve otra función como resultado.
-// TopBar es un parámetro de la función retornada.
 export default connect(mapStateToProps)(TopBar);
