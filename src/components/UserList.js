@@ -36,16 +36,18 @@ const UserList = (props) => {
     loadData(page.number - 1);
   };
 
+  const { content, first, last } = page;
+
   return (
     <div className="card">
       <h3 className="card-title m-auto">Users</h3>
       <div className="list-group list-group-flush" data-testid="usergroup">
-        {page.content.map((user) => {
+        {content.map((user) => {
           return <UserListItem key={user.username} user={user} />;
         })}
       </div>
       <div className="clearfix">
-        {!page.first && (
+        {!first && (
           <span
             data-testid="previous"
             className="badge badge-light float-left"
@@ -55,7 +57,7 @@ const UserList = (props) => {
             {`< previous`}
           </span>
         )}
-        {!page.last && (
+        {!last && (
           <span
             data-testid="next"
             className="badge badge-light float-right"
