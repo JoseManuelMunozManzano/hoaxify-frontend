@@ -27,9 +27,13 @@ const HoaxView = (props) => {
           <span className="text-black-50">{relativeDate}</span>
         </div>
         {ownedByLoggedInUser && (
-          <button className="btn btn-outline-danger btn-sm" onClick={onClickDelete}>
-            <i className="far fa-trash-alt" />
-          </button>
+          <div className="dropdown">
+            <div className="dropdown-menu" data-testid="hoax-action-dropdown">
+              <button className="btn btn-outline-danger btn-sm" onClick={onClickDelete}>
+                <i className="far fa-trash-alt" />
+              </button>
+            </div>
+          </div>
         )}
       </div>
       <div className="pl-5">{hoax.content}</div>

@@ -138,5 +138,11 @@ describe('HoaxView', () => {
       const { container } = setup(hoaxWithoutAttachment, loggedInStateUser2);
       expect(container.querySelector('button')).not.toBeInTheDocument();
     });
+
+    it('does not show the dropdown menu when not clicked', () => {
+      setup();
+      const dropDownMenu = screen.queryByTestId('hoax-action-dropdown');
+      expect(dropDownMenu).not.toHaveClass('show');
+    });
   });
 });
