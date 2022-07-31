@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as apiCalls from '../api/apiCalls';
 import UserListItem from './UserListItem';
 
@@ -10,24 +10,23 @@ const UserList = (props) => {
   });
   const [loadError, setLoadError] = useState();
 
-  const loadData = useCallback(
-    (requestedPage = 0) => {
-      apiCalls
-        .listUsers({ page: requestedPage, size: page.size })
-        .then((response) => {
-          setPage(response.data);
-          setLoadError();
-        })
-        .catch((error) => {
-          setLoadError('User load failed');
-        });
-    },
-    [page.size]
-  );
-
   useEffect(() => {
     loadData();
-  }, [loadData]);
+  }, []);
+
+  // Dejando el valor 3 en size ya no hay dependencia que informar en useEffect y no hace falta
+  // useCallback. Esto lo hace más sencillo.
+  const loadData = (requestedPage = 0) => {
+    apiCalls
+      .listUsers({ page: requestedPage, size: 3 })
+      .then((response) => {
+        setPage(response.data);
+        setLoadError();
+      })
+      .catch((error) => {
+        setLoadError('User load failed');
+      });
+  };
 
   const onClickNext = () => {
     loadData(page.number + 1);
