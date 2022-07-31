@@ -306,6 +306,8 @@ describe('UserPage', () => {
 
       const saveButton = screen.queryByText('Save').closest('button');
       fireEvent.click(saveButton);
+      // Ejemplo con debug
+      //screen.debug();
 
       expect(saveButton).toBeDisabled();
     });
